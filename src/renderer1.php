@@ -254,10 +254,10 @@ class format_treetopics_renderer extends format_section_renderer_base {
         }
         
         // Print all sections
-        switch($course->ttsectiondisplay)
+       switch($course->ttsectiondisplay)
         {
             case TT_DISPLAY_TABS:
-                $this->print_tabs_block($course, $modinfo, $numsections);
+			    $this->print_tabs_block($course, $modinfo, $numsections);
                 $this->print_tabs_sections($course, $modinfo, $numsections, $sectioninfo);
                 break;
             case TT_DISPLAY_IMAGES:
@@ -330,9 +330,9 @@ class format_treetopics_renderer extends format_section_renderer_base {
         echo $o;
     }
     
-       protected function print_home($course, $modinfo){
+    protected function print_home($course, $modinfo){
         global $CFG;
-       /* $o = '';
+      /*$o = '';
         $o .= html_writer::start_tag('div', array('class' => self::ID_APPEND . 'home'));
         $o .= html_writer::start_tag('div', array('class' => self::ID_APPEND . 'home-header'));
         $o .= '<iframe class="tt-home-video" width="560" height="315" src="https://www.youtube.com/embed/IilAcCLJaMo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
@@ -356,12 +356,381 @@ class format_treetopics_renderer extends format_section_renderer_base {
         $o .= html_writer::start_tag('div', array('class' => self::ID_APPEND . 'home-menu2'));
         if($course->tthascontract)
             $o .= html_writer::tag('button', html_writer::tag('a', "Contrat d'engagement", array('href' => $CFG->wwwroot.'/course/view.php?id='.$course->id.'&contract=1')), array('class' => self::ID_APPEND . 'home-menu-button'));
-        $o .= html_writer::tag('button', html_writer::tag('a', 'Débuter le cours', array('href' => $CFG->wwwroot.'/course/view.php?id='.$course->id.'&course=1')), array('class' =>  'recit-btn-style_btn_1'));
+        $o .= html_writer::tag('button', html_writer::tag('a', 'Débuter le cours', array('href' => $CFG->wwwroot.'/course/view.php?id='.$course->id.'&course=1')), array('class' => self::ID_APPEND . 'home-menu-button'));
         $o .= html_writer::end_tag('div');
         
         echo $o;
     }
     
+    
+    protected function print_tabs_item($course, $modinfo, $sectioninfo, $sectioninfoall, $numsections, $previous, &$o, &$i)
+    {
+        if($i > $numsections)
+            return 0;
+        
+        $thissection = $sectioninfoall[$i];
+        $showsection = $thissection->uservisible || ($thissection->visible && !$thissection->available) || (!$thissection->visible && !$course->hiddensections);
+            
+        if (!$showsection)
+            return 0;
+        
+        $thistype = $thissection->ttsectiondisplay;
+        
+        if($previous > $thistype)
+            return 0;
+        
+        $childoutput = '';
+        if($thissection->ttsectioncontentdisplay == TT_DISPLAY_IMAGES)
+        {
+            while(++$i <= $numsections && $sectioninfoall[$i]->ttsectiondisplay > $thistype);
+        }
+        else
+            $i++;
+        
+        $childtype = $this->print_tabs_item($course, $sectioninfoall, $numsections, $thistype, $childoutput, $i);
+        
+        $sectionname = get_section_name($course, $thissection);
+        $sectionid = $this->get_section_id($course, $thissection);
+            
+        if($childtype > $thistype)
+        {
+            if($thistype == 1)
+            {
+                $dropdownid = $sectionid.'DropdownMenuLink';
+                $o .= html_writer::start_tag('li', array('class' => 'nav-item dropdown'));
+                $o .= html_writer::tag('a', $sectionname, array('class' => 'nav-link dropdown-toggle', 'href' => '#', 'id' => $dropdownid, 'data-toggle' => 'dropdown', 'aria-haspopup' => 'true', 'aria-expanded' => 'false'));
+                $o .= html_writer::start_tag('ul', array('class' => 'dropdown-menu', 'aria-labelledby' => $dropdownid));
+                $o .= $childoutput;
+                $o .= html_writer::end_tag('ul');
+                $o .= html_writer::end_tag('li');
+            }
+            else
+            {
+                $o .= html_writer::start_tag('li', array('class' => 'dropdown-submenu'));
+                $o .= html_writer::tag('a', $sectionname, array('class' => 'dropdown-item dropdown-toggle', 'href' => '#'));
+                $o .= html_writer::start_tag('ul', array('class' => 'dropdown-menu'));
+                $o .= $childoutput;
+                $o .= html_writer::end_tag('ul');
+                $o .= html_writer::end_tag('li');
+            }
+            
+            $childoutput = '';
+            $childtype = $this->print_tabs_item($course, $sectioninfoall, $numsections, $thistype, $childoutput, $i);
+            $o .= $childoutput;
+        }
+        else
+        {
+            if($thistype == 1)
+            {
+                $o .= html_writer::start_tag('li', array('class' => 'nav-item'));
+                $o .= html_writer::tag('a', $sectionname, array('class' => 'nav-link', 'href' => '#', 'data-section' => $sectionid));
+                $o .= html_writer::end_tag('li');
+            }
+            else
+            {
+                $o .= html_writer::tag('li', html_writer::tag('a', $sectionname, array('class' => 'dropdown-item', 'href' => '#', 'data-section' => $sectionid)));
+            }
+            
+            $o .= $childoutput;
+        }
+        
+        return $thistype;
+    }
+    
+    /**
+     * Prints the tabs block
+     *
+     * @param stdClass $course The course entry from DB
+     * @param stdClass $modinfo the course info
+     * @param int $numsections The number of sections
+     */
+    protected function print_tabs_block($course, $modinfo, $numsections){
+        
+        $o = html_writer::start_tag('nav', array('class' => 'navbar navbar-expand-lg navbar-light bg-light', 'id' => 'tt-recit-nav'));
+        $o .= html_writer::start_tag('button', array('class' => 'navbar-toggler', 'type' => 'button', 'data-toggle' => 'collapse', 'data-target' => '#navbarTogglerCourse', 'aria-controls' => 'navbarTogglerCourse', 'aria-expanded' => 'false', 'aria-label' => 'Toggle navigation'));
+        $o .= html_writer::tag('span', '', array('class' => 'navbar-toggler-icon'));
+        $o .= html_writer::end_tag('button');
+        $o .= html_writer::start_tag('div', array('class' => 'collapse navbar-collapse', 'id' => 'navbarTogglerCourse'));
+        $o .= html_writer::start_tag('ul', array('class' => 'navbar-nav mr-auto mt-2 mt-lg-0'));
+        
+        $sectioninfoall = $modinfo->get_section_info_all();
+        $tabsoutput = '';
+        $i = 1;
+        $this->print_tabs_item($course, $sectioninfoall, $numsections, 0, $tabsoutput, $i);
+        $o .= $tabsoutput;
+        
+        $o .= html_writer::end_tag('ul');
+        $o .= html_writer::end_tag('div');
+        $o .= html_writer::end_tag('nav');
+        echo $o;
+    }
+    
+    /**
+     * Prints the images block
+     *
+     * @param stdClass $course The course entry from DB
+     * @param stdClass $modinfo the course info
+     * @param int $numsections The number of sections to print
+     * @param int $start The first section to print
+     */
+    protected function print_images_block($parentsection, $course, $modinfo, $sectionarray, $startvisible = true){
+        $o = '';
+
+        $nbcolumns = $course->ttimagegridcolumns;
+        if($nbcolumns < 1)
+            $nbcolumns = 1;
+        
+        $hauto = '';
+        for($i = 0; $i < $nbcolumns; $i++)
+            $hauto .= 'auto ';
+        
+        $o .= html_writer::tag('button', get_string('backtotableofcontent', 'format_treetopics'), array('class' => self::ID_APPEND . 'section-image-link', 'id' => self::ID_APPEND . 'section-image-back', 'style' => 'display: none;'));
+        
+        $firstdivoptions = array('id' => self::ID_APPEND . "imagebuttons", 'class' => self::ID_APPEND . "imagebuttons auto$nbcolumns", 'style' => 'display: ' . ($startvisible ? 'grid' : 'none') . '; grid-template-columnsx: ' . $hauto . ';');
+        
+        if($parentsection != null)
+        {
+            $firstdivoptions['id'] = $this->get_section_id($course, $parentsection).'-imagebuttons';
+            $firstdivoptions['data'] = $this->get_section_id($course, $parentsection);
+        }
+        
+        $o .= html_writer::start_tag('div', $firstdivoptions);
+        
+		foreach ($modinfo->get_section_info_all() as $section => $thissection) {
+            
+			// Hide general section and orphaned activities
+            if (!in_array($section, $sectionarray))
+            {
+				continue;
+			}
+			// Show the section if the user is permitted to access it
+			$showsection = $thissection->uservisible ||
+                    ($thissection->visible && !$thissection->available) ||
+                    (!$thissection->visible && !$course->hiddensections);
+            if (!$showsection) {
+                continue;
+            }
+            
+            $format_options = format_base::instance($course)->get_format_options($thissection);
+            //var_dump($format_options);
+            
+            $sectionname = get_section_name($course, $thissection);
+            $sectionheader = $this->format_summary_text($thissection);//$this->section_tabs_header($thissection, $course, false, false, false);
+            $summaryStart = strpos($sectionheader, '&lt;summary&gt;');
+            if($summaryStart !== false)
+            {
+                $summaryStart += 15;
+                $summaryEnd = strpos($sectionheader, '&lt;/summary&gt;', $summaryStart);
+                if($summaryEnd !== false)
+                {
+                    $summaryLength = $summaryEnd - $summaryStart;
+                    $sectionheader = substr($sectionheader, $summaryStart, $summaryLength);
+                    
+                    $startPara = strpos($sectionheader, '<p>');
+                    if($startPara !== false)
+                    {
+                        $endPara = strpos($sectionheader, '</p>');
+                        if($endPara < $startPara)
+                        {
+                            $sectionheader = substr($sectionheader, $endPara + 4);
+                        }
+                    }
+                    
+                    $startPara = strrpos($sectionheader, '<p>');
+                    if($startPara !== false)
+                    {
+                        $endPara = strrpos($sectionheader, '</p>', $startPara);
+                        if($endPara === false)
+                        {
+                            $sectionheader .= '</p>';
+                        }
+                    }
+                }
+            }
+            
+			$sectionclass = self::ID_APPEND . 'section-image-link '. self::ID_APPEND . 'grid-element' . ($section == 1 ? ' ' . self::ID_APPEND . 'section-image-link-selected' : '');
+            
+            $url = moodle_url::make_pluginfile_url($format_options['ttsectionimage-context'], $format_options['ttsectionimage-component'], $format_options['ttsectionimage-filearea'], $format_options['ttsectionimage-itemid'], $format_options['ttsectionimage-filepath'], $format_options['ttsectionimage-filename']);
+            if($url == '')
+                $url = 'http://res.freestockphotos.biz/pictures/15/15789-illustration-of-a-blank-glossy-rectangular-button-pv.png';
+            
+            $o .= html_writer::start_tag('div', array('class' => $sectionclass, 'data' => $this->get_section_id($course, $thissection),'style' => 'position:relative;'));
+            $o .= html_writer::tag('img', '', array('class' => self::ID_APPEND . 'section-image', 'src' => $url->out(false), 'alt' => $sectionname));
+            if($format_options['ttsectiontitle'])
+                $o .= html_writer::tag('div', $sectionname, array('class' => self::ID_APPEND . 'section-title'));
+            $o .= $sectionheader;
+            $o .= html_writer::end_tag('div');
+		}
+		$o .= html_writer::end_tag('div');
+        
+		return $o;
+    }
+    
+    /**
+     * Prints the tabs mode sections
+     *
+     * @param stdClass $course The course entry from DB
+     * @param stdClass $modinfo the course info
+     * @param int $numsections The number of sections
+     */
+    protected function print_tabs_sections($course, $modinfo, $numsections, $hideall=false)
+    {
+        $sectioninfoall = $modinfo->get_section_info_all();
+        for($i = 1; $i <= $numsections; $i++)
+        {
+            $thissection = $sectioninfoall[$i];
+            $showsection = $thissection->uservisible || ($thissection->visible && !$thissection->available) || (!$thissection->visible && !$course->hiddensections);
+            
+            if ($i > $numsections || !$showsection)
+                continue;
+            
+            $showtitle = true;//$thissection->ttsectiondisplay == TT_DISPLAY_IMAGES || $course->ttsectiondisplay == TT_DISPLAY_IMAGES;
+            echo $this->section_tabs_header($thissection, $course, false, $hideall, $showtitle);
+            
+            if($thissection->ttsectioncontentdisplay == TT_DISPLAY_IMAGES)
+            {
+                $start = $i + 1;
+                for($j = $start; $j <= $numsections; $j++)
+                {
+                    $childsection = $sectioninfoall[$j];
+                    if($childsection->ttsectiondisplay <= $thissection->ttsectiondisplay)
+                    {
+                        break;
+                    }
+                }
+                if($j < $numsections)
+                    $j--;
+                
+                echo $this->print_images_block($thissection, $course, $modinfo, range($start, $j), false);
+            }
+            
+            if($i > $numsections)
+                break;
+
+            // Display course activities
+            if ($thissection->uservisible && $thissection->ttsectionshowactivities) 
+            {
+                echo $this->courserenderer->course_section_cm_list($course, $thissection, 0);
+                echo $this->courserenderer->course_section_add_cm_control($course, $i, 0);
+            }
+            echo $this->section_tabs_footer();
+        }
+    }
+    
+    /**
+     * Generate the display of the header part of a section before
+     * course modules are included
+     *
+     * @param stdClass $section The course_section entry from DB
+     * @param stdClass $course The course entry from DB
+     * @param bool $onsectionpage true if being printed on a single-section page
+     * @return string HTML to output.
+     */
+    protected function section_tabs_header($section, $course, $onsectionpage, $hideall, $showtitle) {
+        global $PAGE;
+        
+        // Don't display 0 section
+        if($section->section == 0)
+        {
+            $hideall = false;
+            $showtitle = false;
+        }
+
+        $o = '';
+        $currenttext = '';
+        $sectionstyle = '';
+
+        if (!$section->visible) {
+            $sectionstyle = ' hidden';
+        }
+        if (course_get_format($course)->is_section_current($section)) {
+            $sectionstyle = ' current';
+        }
+        $o.= html_writer::start_tag('div', array('id' => $this->get_section_id($course, $section),
+            'class' => 'section main clearfix tt-section'.$sectionstyle, 'role'=>'region',
+            'aria-label'=> get_section_name($course, $section),
+            'style'=> (($section->section == 1 || $section->section == 0) && !$hideall) ? 'display:block' : 'display:none'));
+            
+        // Create a span that contains the section title to be used to create the keyboard section move menu.
+        if($showtitle)
+            $o .= html_writer::tag('h2', get_section_name($course, $section), array('class' => 'sectionname'));
+        
+        $leftcontent = $this->section_left_content($section, $course, $onsectionpage);
+        $o.= html_writer::tag('div', $leftcontent, array('class' => 'left side'));
+
+        $rightcontent = $this->section_right_content($section, $course, $onsectionpage);
+        $o.= html_writer::tag('div', $rightcontent, array('class' => 'right side'));
+        $o.= html_writer::start_tag('div', array('class' => 'content'));
+
+        $o .= $this->section_availability($section);
+
+        $o .= html_writer::start_tag('div', array('class' => 'summary'));
+        if ($section->uservisible || $section->visible) {
+            //Show summary if section is available or has availability restriction information.
+            //Do not show summary if section is hidden but we still display it because of course setting
+            //"Hidden sections are shown in collapsed form".
+            $o .= str_replace('<p></p>', '', str_replace('&lt;summary&gt;', '', str_replace('&lt;/summary&gt;', '', $this->format_summary_text($section))));
+        }
+        $o .= html_writer::end_tag('div');
+
+        return $o;
+    }
+    
+    /**
+     * Generate the display of the footer part of a section
+     *
+     * @return string HTML to output.
+     */
+    protected function section_tabs_footer() {
+        $o = html_writer::end_tag('div');
+        $o.= html_writer::end_tag('div');
+
+        return $o;
+    }
+	
+	/**
+     * Generate a section's id
+     *
+	 * @param stdClass $course The course entry from DB
+     * @param stdClass $section The course_section entry from DB
+     * @return the section's string id
+     */
+	protected function get_section_id($course, $section){
+        $specialchars = array("'", '"', '\\', '/', '@', '$', '%', '!', '#', '?', '&', '*', '(', ')', '+', ' ', '-', '=', ';', ':', '^', '`', '<', '>', '«', '»');
+		return self::ID_APPEND . str_replace($specialchars, '', get_section_name($course, $section));
+	}
+
+    /**
+     * Generate the edit control items of a section
+     *
+     * @param stdClass $course The course entry from DB
+     * @param stdClass $section The course_section entry from DB
+     * @param bool $onsectionpage true if being printed on a section page
+     * @return array of edit control items
+     */
+    protected function section_edit_control_items($course, $section, $onsectionpage = false) {
+        global $PAGE;
+
+        if (!$PAGE->user_is_editing()) {
+            return array();
+        }
+
+        $coursecontext = context_course::instance($course->id);
+
+        if ($onsectionpage) {
+            $url = course_get_url($course, $section->section);
+        } else {
+            $url = course_get_url($course);
+        }
+        $url->param('sesskey', sesskey());
+
+        $controls = array();
+        if ($section->section && has_capability('moodle/course:setcurrentsection', $coursecontext)) {
+            if ($course->marker == $section->section) {  // Show the "light globe" on/off.
+                $url->param('marker', 0);
+                $markedthistopic = get_string('markedthistopic');
+                $highlightoff = get_string('highlightoff');
+                $controls['highlight'] = array('url' => $url, "icon" => 'i/marked',
     protected function print_tabs_item($course, $sectioninfoall, $numsections, $previous, &$o, &$i)
     {
         if($i > $numsections)

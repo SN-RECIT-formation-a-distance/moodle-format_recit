@@ -410,7 +410,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
                         $outputLev2 .= $newOutputLev2;
                         $outputLev2 .= html_writer::end_tag('div');
                     }
-                    $newOutputLev2 = html_writer::start_tag('div', array('id' => $this->get_section_id($course, $thissection), 'class' => self::ID_APPEND . "tabs-block-lev2 tabs-block".($firstlev2visible ? '' : ' tt-tabs-selected'), 'style' => $firstlev2visible ? 'display:none;' : ''));
+                    $newOutputLev2 = html_writer::start_tag('div', array('id' => $this->get_section_id($course, $thissection), 'class' => self::ID_APPEND . "tabs-block-lev2 tabs-block".($firstlev2visible ? '' : ' tt-tabs-selected'), 'style' => $firstlev2visible ? 'display:mnone;' : ''));
                     
                     if($firstlev2visible)
                         $firstlev3visible = true;

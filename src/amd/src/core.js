@@ -39,69 +39,6 @@ define(['jquery'], function($) {
               }
               return "";
             }
-            $('.tt-tabs').click(function() {
-                var dataValue = $(this).attr('data');
-                var sectionID = '#' + dataValue;
-                $('.tt-section').css('display', 'none');
-                $('.tt-imagebuttons').css('display', 'none');
-                if($(this).hasClass('tt-tabs-lev1'))
-                {
-                    $('.tt-tabs-block-lev2').css('display', 'none');
-                    $('.tt-tabs-block-lev3').css('display', 'none');
-                }
-                else if($(this).hasClass('tt-tabs-lev2'))
-                {
-                    $('.tt-tabs-block-lev3').css('display', 'none');
-                }
-                if($(sectionID).hasClass('tt-imagebuttons'))
-                {
-                    $(sectionID).css('display', 'grid');
-                }
-                else if(!$(sectionID).hasClass('tt-tabs-block-lev3'))
-                {
-                    $(sectionID).css('display', 'block');
-                }
-                else
-                {
-                    if($( "#tt-tabs-blocks-5" ).length)
-                    {
-                        $(sectionID).css('display', 'inline-flex');
-                    }
-                    else
-                    {
-                        $(sectionID).css('display', 'block');
-                    }
-                }
-                if($(this).hasClass('tt-tabs-lev1'))
-                {
-                    $('.tt-tabs-lev1').removeClass('tt-tabs-selected');
-                    $(this).addClass('tt-tabs-selected');
-                    if($(sectionID).hasClass('tt-tabs-block-lev2'))
-                    {
-                        $(sectionID).children().first().trigger('click');
-                    }
-                    document.cookie = 'section1=' + dataValue;
-                    document.cookie = 'section2=;';
-                    document.cookie = 'section3=;';
-                }
-                else if($(this).hasClass('tt-tabs-lev2'))
-                {
-                    $('.tt-tabs-lev2').removeClass('tt-tabs-selected');
-                    $(this).addClass('tt-tabs-selected');
-                    if($(sectionID).hasClass('tt-tabs-block-lev3'))
-                    {
-                        $(sectionID).children().first().trigger('click');
-                    }
-                    document.cookie = 'section2=' + dataValue;
-                    document.cookie = 'section3=;';
-                }
-                else if($(this).hasClass('tt-tabs-lev3'))
-                {
-                    $('.tt-tabs-lev3').removeClass('tt-tabs-selected');
-                    $(this).addClass('tt-tabs-selected');
-                    document.cookie = 'section3=' + dataValue;
-                }
-            });
             $('.tt-section-image-link').click(function() {
                 var dataValue = $(this).attr('data');
                 var backButton = $('#tt-section-image-back');
@@ -128,25 +65,38 @@ define(['jquery'], function($) {
             $('#tt-contract-sign').click(function() {
                 window.location = $('#tt-contract-sign').attr('href');
             });
-            $(window).ready(function() {
-                var section1 = getCookie('section1');
-                var section2 = getCookie('section2');
-                var section3 = getCookie('section3');
-                if(section1 != '')
-                {
-                    $('#' + section1 + '-tab').trigger('click');
-                    if(section2 != '')
-                    {
-                        $('#' + section2 + '-tab').trigger('click');
-                        if(section3 != '')
-                        {
-                            $('#' + section3 + '-tab').trigger('click');
-                        }
-                    }
+            $('#tt-recit-nav a').on('click', function () {
+                var datasection = $(this).attr('data-section');
+                if (typeof datasection !== typeof undefined && datasection !== false) {
+                    var sectionID = '#' + datasection;
+                    document.cookie = 'section=' + sectionID;
+                    $('.tt-section').css('display', 'none');
+                    $('.tt-imagebuttons').css('display', 'none');
+                    $(sectionID+'-imagebuttons').css('display', 'grid');
+                    $(sectionID).css('display', 'block');
                 }
-                else
+            });
+            $('.dropdown-menu a.dropdown-toggle').on('click', function() {
+                if (!$(this).next().hasClass('show'))
                 {
-                    $('#tt-tabs-block-lev1').children().first().trigger('click');
+                    $(this).parents('.dropdown-menu').first().find('.show').removeClass("show");
+                }
+                var $subMenu = $(this).next(".dropdown-menu");
+                $subMenu.toggleClass('show');
+                $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function()
+                {
+                    $('.dropdown-submenu .show').removeClass("show");
+                });
+                return false;
+            });
+            $(window).ready(function() {
+                var sectionID = getCookie('section');
+                if(sectionID !== '')
+                {
+                    $('.tt-section').css('display', 'none');
+                    $('.tt-imagebuttons').css('display', 'none');
+                    $(sectionID+'-imagebuttons').css('display', 'grid');
+                    $(sectionID).css('display', 'block');
                 }
             });
         }
