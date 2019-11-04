@@ -353,13 +353,12 @@ class format_treetopics_renderer extends format_section_renderer_base {
         $o .= html_writer::end_tag('div');*/
         
         $o = $this->section_tabs_header($modinfo->get_section_info_all()[0], $course, false, false, false);
-        $o .= html_writer::start_tag('div', array('class' => self::ID_APPEND . 'home-menu2'));
-        if($course->tthascontract)
-            $o .= html_writer::tag('button', html_writer::tag('a', "Contrat d'engagement", array('href' => $CFG->wwwroot.'/course/view.php?id='.$course->id.'&contract=1')), array('class' => self::ID_APPEND . 'home-menu-button'));
-        $o .= html_writer::tag('button', html_writer::tag('a', 'Débuter le cours', array('href' => $CFG->wwwroot.'/course/view.php?id='.$course->id.'&course=1')), array('class' =>  'recit-btn-style_btn_1'));
-        $o .= html_writer::end_tag('div');
-        
-        echo $o;
+                
+		$o .= '<section class="C1004" data-version="0.1.1" data-recit-block="1" style="">    <div class="C1004a parallax-recit c_espacement-nul bg_secondary" style="background-image: url()">        <div class="container">            <div class="C1004a row ">                <div class="C1004b inserer col-md-3 ">				<div class=" basic-pale-row" style="" data-version="0.1.1" data-recit-block="2"></div>                 </div>				 <div class="C1004c inserer col-md-3 ">				<div class=" basic-pale-row " style="" data-version="0.1.1" data-recit-block="2"></div>                 </div>				 <div class="C1004d inserer col-md-3 ">				<div class=" basic-pale-row " style="" data-version="0.1.1" data-recit-block="2"></div>                 </div>				 <div class="C1004e inserer col-md-3 ">				<div class=" basic-pale-row text_box1" style="" data-version="0.1.1" data-recit-block="2"><div class="I803  " data-version="0.1.1" data-recit-block="2" style="">				    <p>					';
+		$o .= html_writer::tag('button', html_writer::tag('a', 'Commencer le cours', array('href' => $CFG->wwwroot.'/course/view.php?id='.$course->id.'&course=1')), array('class' =>  'recit-btn-style_btn_1'));
+		$o .= '					</p>					</div>                </div>                                  </div>                </div>        </div>    </div></section>' ;
+		echo $o;
+		   
     }
     
     protected function print_tabs_item($course, $sectioninfoall, $numsections, $previous, &$o, &$i)
