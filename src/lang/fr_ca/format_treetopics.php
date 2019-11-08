@@ -50,7 +50,7 @@ $string['backtotableofcontent'] = '<- Retour au menu principal';
 $string['sectionmaindisplay'] = 'Affichage de la section principale';
 $string['sectionsecondarydisplay'] = 'Affichage des sections secondaires';
 $string['sectiondisplay'] = 'Affichage';
-$string['sectioncontentdisplay'] = 'Affichage du Contenu';
+$string['sectioncontentdisplay'] = 'Affichage des niveaux sous jacents';
 $string['subsections'] = 'Numéro des sous-section';
 $string['sectionparent'] = 'Parent';
 $string['sectionshowactivities'] = 'Afficher les activiés';
@@ -61,7 +61,7 @@ $string['sectionimagecomponent'] = 'Composant de l\'image';
 $string['sectionimagefilearea'] = 'Image Filearea';
 $string['sectionimageitemid'] = 'Image ItemID';
 $string['sectionimagefilepath'] = 'Image Filepath';
-$string['sectionimagefilename'] = 'Nom du fichier imageImage Filename';
+$string['sectionimagefilename'] = 'Nom du fichier image';
 
 $string['showsectiontitle'] = 'Afficher le titre de la section';
 $string['sectionimagewidth'] = 'Proportion de la largeur de l\'image';

@@ -258,7 +258,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
         {
             case TT_DISPLAY_TABS:
                 $this->print_tabs_block($course, $modinfo, $numsections);
-                $this->print_tabs_sections($course, $modinfo, $numsections, $sectioninfo);
+                $this->print_tabs_sections($course, $modinfo, $numsections);
                 break;
             case TT_DISPLAY_IMAGES:
                 echo $this->print_images_block(null, $course, $modinfo, range(1, $numsections + 1));
@@ -354,8 +354,8 @@ class format_treetopics_renderer extends format_section_renderer_base {
         
         $o = $this->section_tabs_header($modinfo->get_section_info_all()[0], $course, false, false, false);
                 
-		$o .= '<section class="C1004" data-version="0.1.1" data-recit-block="1" style="">    <div class="C1004a parallax-recit c_espacement-nul bg_secondary" style="background-image: url()">        <div class="container">            <div class="C1004a row ">                <div class="C1004b inserer col-md-3 ">				<div class=" basic-pale-row" style="" data-version="0.1.1" data-recit-block="2"></div>                 </div>				 <div class="C1004c inserer col-md-3 ">				<div class=" basic-pale-row " style="" data-version="0.1.1" data-recit-block="2"></div>                 </div>				 <div class="C1004d inserer col-md-3 ">				<div class=" basic-pale-row " style="" data-version="0.1.1" data-recit-block="2"></div>                 </div>				 <div class="C1004e inserer col-md-3 ">				<div class=" basic-pale-row text_box1" style="" data-version="0.1.1" data-recit-block="2"><div class="I803  " data-version="0.1.1" data-recit-block="2" style="">				    <p>					';
-		$o .= html_writer::tag('button', html_writer::tag('a', 'Commencer le cours', array('href' => $CFG->wwwroot.'/course/view.php?id='.$course->id.'&course=1')), array('class' =>  'recit-btn-style_btn_1'));
+		$o .= '<section class="C1004 section0" data-version="0.1.1" style="">   <div class="C1004a -recit c_espacement-etroit bg_white" style="background-image: url()">        <div class="container">            <div class="C1004a row ">                <div class="C1004b  col-md-3 "></div>	<div class="C1004c  col-md-3 ">	  </div><div class="C1004d  col-md-3 ">	 </div>				 <div class="C1004e  col-md-3 ">				<div class="  data-version="0.1.1" data-recit-block="2"><div class="I803  " data-version="0.1.1" data-recit-block="2" style="">				    <p>	';
+		$o .= html_writer::tag('button', html_writer::tag('a', 'Commencer le cours', array('href' => $CFG->wwwroot.'/course/view.php?id='.$course->id.'&course=1')), array('class' =>  'recit-btn recit-btn-style_btn_1'));
 		$o .= '					</p>					</div>                </div>                                  </div>                </div>        </div>    </div></section>' ;
 		echo $o;
 		   
