@@ -116,7 +116,6 @@ class format_treetopics_renderer extends format_section_renderer_base {
      * @param stdClass $course The course entry from DB
      */
     public function print_multiple_section_page($course, $sections, $mods, $modnames, $modnamesused) {
-    public function print_multiple_section_page($course, $sections, $mods, $modnames, $modnamesused) {        
         global $PAGE;
 
         $modinfo = get_fast_modinfo($course);
