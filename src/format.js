@@ -1,7 +1,6 @@
 // Javascript functions for Tree Topics course format
 
 M.course = M.course || {};
-
 M.course.format = M.course.format || {};
 
 /**
@@ -86,3 +85,96 @@ M.course.format.process_sections = function(Y, sectionlist, response, sectionfro
         }
     }
 }
+
+M.recit = M.recit || {};
+M.recit.course = M.recit.course || {};
+M.recit.course.format = M.recit.course.format || {};
+M.recit.course.format.TreeTopics = class{
+    constructor(){
+        this.onChangeFilter = this.onChangeFilter.bind(this);
+        this.onChangeLevel = this.onChangeLevel.bind(this);
+
+        this.init();
+    }
+
+    init(){
+        this.initRadioSectionLevel();
+        this.initFilter();
+    }
+
+    initRadioSectionLevel(){
+        let sectionList = document.querySelectorAll("[data-section-id]");
+        
+        for(let section of sectionList){
+            let radioItems = section.querySelectorAll("[data-component='ttRadioSectionLevel']");
+
+            for(let item of radioItems){
+                item.onchange = (event) => this.onChangeLevel(event.target, section);
+            }
+        }
+    }
+
+    onChangeLevel(radio, section){
+        let callback = function(result){
+            if(result.success){
+                section.setAttribute("data-section-level", radio.value);
+            }
+            else{
+                alert("Une erreur inattendue est survenue. Veuillez réessayer.");
+            }
+        }
+        let courseId = recit.utils.getQueryVariable("id");
+        recit.http.WebApi.instance().setSectionLevel({courseId: courseId, sectionId: section.getAttribute("data-section-id"), level: radio.value}, callback);
+    }
+
+    initFilter(){
+        let filter = document.getElementById("ttModeEditionFilter");
+        
+        if(filter === null){ return; }
+        
+        let options = filter.querySelectorAll("input");
+
+        for(let item of options){
+            item.onchange = this.onChangeFilter;
+        }
+    }
+
+    onChangeFilter(event){
+        switch(event.target.name){
+            case "act": this.displayActivities(event.target.checked); break;
+            case "sum": this.displaySummary(event.target.checked); break;
+        }
+    }
+
+    displayActivities(display){
+        let sectionList = document.querySelectorAll('[data-section-level]');
+
+        for(let section of sectionList){
+            let elList = [
+                ...section.querySelectorAll("ul.section"),
+                ...section.querySelectorAll("div.section-modchooser")
+            ];
+            
+            for(let el of elList){
+                el.style.display = (display ? "block" : 'none');
+            }
+        }
+        
+    }
+
+    displaySummary(display){
+        let sectionList = document.querySelectorAll('[data-section-level]');
+
+        for(let section of sectionList){
+            let elList = section.querySelectorAll("div.summary");
+            for(let el of elList){
+                el.style.display = (display ? "block" : 'none');
+            }
+        }
+    }
+}
+
+// without jQuery (doesn't work in older IEs)
+document.addEventListener('DOMContentLoaded', function(){ 
+    M.recit.course.format.TreeTopics.instance = new M.recit.course.format.TreeTopics(); 
+}, false);

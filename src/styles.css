@@ -2,3 +2,11 @@
 {
 	background-color: blue!important;
 }
+
+.course-content li.section[data-section-level="2"]{
+	padding-left: 3.3rem;
+}
+
+.course-content li.section[data-section-level="3"]{
+	padding-left: 5.5rem;
+}

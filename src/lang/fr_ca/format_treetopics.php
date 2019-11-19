@@ -25,7 +25,7 @@
 $string['addsections'] = 'Ajouter une section';
 $string['currentsection'] = 'Cette section';
 $string['editsection'] = 'Editer la section';
-$string['editsectionname'] = 'Editer ;e nom de la section';
+$string['editsectionname'] = 'Editer le nom de la section';
 $string['deletesection'] = 'Supprimer la section';
 $string['newsectionname'] = 'Nouveau nom pour la section {$a}';
 $string['sectionname'] = 'Section';
@@ -39,9 +39,9 @@ $string['privacy:metadata'] = 'Ce format de cours de conserve aucune donnée per
 
 $string['displaynone'] = 'Aucun';
 $string['displaytabs'] = 'Onglet';
-$string['displaytabslev1'] = 'Onglet niveau 1';
-$string['displaytabslev2'] = 'Onglet niveau 2';
-$string['displaytabslev3'] = 'Onglet niveau 3';
+$string['displaytabslev1'] = 'Niveau 1';
+$string['displaytabslev2'] = 'Niveau 2';
+$string['displaytabslev3'] = 'Niveau 3';
 $string['displayimages'] = 'Image';
 $string['tabsmodel'] = 'Modèle d\'onglet';
 

@@ -82,7 +82,21 @@ class format_treetopics_renderer extends format_section_renderer_base {
      * @return string HTML to output.
      */
     public function section_title($section, $course) {
-        return $this->render(course_get_format($course)->inplace_editable_render_section_name($section));
+        $sectionName = $this->render(course_get_format($course)->inplace_editable_render_section_name($section));
+
+        $radio = 
+        '<label class="btn btn-outline-info %s" >
+            <input data-component="ttRadioSectionLevel" type="radio" name="options" value="%s" autocomplete="off" %s> %s
+        </label>';
+
+        $level = sprintf('<div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">%s%s%s</div>',
+                sprintf($radio, ($section->ttsectiondisplay == 1 ? "active" : ""), "1", ($section->ttsectiondisplay == 1 ? "checked" : ""), get_string('displaytabslev1', 'format_treetopics')),
+                sprintf($radio, ($section->ttsectiondisplay == 2 ? "active" : ""), "2", ($section->ttsectiondisplay == 2 ? "checked" : ""), get_string('displaytabslev2', 'format_treetopics')),
+                sprintf($radio, ($section->ttsectiondisplay == 3 ? "active" : ""), "3", ($section->ttsectiondisplay == 3 ? "checked" : ""), get_string('displaytabslev3', 'format_treetopics')));
+        
+        $html = sprintf("<span>%s%s</span>", $sectionName, $level);
+
+        return $html;
     }
 
     /**
@@ -102,6 +116,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
      * @param stdClass $course The course entry from DB
      */
     public function print_multiple_section_page($course, $sections, $mods, $modnames, $modnamesused) {
+    public function print_multiple_section_page($course, $sections, $mods, $modnames, $modnamesused) {        
         global $PAGE;
 
         $modinfo = get_fast_modinfo($course);
@@ -110,6 +125,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
         $context = context_course::instance($course->id);
         // Title with completion help icon.
         $completioninfo = new completion_info($course);
+        
         echo $completioninfo->display_help_icon();
         echo $this->output->heading($this->page_title(), 2, 'accesshide');
 
@@ -117,7 +133,20 @@ class format_treetopics_renderer extends format_section_renderer_base {
         echo $this->course_activity_clipboard($course, 0);
 
         // Now the list of sections..
-        echo $this->start_section_list();
+        echo $this->start_section_list();       
+
+        echo 
+        '
+            <div class="btn-group btn-group-toggle" data-toggle="buttons" id="ttModeEditionFilter">
+                <label class="btn btn-outline-info  active">
+                    <input type="checkbox" name="act" autocomplete="off" checked> Afficher les activités
+                </label>
+                <label class="btn btn-outline-info  active">
+                    <input type="checkbox" name="sum" id="option2" autocomplete="off" checked> Affiche le sommaire de la section
+                </label>
+            </div>
+        ';
+
         $numsections = course_get_format($course)->get_last_section_number();
 
         foreach ($modinfo->get_section_info_all() as $section => $thissection) {
@@ -177,7 +206,77 @@ class format_treetopics_renderer extends format_section_renderer_base {
             echo $this->end_section_list();
         }
     }
-	
+    
+     /**
+     *  OVERRIDE
+     * Generate the display of the header part of a section before
+     * course modules are included
+     *
+     * @param stdClass $section The course_section entry from DB
+     * @param stdClass $course The course entry from DB
+     * @param bool $onsectionpage true if being printed on a single-section page
+     * @param int $sectionreturn The section to return to after an action
+     * @return string HTML to output.
+     */
+    protected function section_header($section, $course, $onsectionpage, $sectionreturn=null) {
+        global $PAGE;       
+
+        $o = '';
+        $currenttext = '';
+        $sectionstyle = '';
+
+        if ($section->section != 0) {
+            // Only in the non-general sections.
+            if (!$section->visible) {
+                $sectionstyle = ' hidden';
+            }
+            if (course_get_format($course)->is_section_current($section)) {
+                $sectionstyle = ' current';
+            }
+        }
+
+        $o.= html_writer::start_tag('li', array('id' => 'section-'.$section->section,
+            'class' => 'section main clearfix'.$sectionstyle, 'role'=>'region',
+            'aria-label'=> get_section_name($course, $section), "data-section-level" => $section->ttsectiondisplay,
+            "data-section-id" => $section->id));
+
+        // Create a span that contains the section title to be used to create the keyboard section move menu.
+        $o .= html_writer::tag('span', get_section_name($course, $section), array('class' => 'hidden sectionname'));
+
+        $leftcontent = $this->section_left_content($section, $course, $onsectionpage);
+        $o.= html_writer::tag('div', $leftcontent, array('class' => 'left side'));
+
+        $rightcontent = $this->section_right_content($section, $course, $onsectionpage);
+        $o.= html_writer::tag('div', $rightcontent, array('class' => 'right side'));
+        $o.= html_writer::start_tag('div', array('class' => 'content'));
+
+        // When not on a section page, we display the section titles except the general section if null
+        $hasnamenotsecpg = (!$onsectionpage && ($section->section != 0 || !is_null($section->name)));
+
+        // When on a section page, we only display the general section title, if title is not the default one
+        $hasnamesecpg = ($onsectionpage && ($section->section == 0 && !is_null($section->name)));
+
+        $classes = ' accesshide';
+        if ($hasnamenotsecpg || $hasnamesecpg) {
+            $classes = '';
+        }
+        $sectionname = html_writer::tag('span', $this->section_title($section, $course));
+        $o.= $this->output->heading($sectionname, 3, 'sectionname' . $classes);
+
+        $o .= $this->section_availability($section);
+
+        $o .= html_writer::start_tag('div', array('class' => 'summary'));
+        if ($section->uservisible || $section->visible) {
+            // Show summary if section is available or has availability restriction information.
+            // Do not show summary if section is hidden but we still display it because of course setting
+            // "Hidden sections are shown in collapsed form".
+            $o .= $this->format_summary_text($section);
+        }
+        $o .= html_writer::end_tag('div');
+
+        return $o;
+    }
+
 	/**
      * Output the html for a multiple section page
      *
@@ -189,7 +288,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
         $modinfo = get_fast_modinfo($course);
         $course = course_get_format($course)->get_course();
         $context = context_course::instance($course->id);
-        
+                
         if($PAGE->user_is_editing())
         {
             $this->print_multiple_section_page($course, null, null, null, null);
@@ -231,7 +330,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
                 }
             }
         }
-        
+
         if($showContract)
         {
             $this->print_contract($course);
@@ -253,7 +352,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
             }
         }
         
-        // Print all sections
+        // Print all sections        
         switch($course->ttsectiondisplay)
         {
             case TT_DISPLAY_TABS:
@@ -330,7 +429,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
         echo $o;
     }
     
-       protected function print_home($course, $modinfo){
+    protected function print_home($course, $modinfo){
         global $CFG;
        /* $o = '';
         $o .= html_writer::start_tag('div', array('class' => self::ID_APPEND . 'home'));

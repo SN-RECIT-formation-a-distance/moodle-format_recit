@@ -748,6 +748,7 @@ class format_treetopics extends format_base {
             $title = get_section_name($section->course, $section);
             $editlabel = new lang_string('newsectionname', 'format_treetopics', $title);
         }
+        
         return parent::inplace_editable_render_section_name($section, $linkifneeded, $editable, $edithint, $editlabel);
     }
 
