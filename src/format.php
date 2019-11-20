@@ -64,8 +64,8 @@ if (!empty($displaysection)) {
 //js_reset_all_caches();
 
 if ($PAGE->user_is_editing()) {
-    $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/mod/recitcahiercanada/common/js/WebApi.js'), true);
-    $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/mod/recitcahiercanada/common/js/Utils.js'), true);
+    $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/local/recitcommon/js/RecitApi.js'), true);
+    $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/local/recitcommon/js/Utils.js'), true);
 }
 
 // Include course format js module
