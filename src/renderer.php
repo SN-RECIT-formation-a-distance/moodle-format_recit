@@ -284,6 +284,8 @@ class format_treetopics_renderer extends format_section_renderer_base {
     public function print_treetopics_section_page($course) {
         global $PAGE;
         
+        $this->signingContract($course);
+
         $modinfo = get_fast_modinfo($course);
         $course = course_get_format($course)->get_course();
         $context = context_course::instance($course->id);
@@ -304,18 +306,40 @@ class format_treetopics_renderer extends format_section_renderer_base {
         echo $this->start_section_list();
         $numsections = course_get_format($course)->get_last_section_number();
         
-        if(!$course->tthascontract)
-            $contractsigned = true;
-        else
-            $contractsigned = $this->contract_is_signed($course);
+        if(($course->tthascontract) && (!$this->contract_is_signed($course))){
+            $this->print_contract($course);
+        }
+        else{
+            // Print all sections        
+            switch($course->ttsectiondisplay){
+                case TT_DISPLAY_TABS:
+                    $this->print_tabs_block($course, $modinfo, $numsections);
+                    $this->print_tabs_sections($course, $modinfo, $numsections);
+                    break;
+                case TT_DISPLAY_IMAGES:
+                    echo $this->print_images_block(null, $course, $modinfo, range(1, $numsections + 1));
+                    $this->print_tabs_sections($course, $modinfo, $numsections, true);
+                    break;
+                default:
+                    break;
+            }
+        }
+/*        else if($showHome){
+            $this->print_home($course, $modinfo);
+        }*/
         
-        $showHome = !isset($_GET["course"]) || (isset($_GET["course"]) && $_GET["course"] == '0');
-        if($contractsigned && isset($_COOKIE['section1']))
-            $showHome = false;
-        
-        $showContract = $course->tthascontract && isset($_GET["contract"]) && $_GET["contract"] == '1';
-        
-        if($course->tthascontract)
+        /*if($course->tthascontract)
+        {
+            if(!$this->contract_is_signed($course))
+            {
+                $this->print_contract($course);
+                return;
+            }
+        }*/
+    }
+    
+    protected function signingContract($course){
+        if(($course->tthascontract) && !($this->contract_is_signed($course)))
         {
             if(isset($_GET["ttc"]))
             {
@@ -323,50 +347,15 @@ class format_treetopics_renderer extends format_section_renderer_base {
                 {
                     $this->contract_sign($course);
                 }
-                else if($_GET["ttc"] == 'DEBUG_UNSIGN') //TODO comment for prod
+                //else if($_GET["ttc"] == 'DEBUG_UNSIGN') //TODO comment for prod
+                else
                 {
                     $this->contract_unsign($course);
                 }
             }
         }
-
-        if($showContract)
-        {
-            $this->print_contract($course);
-            return;
-        }
-        
-        if($showHome)
-        {
-            $this->print_home($course, $modinfo);
-            return;
-        }
-        
-        if($course->tthascontract)
-        {
-            if(!$this->contract_is_signed($course))
-            {
-                $this->print_contract($course);
-                return;
-            }
-        }
-        
-        // Print all sections        
-        switch($course->ttsectiondisplay)
-        {
-            case TT_DISPLAY_TABS:
-                $this->print_tabs_block($course, $modinfo, $numsections);
-                $this->print_tabs_sections($course, $modinfo, $numsections);
-                break;
-            case TT_DISPLAY_IMAGES:
-                echo $this->print_images_block(null, $course, $modinfo, range(1, $numsections + 1));
-                $this->print_tabs_sections($course, $modinfo, $numsections, true);
-                break;
-            default:
-                break;
-        }
     }
-    
+
     protected function contract_is_signed($course)
     {
         global $DB;
@@ -430,33 +419,17 @@ class format_treetopics_renderer extends format_section_renderer_base {
     
     protected function print_home($course, $modinfo){
         global $CFG;
-       /* $o = '';
-        $o .= html_writer::start_tag('div', array('class' => self::ID_APPEND . 'home'));
-        $o .= html_writer::start_tag('div', array('class' => self::ID_APPEND . 'home-header'));
-        $o .= '<iframe class="tt-home-video" width="560" height="315" src="https://www.youtube.com/embed/IilAcCLJaMo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
-        //$o .= html_writer::tag('video', html_writer::start_tag('source', array('src' => 'src', 'type' => 'video/mp4')), array('class' => self::ID_APPEND . 'home-video', 'width' => 320, 'height' => 240, 'controls'));
-        $o .= html_writer::tag('img', '', array('class' => self::ID_APPEND . 'home-image', 'src' => $CFG->wwwroot.'/course/format/treetopics/sectionimages/histoire.png'));
-        $o .= html_writer::end_tag('div');
-        $o .= html_writer::start_tag('div', array('class' => self::ID_APPEND . 'home-menu'));
-        $o .= html_writer::tag('button', html_writer::tag('a', 'Échéancier', array('href' => '')), array('class' => self::ID_APPEND . 'home-menu-button'));
-        $o .= html_writer::tag('button', html_writer::tag('a', 'Exigences et travaux', array('href' => '')), array('class' => self::ID_APPEND . 'home-menu-button'));
-        $o .= html_writer::tag('button', html_writer::tag('a', 'Contacte ton enseignant', array('href' => '')), array('class' => self::ID_APPEND . 'home-menu-button'));
-        if($course->tthascontract)
-            $o .= html_writer::tag('button', html_writer::tag('a', "Contrat d'engagement", array('href' => $CFG->wwwroot.'/course/view.php?id='.$course->id.'&contract=1')), array('class' => self::ID_APPEND . 'home-menu-button'));
-        $o .= html_writer::end_tag('div');
-        $o .= html_writer::start_tag('div', array('class' => self::ID_APPEND . 'home-menu2'));
-        $o .= html_writer::tag('button', html_writer::tag('a', 'Rencontre tes guides', array('href' => '')), array('class' => self::ID_APPEND . 'home-menu-button'));
-        $o .= html_writer::tag('button', html_writer::tag('a', 'Débuter le cours', array('href' => $CFG->wwwroot.'/course/view.php?id='.$course->id.'&course=1')), array('class' => self::ID_APPEND . 'home-menu-button'));
-        $o .= html_writer::end_tag('div');
-        $o .= html_writer::end_tag('div');*/
-        
-        $o = $this->section_tabs_header($modinfo->get_section_info_all()[0], $course, false, false, false);
-                
-		$o .= '<section class="C1004 section0" data-version="0.1.1" style="">   <div class="C1004a -recit c_espacement-etroit bg_white" style="background-image: url()">        <div class="container">            <div class="C1004a row ">                <div class="C1004b  col-md-3 "></div>	<div class="C1004c  col-md-3 ">	  </div><div class="C1004d  col-md-3 ">	 </div>				 <div class="C1004e  col-md-3 ">				<div class="  data-version="0.1.1" data-recit-block="2"><div class="I803  " data-version="0.1.1" data-recit-block="2" style="">				    <p>	';
-		$o .= html_writer::tag('button', html_writer::tag('a', 'Commencer le cours', array('href' => $CFG->wwwroot.'/course/view.php?id='.$course->id.'&course=1')), array('class' =>  'recit-btn recit-btn-style_btn_1'));
-		$o .= '					</p>					</div>                </div>                                  </div>                </div>        </div>    </div></section>' ;
-		echo $o;
-		   
+      
+        $sectioninfoall = $modinfo->get_section_info_all();
+        $secondSection = $sectioninfoall[1];
+        $sectionid = $this->get_section_id($course, $secondSection);
+
+        $result = '<section class="C1004 section0" data-version="0.1.1" style=""> ';
+
+        $result .= html_writer::tag('a', 'Commencer le cours', array('href' => $CFG->wwwroot."/course/view.php?id=$course->id#$sectionid", "data-section" => $sectionid, 'class' =>  'btn btn-primary', "id" => "tt-btn-start-course"));
+
+        $result .= '</section>';
+		echo  $result;
     }
     
     protected function print_tabs_item($course, $sectioninfoall, $numsections, $previous, &$o, &$i)
@@ -487,11 +460,11 @@ class format_treetopics_renderer extends format_section_renderer_base {
         
         $sectionname = get_section_name($course, $thissection);
         $sectionid = $this->get_section_id($course, $thissection);
-            
+
         if($childtype > $thistype)
         {
             if($thistype == 1)
-            {
+            {                
                 $dropdownid = $sectionid.'DropdownMenuLink';
                 $o .= html_writer::start_tag('li', array('class' => 'nav-item dropdown'));
                 $o .= html_writer::tag('a', $sectionname, array('class' => 'nav-link dropdown-toggle', 'href' => '#', 'id' => $dropdownid, 'data-toggle' => 'dropdown', 'aria-haspopup' => 'true', 'aria-expanded' => 'false'));
@@ -519,7 +492,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
             if($thistype == 1)
             {
                 $o .= html_writer::start_tag('li', array('class' => 'nav-item'));
-                $o .= html_writer::tag('a', $sectionname, array('class' => 'nav-link', 'href' => '#', 'data-section' => $sectionid));
+                $o .= html_writer::tag('a', $sectionname, array('class' => 'nav-link', 'href' => "#$sectionid", 'data-section' => $sectionid));
                 $o .= html_writer::end_tag('li');
             }
             else
@@ -541,8 +514,8 @@ class format_treetopics_renderer extends format_section_renderer_base {
      * @param int $numsections The number of sections
      */
     protected function print_tabs_block($course, $modinfo, $numsections){
-        
-        $o = html_writer::start_tag('nav', array('class' => 'navbar navbar-expand-lg navbar-light bg-light', 'id' => 'tt-recit-nav'));
+        //js_reset_all_caches();
+        $o = html_writer::start_tag('nav', array('class' => 'navbar navbar-expand-lg navbar-dark', 'id' => 'tt-recit-nav'));
         $o .= html_writer::start_tag('button', array('class' => 'navbar-toggler', 'type' => 'button', 'data-toggle' => 'collapse', 'data-target' => '#navbarTogglerCourse', 'aria-controls' => 'navbarTogglerCourse', 'aria-expanded' => 'false', 'aria-label' => 'Toggle navigation'));
         $o .= html_writer::tag('span', '', array('class' => 'navbar-toggler-icon'));
         $o .= html_writer::end_tag('button');
@@ -551,7 +524,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
         
         $sectioninfoall = $modinfo->get_section_info_all();
         $tabsoutput = '';
-        $i = 1;
+        $i = 0;
         $this->print_tabs_item($course, $sectioninfoall, $numsections, 0, $tabsoutput, $i);
         $o .= $tabsoutput;
         
@@ -672,8 +645,8 @@ class format_treetopics_renderer extends format_section_renderer_base {
     protected function print_tabs_sections($course, $modinfo, $numsections, $hideall=false)
     {
         $sectioninfoall = $modinfo->get_section_info_all();
-        for($i = 1; $i <= $numsections; $i++)
-        {
+        for($i = 0; $i <= $numsections; $i++)
+        {            
             $thissection = $sectioninfoall[$i];
             $showsection = $thissection->uservisible || ($thissection->visible && !$thissection->available) || (!$thissection->visible && !$course->hiddensections);
             
@@ -681,6 +654,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
                 continue;
             
             $showtitle = true;//$thissection->ttsectiondisplay == TT_DISPLAY_IMAGES || $course->ttsectiondisplay == TT_DISPLAY_IMAGES;
+
             echo $this->section_tabs_header($thissection, $course, false, $hideall, $showtitle);
             
             if($thissection->ttsectioncontentdisplay == TT_DISPLAY_IMAGES)
@@ -709,6 +683,11 @@ class format_treetopics_renderer extends format_section_renderer_base {
                 echo $this->courserenderer->course_section_cm_list($course, $thissection, 0);
                 echo $this->courserenderer->course_section_add_cm_control($course, $i, 0);
             }
+
+            if($i == 0){
+                $this->print_home($course, $modinfo);
+            }
+
             echo $this->section_tabs_footer();
         }
     }
@@ -745,8 +724,8 @@ class format_treetopics_renderer extends format_section_renderer_base {
         $o.= html_writer::start_tag('div', array('id' => $this->get_section_id($course, $section),
             'class' => 'section main clearfix tt-section'.$sectionstyle, 'role'=>'region',
             'aria-label'=> get_section_name($course, $section),
-            'style'=> (($section->section == 1 || $section->section == 0) && !$hideall) ? 'display:block' : 'display:none'));
-            
+            'style'=> 'display:none'));
+                        
         // Create a span that contains the section title to be used to create the keyboard section move menu.
         if($showtitle)
             $o .= html_writer::tag('h2', get_section_name($course, $section), array('class' => 'sectionname'));
@@ -767,6 +746,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
             //"Hidden sections are shown in collapsed form".
             $o .= str_replace('<p></p>', '', str_replace('&lt;summary&gt;', '', str_replace('&lt;/summary&gt;', '', $this->format_summary_text($section))));
         }
+
         $o .= html_writer::end_tag('div');
 
         return $o;
