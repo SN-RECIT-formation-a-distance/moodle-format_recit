@@ -30,5 +30,6 @@ $plugin->component = 'format_treetopics';    // Full name of the plugin (used fo
 $plugin->maturity = MATURITY_ALPHA;
 $plugin->release = 'Version 0.1.3-alpha';
 $plugin->dependencies = [                                                                                                           
-    'local_recitcommon' => '2019112000'
+    'local_recitcommon' => '2019112000',
+    'theme_recit' => '2019110800'
 ];
