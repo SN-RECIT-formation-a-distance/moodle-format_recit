@@ -93,12 +93,20 @@ M.recit.course.format.TreeTopics = class{
     constructor(){
         this.onChangeFilter = this.onChangeFilter.bind(this);
         this.onChangeLevel = this.onChangeLevel.bind(this);
+        this.onChangeContentDisplay = this.onChangeContentDisplay.bind(this);
+
+        this.filter = null;
 
         this.init();
     }
 
+    static messages = {
+        error: "Une erreur inattendue est survenue. Veuillez réessayer."
+    }
+
     init(){
         this.initRadioSectionLevel();
+        this.initRadioSectionContentDisplay();
         this.initFilter();
     }
 
@@ -120,30 +128,67 @@ M.recit.course.format.TreeTopics = class{
                 section.setAttribute("data-section-level", radio.value);
             }
             else{
-                alert("Une erreur inattendue est survenue. Veuillez réessayer.");
+                alert(M.recit.course.format.TreeTopics.messages.error);
             }
         }
         let courseId = recit.utils.getQueryVariable("id");
         recit.http.WebApi.instance().setSectionLevel({courseId: courseId, sectionId: section.getAttribute("data-section-id"), level: radio.value}, callback);
     }
 
+    initRadioSectionContentDisplay(){
+        let sectionList = document.querySelectorAll("[data-section-id]");
+        
+        for(let section of sectionList){
+            let radioItems = section.querySelectorAll("[data-component='ttRadioSectionContentDisplay']");
+
+            for(let item of radioItems){
+                item.onchange = (event) => this.onChangeContentDisplay(event.target, section);
+            }
+        }
+    }
+
+    onChangeContentDisplay(radio, section){
+        let callback = function(result){
+            if(!result.success){
+                alert(M.recit.course.format.TreeTopics.messages.error);
+            }
+        }
+        let courseId = recit.utils.getQueryVariable("id");
+        recit.http.WebApi.instance().setSectionContentDisplay({courseId: courseId, sectionId: section.getAttribute("data-section-id"), value: radio.value}, callback);
+    }
+
     initFilter(){
-        let filter = document.getElementById("ttModeEditionFilter");
+        this.filter = document.getElementById("ttModeEditionFilter");
         
-        if(filter === null){ return; }
+        if(this.filter === null){ return; }
         
-        let options = filter.querySelectorAll("input");
+        let options = this.filter.querySelectorAll("input");
 
         for(let item of options){
             item.onchange = this.onChangeFilter;
+            let evt = document.createEvent("HTMLEvents");
+            evt.initEvent("change", false, true);
+            item.dispatchEvent(evt);
         }
     }
 
     onChangeFilter(event){
-        switch(event.target.name){
+        switch(event.target.value){
             case "act": this.displayActivities(event.target.checked); break;
             case "sum": this.displaySummary(event.target.checked); break;
         }
+
+        // cookies ctrl
+        let options = this.filter.querySelectorAll("input");
+
+        let cookies = [];
+        for(let item of options){
+            if(item.checked){
+                cookies.push(item.value);
+            }
+        }
+
+        recit.utils.setCookie('ttModeEditionFilter', cookies.join(","));
     }
 
     displayActivities(display){
