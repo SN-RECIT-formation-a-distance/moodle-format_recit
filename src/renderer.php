@@ -787,7 +787,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
      * @return the section's string id
      */
 	protected function get_section_id($course, $section){
-        $specialchars = array("'", '"', '\\', '/', '@', '$', '%', '!', '#', '?', '&', '*', '(', ')', '+', ' ', '-', '=', ';', ':', '^', '`', '<', '>', '«', '»');
+        $specialchars = array("'", '"', '\\', '/', '@', '$', '%', '!', '#', '?', '&', '*', '(', ')', '+', ' ', '-', '=', ';', ':', '^', '`', '<', '>', '«', '»', '.');
 		return self::ID_APPEND . str_replace($specialchars, '', get_section_name($course, $section));
 	}
 
@@ -858,4 +858,32 @@ class format_treetopics_renderer extends format_section_renderer_base {
             return array_merge($controls, $parentcontrols);
         }
     }
+
+   /* protected function get_section_name_rec($course, $section) {
+        echo "<pre>";
+        $modinfo = get_fast_modinfo($course);
+        $sections = $modinfo->get_section_info_all();
+        $nbSections = count($sections);
+
+        $branchName = array($section->name);
+        for($i = 0; $i < $nbSections; $i++){
+            if($sections[$i]->id == $section->id){
+                if(($sections[$i]->ttsectiondisplay == 2) && (isset($sections[$i-1]))){
+                    array_unshift($branchName, $sections[$i-1]->name);
+                }
+                else if($sections[$i]->ttsectiondisplay == 3){
+                    if(isset($sections[$i-1]){
+                        array_unshift($branchName, $sections[$i-1]->name);
+                        if(isset($sections[$i-2]){
+                            array_unshift($branchName, $sections[$i-2]->name);
+                        }
+                    }
+                }
+                break;
+            }
+        }
+        
+        //return implode("/", $branchName);
+        return "";
+    }*/
 }
