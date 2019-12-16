@@ -145,7 +145,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
         // Now the list of sections..
         echo $this->start_section_list();       
 
-        $filterValues = explode(",", $_COOKIE['ttModeEditionFilter']);
+        $filterValues = (isset($_COOKIE['ttModeEditionFilter']) ? explode(",", $_COOKIE['ttModeEditionFilter']) : '');
         $ttModeEditionFilter ='
             <div class="btn-group btn-group-toggle" data-toggle="buttons" id="ttModeEditionFilter">
                 <label class="btn btn-outline-primary  %s">
@@ -441,7 +441,10 @@ class format_treetopics_renderer extends format_section_renderer_base {
 
         $result = '<section class="C1004 section0" data-version="0.1.1" style=""> ';
 
-        $result .= html_writer::tag('a', 'Commencer le cours', array('href' => $CFG->wwwroot."/course/view.php?id=$course->id#$sectionid", "data-section" => $sectionid, 'class' =>  'btn btn-primary', "id" => "tt-btn-start-course"));
+        $linkProps = array("data-section" => $sectionid, 'class' =>  'btn btn-primary', "id" => "tt-btn-start-course");
+        $linkProps = array_merge($linkProps, $this->getMenuOnClick($sectionid));
+
+        $result .= html_writer::tag('a', 'Commencer le cours', $linkProps);
 
         $result .= '</section>';
 		echo  $result;
@@ -507,7 +510,9 @@ class format_treetopics_renderer extends format_section_renderer_base {
             if($thistype == 1)
             {
                 $o .= html_writer::start_tag('li', array('class' => 'nav-item'));
-                $o .= html_writer::tag('a', $sectionname, array('class' => 'nav-link', 'href' => "#$sectionid", 'data-section' => $sectionid));
+                $linkProps = array('class' => 'nav-link', 'data-section' => $sectionid);
+                $linkProps = array_merge($linkProps, $this->getMenuOnClick($sectionid));
+                $o .= html_writer::tag('a', $sectionname, $linkProps);
                 $o .= html_writer::end_tag('li');
             }
             else
@@ -519,6 +524,10 @@ class format_treetopics_renderer extends format_section_renderer_base {
         }
         
         return $thistype;
+    }
+
+    protected function getMenuOnClick($sectionid){
+        return array('href' => "#", "onclick" => "M.recit.course.format.TreeTopics.instance.goToSection(event,'$sectionid')");
     }
     
     /**
@@ -664,14 +673,15 @@ class format_treetopics_renderer extends format_section_renderer_base {
         {            
             $thissection = $sectioninfoall[$i];
             $showsection = $thissection->uservisible || ($thissection->visible && !$thissection->available) || (!$thissection->visible && !$course->hiddensections);
-            
+           
+           
             if ($i > $numsections || !$showsection)
                 continue;
-            
+                
             $showtitle = true;//$thissection->ttsectiondisplay == TT_DISPLAY_IMAGES || $course->ttsectiondisplay == TT_DISPLAY_IMAGES;
-
+           
             echo $this->section_tabs_header($thissection, $course, false, $hideall, $showtitle);
-            
+
             if($thissection->ttsectioncontentdisplay == TT_DISPLAY_IMAGES)
             {
                 $start = $i + 1;
@@ -689,6 +699,8 @@ class format_treetopics_renderer extends format_section_renderer_base {
                 echo $this->print_images_block($thissection, $course, $modinfo, range($start, $j), false);
             }
             
+           
+
             if($i > $numsections)
                 break;
 
@@ -720,11 +732,11 @@ class format_treetopics_renderer extends format_section_renderer_base {
         global $PAGE;
         
         // Don't display 0 section
-        if($section->section == 0)
+        /*if($section->section == 0)
         {
             $hideall = false;
             $showtitle = false;
-        }
+        }*/
 
         $o = '';
         $currenttext = '';
@@ -736,10 +748,21 @@ class format_treetopics_renderer extends format_section_renderer_base {
         if (course_get_format($course)->is_section_current($section)) {
             $sectionstyle = ' current';
         }
+
+        $display = "none";
+        /*$sectionid = $this->get_section_id($course, $section);
+        if((isset($_COOKIE['section'])) && ($sectionid == $_COOKIE['section'])){
+            $display = "block";
+        }*/
+        // par défaut, on affiche la section 0. Si le cookie "section" est assigné, il remplacera la section 0
+        if($section->section == 0){
+            $display = "block";
+        }
+
         $o.= html_writer::start_tag('div', array('id' => $this->get_section_id($course, $section),
             'class' => 'section main clearfix tt-section'.$sectionstyle, 'role'=>'region',
             'aria-label'=> get_section_name($course, $section),
-            'style'=> 'display:none'));
+            'style'=> "display: $display"));
                         
         // Create a span that contains the section title to be used to create the keyboard section move menu.
         if($showtitle)

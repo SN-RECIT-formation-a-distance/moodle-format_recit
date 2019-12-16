@@ -217,6 +217,14 @@ M.recit.course.format.TreeTopics = class{
             }
         }
     }
+
+    goToSection(event, anchor) {
+        event.preventDefault();
+
+        window.location.href = `${window.location.origin}${window.location.pathname}${window.location.search}#${anchor}`;
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    }
 }
 
 // without jQuery (doesn't work in older IEs)
