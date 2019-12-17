@@ -145,7 +145,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
         // Now the list of sections..
         echo $this->start_section_list();       
 
-        $filterValues = (isset($_COOKIE['ttModeEditionFilter']) ? explode(",", $_COOKIE['ttModeEditionFilter']) : '');
+        $filterValues = (isset($_COOKIE['ttModeEditionFilter']) ? explode(",", $_COOKIE['ttModeEditionFilter']) : array());
         $ttModeEditionFilter ='
             <div class="btn-group btn-group-toggle" data-toggle="buttons" id="ttModeEditionFilter">
                 <label class="btn btn-outline-primary  %s">
@@ -161,7 +161,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
                                     (in_array("sum",$filterValues) ? 'active' : ''), (in_array("sum",$filterValues) ? 'checked' : ''));
 
         $numsections = course_get_format($course)->get_last_section_number();
-
+        
         foreach ($modinfo->get_section_info_all() as $section => $thissection) {
             if ($section == 0) {
                 // 0-section is displayed a little different then the others
@@ -304,7 +304,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
         $modinfo = get_fast_modinfo($course);
         $course = course_get_format($course)->get_course();
         $context = context_course::instance($course->id);
-                
+            
         if($PAGE->user_is_editing())
         {
             $this->print_multiple_section_page($course, null, null, null, null);
@@ -320,14 +320,14 @@ class format_treetopics_renderer extends format_section_renderer_base {
         // Now the list of sections..
         echo $this->start_section_list();
         $numsections = course_get_format($course)->get_last_section_number();
-        
+                
         if(($course->tthascontract) && (!$this->contract_is_signed($course))){
-            $this->print_contract($course);
+            $this->print_contract($course);    
         }
         else{
             // Print all sections        
             switch($course->ttsectiondisplay){
-                case TT_DISPLAY_TABS:
+                case TT_DISPLAY_TABS:                    
                     $this->print_tabs_block($course, $modinfo, $numsections);
                     $this->print_tabs_sections($course, $modinfo, $numsections);
                     break;
@@ -538,8 +538,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
      * @param int $numsections The number of sections
      */
     protected function print_tabs_block($course, $modinfo, $numsections){
-        //js_reset_all_caches();
-        $o = html_writer::start_tag('nav', array('class' => 'navbar navbar-expand-lg navbar-dark', 'id' => 'tt-recit-nav'));
+        $o = html_writer::start_tag('nav', array('class' => 'navbar navbar-expand-lg', 'id' => 'tt-recit-nav'));
         $o .= html_writer::start_tag('button', array('class' => 'navbar-toggler', 'type' => 'button', 'data-toggle' => 'collapse', 'data-target' => '#navbarTogglerCourse', 'aria-controls' => 'navbarTogglerCourse', 'aria-expanded' => 'false', 'aria-label' => 'Toggle navigation'));
         $o .= html_writer::tag('span', '', array('class' => 'navbar-toggler-icon'));
         $o .= html_writer::end_tag('button');
