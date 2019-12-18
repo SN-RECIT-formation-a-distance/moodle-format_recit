@@ -98,11 +98,7 @@ M.recit.course.format.TreeTopics = class{
         this.filter = null;
 
         this.init();
-    }
-
-    static messages = {
-        error: "Une erreur inattendue est survenue. Veuillez réessayer."
-    }
+    }    
 
     init(){
         this.initRadioSectionLevel();
@@ -225,6 +221,11 @@ M.recit.course.format.TreeTopics = class{
         document.body.scrollTop = 0; // For Safari
         document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
     }
+}
+
+// definition static attributes and methods to work with Firefox
+M.recit.course.format.TreeTopics.messages = {
+    error: "Une erreur inattendue est survenue. Veuillez réessayer."
 }
 
 // without jQuery (doesn't work in older IEs)

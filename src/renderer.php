@@ -538,7 +538,8 @@ class format_treetopics_renderer extends format_section_renderer_base {
      * @param int $numsections The number of sections
      */
     protected function print_tabs_block($course, $modinfo, $numsections){
-        $o = html_writer::start_tag('nav', array('class' => 'navbar navbar-expand-lg', 'id' => 'tt-recit-nav'));
+        // le navbar-dark donne la couleur au bouton toggle
+        $o = html_writer::start_tag('nav', array('class' => 'navbar navbar-dark navbar-expand-lg', 'id' => 'tt-recit-nav'));
         $o .= html_writer::start_tag('button', array('class' => 'navbar-toggler', 'type' => 'button', 'data-toggle' => 'collapse', 'data-target' => '#navbarTogglerCourse', 'aria-controls' => 'navbarTogglerCourse', 'aria-expanded' => 'false', 'aria-label' => 'Toggle navigation'));
         $o .= html_writer::tag('span', '', array('class' => 'navbar-toggler-icon'));
         $o .= html_writer::end_tag('button');
