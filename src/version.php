@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2019112000;        // The current plugin version (Date: YYYYMMDDXX).
+$plugin->version   = 2019122000;        // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires  = 2018051700;        // Requires this Moodle version.
 $plugin->component = 'format_treetopics';    // Full name of the plugin (used for diagnostics).
 $plugin->maturity = MATURITY_ALPHA;
