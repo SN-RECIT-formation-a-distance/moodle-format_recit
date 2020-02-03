@@ -220,6 +220,11 @@ M.recit.course.format.TreeTopics = class{
         window.location.href = `${window.location.origin}${window.location.pathname}${window.location.search}#${anchor}`;
         document.body.scrollTop = 0; // For Safari
         document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+
+        let btn = document.querySelector("[data-target='#navbarTogglerCourse']");
+        if(btn.getAttribute('aria-expanded') === 'true'){
+            btn.click();
+        }
     }
 }
 

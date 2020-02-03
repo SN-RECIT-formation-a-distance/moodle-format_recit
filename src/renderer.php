@@ -517,7 +517,9 @@ class format_treetopics_renderer extends format_section_renderer_base {
             }
             else
             {
-                $o .= html_writer::tag('li', html_writer::tag('a', $sectionname, array('class' => 'dropdown-item', 'href' => '#', 'data-section' => $sectionid)));
+                $linkProps = array('class' => 'dropdown-item', 'href' => '#', 'data-section' => $sectionid);
+                $linkProps = array_merge($linkProps, $this->getMenuOnClick($sectionid));
+                $o .= html_writer::tag('li', html_writer::tag('a', $sectionname, $linkProps));
             }
             
             $o .= $childoutput;
@@ -755,9 +757,9 @@ class format_treetopics_renderer extends format_section_renderer_base {
             $display = "block";
         }*/
         // par défaut, on affiche la section 0. Si le cookie "section" est assigné, il remplacera la section 0
-        if($section->section == 0){
+        /*if($section->section == 0){
             $display = "block";
-        }
+        }*/
 
         $o.= html_writer::start_tag('div', array('id' => $this->get_section_id($course, $section),
             'class' => 'section main clearfix tt-section'.$sectionstyle, 'role'=>'region',
