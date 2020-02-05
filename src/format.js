@@ -100,10 +100,55 @@ M.recit.course.format.TreeTopics = class{
         this.init();
     }    
 
+    getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return "";
+    }   
+
+    getUrlVars(){
+        var vars, uri;
+
+        vars = {};
+    
+        uri = decodeURI(window.location.href);
+    
+        var parts = uri.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+            vars[key] = value;
+        });
+        
+        return vars;
+    }
+
     init(){
         this.initRadioSectionLevel();
         this.initRadioSectionContentDisplay();
         this.initFilter();
+
+            
+        let params = this.getUrlVars();
+        let anchors = params.id.split("#", 2);
+        let sectionId = anchors[1] || this.getCookie('section');
+        
+        if(sectionId === ''){
+            let el = document.getElementById("navbarTogglerCourse");
+            if((el !== null) && (el.firstChild !== null) && (el.firstChild.firstChild !== null)){
+                sectionId = el.firstChild.firstChild.firstChild.getAttribute('data-section');
+            }
+            
+        }
+
+        this.goToSection(null, sectionId);
     }
 
     initRadioSectionLevel(){
@@ -214,15 +259,47 @@ M.recit.course.format.TreeTopics = class{
         }
     }
 
-    goToSection(event, anchor) {
-        event.preventDefault();
+    goToSection(event, sectionId) {
+        if(event !== null){
+            event.preventDefault();
+            sectionId = event.target.getAttribute('data-section');
+        }
+        
+        if(sectionId.length === 0){
+            return;
+        }
 
-        window.location.href = `${window.location.origin}${window.location.pathname}${window.location.search}#${anchor}`;
+        
+        window.location.href = `${window.location.origin}${window.location.pathname}${window.location.search}#${sectionId}`;
         document.body.scrollTop = 0; // For Safari
         document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        
+        document.cookie = 'section=' + sectionId;
+        /*$('.tt-section').css('display', 'none');
+        $('.tt-imagebuttons').css('display', 'none');
+        $(`#${sectionId}-imagebuttons`).css('display', 'grid');
+        $(`#${sectionId}`).css('display', 'block');*/
 
+        // hide all the sections
+        let elems = document.getElementsByClassName('tt-section');
+        for(let el of elems){
+            el.style.display = 'none';
+        }
+
+        // look for the specific section and display it
+        let el = document.getElementById(`${sectionId}`);
+        if(el !== null){
+            el.style.display = 'block';
+            // if the section has subsections then display them too
+            let children = el.getElementsByClassName('tt-section');
+            for(let item of children){
+                item.style.display = 'block';
+            }
+        }
+
+        // simulate the menu button click to hide the menu
         let btn = document.querySelector("[data-target='#navbarTogglerCourse']");
-        if(btn.getAttribute('aria-expanded') === 'true'){
+        if((btn !== null) && (btn.getAttribute('aria-expanded') === 'true')){
             btn.click();
         }
     }
