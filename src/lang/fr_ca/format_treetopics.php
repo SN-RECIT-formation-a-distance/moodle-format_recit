@@ -83,6 +83,8 @@ $string['sectionimagefilearea_help'] = 'Image Filearea';
 $string['sectionimageitemid_help'] = 'ID de l\'item image';
 $string['sectionimagefilepath_help'] = 'Image Filepath';
 $string['sectionimagefilename_help'] = 'Nom du fichier image';
+$string['sectionimagesummary'] = "Sommaire image";
+$string['sectionimagesummary_help'] = "Sommaire image";
 
 $string['tabsmodel_help'] = 'Aide à prorpos du modèle d\'ongelt';
 $string['imagewidth_help'] = "Width of the images in the grid in pixel. The height will be adjusted with the image's ratio";

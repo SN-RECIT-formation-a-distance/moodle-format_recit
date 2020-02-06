@@ -24,6 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot. '/course/format/lib.php');
+require_once($CFG->dirroot. '/course/editsection_form.php');
 
 const TT_DISPLAY_NONE = 0;
 const TT_DISPLAY_TABS = -1;
@@ -63,6 +64,55 @@ function format_treetopics_pluginfile($course, $cm, $context, $filearea, $args, 
 }
 
 /**
+ * Default form for editing course section
+ *
+ * Course format plugins may specify different editing form to use
+ */
+class tt_editsection_form  extends editsection_form {
+    public const EDITOR_OPTIONS =  array('context' => null, 'maxfiles' => 0, 'trusttext' => false, 'noclean' => true, 'maxbytes' => 0);
+    /**
+     * Load in existing data as form defaults
+     *
+     * @param stdClass|array $default_values object or array of default values
+     */
+    function set_data($default_values) {
+        if (!is_object($default_values)) {
+            // we need object for file_prepare_standard_editor
+            $default_values = (object)$default_values;
+        }
+
+        $editoroptions =  tt_editsection_form::EDITOR_OPTIONS; //$this->_customdata['editoroptions'];
+        $default_values->ttsectionimagesummary =  $default_values->ttsectionimagesummary_editor;
+        $default_values = file_prepare_standard_editor($default_values, 'ttsectionimagesummary', $editoroptions,
+                $editoroptions['context'], 'course', 'section', $default_values->id);
+                
+        parent::set_data($default_values);
+    }
+
+    /**
+     * Return submitted data if properly submitted or returns NULL if validation fails or
+     * if there is no submitted data.
+     *
+     * @return object submitted data; NULL if not valid or not submitted or cancelled
+     */
+    function get_data() {
+        $data = parent::get_data();
+
+        if ($data !== null) {
+            $editoroptions = tt_editsection_form::EDITOR_OPTIONS; //$this->_customdata['editoroptions'];
+            $data = file_postupdate_standard_editor($data, 'ttsectionimagesummary', $editoroptions,
+                    $editoroptions['context'], 'course', 'section', $data->id);
+            //$course = $this->_customdata['course'];
+        }
+        return $data;
+    }
+
+    public function getEditorOptions(){
+        return $this->_customdata['editoroptions'];
+    }
+}
+
+/**
  * Main class for the Topics course format
  *
  * @package    format_treetopics
@@ -70,7 +120,6 @@ function format_treetopics_pluginfile($course, $cm, $context, $filearea, $args, 
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class format_treetopics extends format_base {
-
     /**
      * Returns true if this course format uses sections
      *
@@ -364,6 +413,32 @@ class format_treetopics extends format_base {
     }
     
     /**
+     * Return an instance of moodleform to edit a specified section
+     *
+     * Default implementation returns instance of editsection_form that automatically adds
+     * additional fields defined in {@link format_base::section_format_options()}
+     *
+     * Format plugins may extend editsection_form if they want to have custom edit section form.
+     *
+     * @param mixed $action the action attribute for the form. If empty defaults to auto detect the
+     *              current url. If a moodle_url object then outputs params as hidden variables.
+     * @param array $customdata the array with custom data to be passed to the form
+     *     /course/editsection.php passes section_info object in 'cs' field
+     *     for filling availability fields
+     * @return moodleform
+     */
+    public function editsection_form($action, $customdata = array()) {
+        if (!array_key_exists('course', $customdata)) {
+            $customdata['course'] = $this->get_course();
+        }
+        $result = new tt_editsection_form($action, $customdata);
+
+        //$this->editorOptions = $result->getEditorOptions();
+
+        return $result;
+    }
+
+    /**
      * Definitions of the additional options that this course format uses for section
      *
      * See {@link format_base::course_format_options()} for return array definition.
@@ -435,6 +510,10 @@ class format_treetopics extends format_base {
                 'ttsectionimage-filename' => array(
                     'default' => '',
                     'type' => PARAM_TEXT
+                ),
+                'ttsectionimagesummary_editor' => array(
+                    'default' => '',
+                    'type' => PARAM_RAW
                 )
             );
         }
@@ -526,8 +605,16 @@ class format_treetopics extends format_base {
                     'help' => 'sectionimagefilename',
                     'help_component' => 'format_treetopics',
                     'element_type' => 'hidden'
+                ),
+                'ttsectionimagesummary_editor' => array(
+                    'label' => new lang_string('sectionimagesummary', 'format_treetopics'),
+                    'help' => 'sectionimagesummary',
+                    'help_component' => 'format_treetopics',
+                    'element_type' => 'editor',
+                    'element_attributes' => tt_editsection_form::EDITOR_OPTIONS
                 )
             );
+            
             $sectionformatoptions = array_merge_recursive($sectionformatoptions, $sectionformatoptionsedit);
         }
         return $sectionformatoptions;
@@ -544,6 +631,7 @@ class format_treetopics extends format_base {
      */
     public function create_edit_form_elements(&$mform, $forsection = false) {
         global $COURSE;
+        
         $elements = parent::create_edit_form_elements($mform, $forsection);
 
         if (!$forsection && (empty($COURSE->id) || $COURSE->id == SITEID)) {
@@ -563,7 +651,7 @@ class format_treetopics extends format_base {
 
         return $elements;
     }
-    
+
     /**
      * Updates format options for a course
      *
@@ -634,8 +722,8 @@ class format_treetopics extends format_base {
               file_save_draft_area_files($attachmentid, $file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), array('subdirs' => 0));
               break;
           }
-          
         }
+        
         return $this->update_format_options($data, $data['id']);
     }
     
@@ -680,8 +768,11 @@ class format_treetopics extends format_base {
         foreach ($defaultoptions as $key => $value) {
             if (isset($records[$key])) {
                 if (array_key_exists($key, $data) && $records[$key]->value !== $data[$key]) {
-                    $DB->set_field('course_format_options', 'value',
-                            $data[$key], array('id' => $records[$key]->id));
+                    $value = $data[$key];
+                    if(is_array($data[$key])){
+                        $value = $data[$key]['text'];
+                    }
+                    $DB->set_field('course_format_options', 'value', $value, array('id' => $records[$key]->id));
                     $changed = true;
                     $needrebuild = $needrebuild || $cached[$key];
                 }
@@ -695,6 +786,7 @@ class format_treetopics extends format_base {
                     // we still insert entry in DB but there are no changes from user point of
                     // view and no need to call rebuild_course_cache()
                 }
+                
                 $DB->insert_record('course_format_options', array(
                     'courseid' => $this->courseid,
                     'format' => $this->format,

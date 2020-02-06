@@ -83,6 +83,8 @@ $string['sectionimagefilearea_help'] = 'Image Filearea';
 $string['sectionimageitemid_help'] = 'Image ItemID';
 $string['sectionimagefilepath_help'] = 'Image Filepath';
 $string['sectionimagefilename_help'] = 'Image Filename';
+$string['sectionimagesummary'] = 'Image Summary';
+$string['sectionimagesummary_help'] = "Sommaire image";
 
 $string['tabsmodel_help'] = 'Tabs Model Help';
 $string['imagewidth_help'] = "Width of the images in the grid in pixel. The height will be adjusted with the image's ratio";

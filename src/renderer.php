@@ -233,7 +233,7 @@ class TreeTopics
         $url = moodle_url::make_pluginfile_url($format_options['ttsectionimage-context'], $format_options['ttsectionimage-component'], $format_options['ttsectionimage-filearea'], $format_options['ttsectionimage-itemid'], $format_options['ttsectionimage-filepath'], $format_options['ttsectionimage-filename']);
         $imgSource = $url->out(false);
         $sectionTitle = ($format_options['ttsectiontitle'] ? "<div class='tt-section-title'>$sectionName</div>" : "");
-        $sectionSummary = $this->getSectionSummary($section);
+        $sectionSummary = $section->ttsectionimagesummary_editor;
         $html = 
         "<div id='$sectionId' class='tt-imagebuttons auto2' data-section='$sectionId'>
             <div class='tt-section-image-link tt-grid-element tt-section-image-link-selected' data='$sectionId' style='position:relative;'>
@@ -289,49 +289,6 @@ class TreeTopics
         return $html;
     }
 
-    protected function getSectionSummary($section){
-        $context = context_course::instance($section->course);
-        $summarytext = file_rewrite_pluginfile_urls($section->summary, 'pluginfile.php',
-            $context->id, 'course', 'section', $section->id);
-
-        $options = new stdClass();
-        $options->noclean = true;
-        $options->overflowdiv = true;
-
-        $sectionheader =  format_text($summarytext, $section->summaryformat, $options);
-        $summaryStart = strpos($sectionheader, '&lt;summary&gt;');
-        if($summaryStart !== false)
-        {
-            $summaryStart += 15;
-            $summaryEnd = strpos($sectionheader, '&lt;/summary&gt;', $summaryStart);
-            if($summaryEnd !== false)
-            {
-                $summaryLength = $summaryEnd - $summaryStart;
-                $sectionheader = substr($sectionheader, $summaryStart, $summaryLength);
-                
-                $startPara = strpos($sectionheader, '<p>');
-                if($startPara !== false)
-                {
-                    $endPara = strpos($sectionheader, '</p>');
-                    if($endPara < $startPara)
-                    {
-                        $sectionheader = substr($sectionheader, $endPara + 4);
-                    }
-                }
-                
-                $startPara = strrpos($sectionheader, '<p>');
-                if($startPara !== false)
-                {
-                    $endPara = strrpos($sectionheader, '</p>', $startPara);
-                    if($endPara === false)
-                    {
-                        $sectionheader .= '</p>';
-                    }
-                }
-            }
-        }
-        return $sectionheader;
-    }
 	/**
      * Generate a section's id
      *
