@@ -69,6 +69,7 @@ $string['sectionimageheight'] = 'Proportion de la hauteur de l\'image';
 $string['hascontract'] = 'Utiliser le contrat';
 $string['contract'] = 'Contrat d\'engagement';
 
+$string['summary'] = "Résumé de section";
 $string['sectionmaindisplay_help'] = 'Choisir le mode d\'affichage principale du cours';
 $string['sectiondisplay_help'] = 'Aide affichage';
 $string['sectioncontentdisplay_help'] = 'Aide affichage contenu';
