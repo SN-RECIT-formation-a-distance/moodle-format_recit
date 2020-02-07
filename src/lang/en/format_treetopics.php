@@ -44,10 +44,12 @@ $string['displaytabslev2'] = 'Onglet Level 2';
 $string['displaytabslev3'] = 'Onglet Level 3';
 $string['displayimages'] = 'Image';
 $string['tabsmodel'] = 'Tabs Model';
+$string['horizontal'] = 'Horizontal';
+$string['vertical'] = 'Vertical';
 
 $string['backtotableofcontent'] = '<- Back to menu';
 
-$string['sectionmaindisplay'] = 'Main sections display';
+$string['menudisplay'] = 'Menu display';
 $string['sectionsecondarydisplay'] = 'Secondary sections display';
 $string['sectiondisplay'] = 'Affichage';
 $string['sectioncontentdisplay'] = 'Affichage du Contenu';
@@ -69,7 +71,7 @@ $string['sectionimageheight'] = 'Image Height Scale';
 $string['hascontract'] = 'Use a contract';
 $string['contract'] = 'Contract content';
 
-$string['sectionmaindisplay_help'] = 'Help';
+$string['menudisplay_help'] = 'Help';
 $string['sectiondisplay_help'] = 'Help affichage';
 $string['sectioncontentdisplay_help'] = 'Help affichage contenu';
 $string['subsections_help'] = 'Help Subsections';

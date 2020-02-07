@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/course/format/renderer.php');
 
-js_reset_all_caches();
+//js_reset_all_caches();
 
 class TreeTopics 
 {
@@ -51,7 +51,8 @@ class TreeTopics
         $this->modinfo = get_fast_modinfo($course);
         $this->courseFormat = course_get_format($course);
           
-        $html = "<div class='treetopics'>%s</div>";
+        $orientation = ($this->isMenuHorizontal() ? "horizontal" : "vertical");
+        $html = "<div class='treetopics $orientation'>%s</div>";
 
         if($this->showContract()){
             $html = sprintf($html, $this->renderContract());    
@@ -96,26 +97,31 @@ class TreeTopics
         // la section 0 controle le mode d'affichage
         $mode = $this->sectionList[0]->ttsectioncontentdisplay;
 
-        $html = "";
+        $menu = "";
         if($mode == TT_DISPLAY_TABS){
-            $html = $this->renderSectionMenu();    
+            $menu = $this->renderSectionMenu();    
         }
         
-        $html .= $this->renderSectionContent();
+        $content = sprintf("<div>%s</div>", $this->renderSectionContent());
 
-        return $html;
+        return ($this->isMenuHorizontal() == 1 ? $menu.$content : $content.$menu);
     }
 
     protected function renderSectionMenu(){
-        $html = 
-                "<nav class='navbar navbar-dark navbar-expand-lg' id='tt-recit-nav'>
-                    <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarTogglerCourse' aria-controls='navbarTogglerCourse' aria-expanded='false' aria-label='Toggle navigation'>
+        $navbar = "<nav class='navbar navbar-dark %s' id='tt-recit-nav'>%s</nav>";
+
+        $collapse = "<button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarTogglerCourse' aria-controls='navbarTogglerCourse' aria-expanded='false' aria-label='Toggle navigation'>
                         <span class='navbar-toggler-icon'></span>
                     </button>
                     <div class='collapse navbar-collapse' id='navbarTogglerCourse'>
-                        <ul class='navbar-nav mr-auto mt-2 mt-lg-0'>%s</ul>
-                    </div>
-                </nav>";
+                        %s
+                    </div>";
+
+        $menuItems = "<ul class='navbar-nav mr-auto mt-2 mt-lg-0'>%s</ul>";
+
+        $hMenu = sprintf($navbar, "navbar-expand-lg",  sprintf($collapse, $menuItems));
+        $vMenu = sprintf($navbar, "flex-column", $menuItems);
+        $html = ($this->isMenuHorizontal() ? $hMenu : $vMenu);
 
         $tmp1 = "";
         $tmp2 = "";
@@ -287,6 +293,10 @@ class TreeTopics
                 </div>";
 
         return $html;
+    }
+
+    protected function isMenuHorizontal(){
+        return ($this->course->ttmenudisplay == 0);
     }
 
 	/**

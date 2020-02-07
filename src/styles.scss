@@ -2,12 +2,12 @@ $primary:#0069bf;
 $menu-item-height:30px;
 
 .treetopics{
-    margin: -1rem; // the tree topics navbar has no padding
+    display: grid; margin: -1rem; // the tree topics navbar has no padding
 
     #tt-recit-nav{
         background-color: $primary;
         
-        .nav-item{text-align: center;}
+        
         .nav-item.dropdown{padding-right: 1rem;}
 
         .dropdown-submenu {
@@ -20,7 +20,8 @@ $menu-item-height:30px;
         }
     
         ul.navbar-nav{
-            .nav-item{
+            li.nav-item{
+                text-align: left;
                 .nav-link{color: #FFF;}
                 .nav-link:hover{color: rgba(255,255,255,.5);}
             }
@@ -29,7 +30,7 @@ $menu-item-height:30px;
                 margin: 0;
                 border-radius: 0px;
                 border: none;
-                box-shadow: 2px 2px 2px rgba(0,0,0,0.5);
+               // box-shadow: 2px 2px 2px rgba(0,0,0,0.5);
     
                 li{
                     .dropdown-item{
@@ -45,14 +46,6 @@ $menu-item-height:30px;
                 li.dropdown-submenu{
                     ul.dropdown-menu{
                         margin-left: 1.5rem;
-                    }
-                }
-    
-                @media screen and (min-width: 992px){
-                    li.dropdown-submenu{
-                        ul.dropdown-menu{
-                            margin-left: 0px;
-                        }
                     }
                 }
             }
@@ -92,6 +85,45 @@ $menu-item-height:30px;
     .grid6{.tt-section-image{width: 100%; height: 240px;}}
 }
 
+.treetopics.horizontal{
+    grid-template-columns: auto;
+    grid-template-rows: auto auto;
+
+    #tt-recit-nav{
+        ul.navbar-nav{
+            li.nav-item{text-align: center;}
+
+            ul.dropdown-menu{
+                box-shadow: 2px 2px 2px rgba(0,0,0,0.5);
+                
+                li.dropdown-submenu{
+                    ul.dropdown-menu{
+                        margin-left: 0px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.treetopics.vertical{
+    grid-template-columns: 80% 20%;
+    grid-template-rows: auto;
+
+    #tt-recit-nav{
+        min-width: 10vw;
+        ul.navbar-nav{
+            ul.dropdown-menu{
+                li.dropdown-submenu{
+                    ul.dropdown-menu{
+                        margin-left: 1rem;
+                    }
+                }
+            }
+        }
+    }
+}
+
 .course-content{
     li.section{list-style: none;}
     li.section[data-section-level="2"]{padding-left: 3.3rem;}
@@ -118,13 +150,15 @@ $menu-item-height:30px;
 @media  screen and (max-width: 992px){
    
     #tt-recit-nav{
-        .navbar-nav{
-            .nav-item{text-align: left;}
-        }
-        
         ul.navbar-nav{
+            li.nav-item{text-align: left !important;}
             ul.dropdown-menu{
                 box-shadow: none !important;
+                li.dropdown-submenu{
+                    ul.dropdown-menu{
+                        margin-left: 1rem!important;
+                    }
+                }
             }
         }
     }
