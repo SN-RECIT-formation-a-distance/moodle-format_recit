@@ -44,10 +44,12 @@ $string['displaytabslev2'] = 'Niveau 2';
 $string['displaytabslev3'] = 'Niveau 3';
 $string['displayimages'] = 'Image';
 $string['tabsmodel'] = 'Modèle d\'onglet';
+$string['horizontal'] = 'Horizontal';
+$string['vertical'] = 'Vertical';
 
 $string['backtotableofcontent'] = '<- Retour au menu principal';
 
-$string['sectionmaindisplay'] = 'Affichage de la section principale';
+$string['menudisplay'] = 'Affichage menu';
 $string['sectionsecondarydisplay'] = 'Affichage des sections secondaires';
 $string['sectiondisplay'] = 'Affichage';
 $string['sectioncontentdisplay'] = 'Affichage des niveaux sous jacents';
@@ -69,7 +71,7 @@ $string['sectionimageheight'] = 'Proportion de la hauteur de l\'image';
 $string['hascontract'] = 'Utiliser le contrat';
 $string['contract'] = 'Contrat d\'engagement';
 
-$string['sectionmaindisplay_help'] = 'Choisir le mode d\'affichage principale du cours';
+$string['menudisplay_help'] = 'Choisir le mode d\'affichage de menu';
 $string['sectiondisplay_help'] = 'Aide affichage';
 $string['sectioncontentdisplay_help'] = 'Aide affichage contenu';
 $string['subsections_help'] = 'Aide Subsections';

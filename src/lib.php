@@ -317,8 +317,8 @@ class format_treetopics extends format_base {
                     'default' => $courseconfig->hiddensections,
                     'type' => PARAM_INT,
                 ),
-                'ttsectiondisplay' => array(
-                    'default' => TT_DISPLAY_TABS,
+                'ttmenudisplay' => array(
+                    'default' => 0,
                     'type' => PARAM_INT,
                 ),
                 'tttabsmodel' => array(
@@ -353,15 +353,15 @@ class format_treetopics extends format_base {
                             )
                         )
                 ),
-                'ttsectiondisplay' => array(
-                    'label' => new lang_string('sectionmaindisplay', 'format_treetopics'),
-                    'help' => 'sectionmaindisplay',
+                'ttmenudisplay' => array(
+                    'label' => new lang_string('menudisplay', 'format_treetopics'),
+                    'help' => 'menudisplay',
                     'help_component' => 'format_treetopics',
                     'element_type' => 'select',
                     'element_attributes' => array(
                         array(
-                            TT_DISPLAY_TABS => new lang_string('displaytabs', 'format_treetopics'),
-                            TT_DISPLAY_IMAGES => new lang_string('displayimages', 'format_treetopics')
+                            0 => new lang_string('horizontal', 'format_treetopics'),
+                            1 => new lang_string('vertical', 'format_treetopics')
                         )
                     )
                 ),
