@@ -138,15 +138,14 @@ M.recit.course.format.TreeTopics = class{
             
         let params = this.getUrlVars();
         let anchors = params.id.split("#", 2);
-        let sectionId = anchors[1] || this.getCookie('section');
+        let sectionId = anchors[1] || this.getCookie('section') || 'section-0';  // if there is no sectionId defined then it displays the section-0
         
-        if(sectionId === ''){
+        /*if(sectionId === ''){
             let el = document.getElementById("navbarTogglerCourse");
             if((el !== null) && (el.firstChild !== null) && (el.firstChild.firstChild !== null)){
                 sectionId = el.firstChild.firstChild.firstChild.getAttribute('data-section');
             }
-            
-        }
+        }*/
 
         this.goToSection(null, sectionId);
     }
@@ -294,6 +293,18 @@ M.recit.course.format.TreeTopics = class{
             let children = el.getElementsByClassName('tt-section');
             for(let item of children){
                 item.style.display = 'block';
+            }
+
+            // if the section has a parent section then display it too
+            let grid = el.parentElement;
+            if(grid !== null){
+                let content = grid.parentElement;
+                if(content !== null){
+                    let section = content.parentElement;
+                    if(section !== null){
+                        section.style.display = "block";
+                    }
+                }
             }
         }
 

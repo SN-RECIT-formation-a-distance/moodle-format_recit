@@ -768,7 +768,7 @@ class format_treetopics extends format_base {
         foreach ($defaultoptions as $key => $value) {
             if (isset($records[$key])) {
                 if (array_key_exists($key, $data) && $records[$key]->value !== $data[$key]) {
-                    $value = $data[$key];
+                    $value = $data[$key];                    
                     if(is_array($data[$key])){
                         $value = $data[$key]['text'];
                     }
@@ -787,6 +787,10 @@ class format_treetopics extends format_base {
                     // view and no need to call rebuild_course_cache()
                 }
                 
+                if(is_array($data[$key])){
+                    $newvalue = $data[$key]['text'];
+                }
+
                 $DB->insert_record('course_format_options', array(
                     'courseid' => $this->courseid,
                     'format' => $this->format,

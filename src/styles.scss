@@ -125,9 +125,9 @@ $menu-item-height:30px;
 }
 
 .course-content{
-    li.section{list-style: none;}
+    li.section{list-style: none; margin-bottom: 1rem;}
     li.section[data-section-level="2"]{padding-left: 3.3rem;}
-    li.section[data-section-level="3"]{padding-left: 5.5rem;}
+    li.section[data-section-level="3"]{padding-left: 6.3rem;}
 }
 
 .tt-contract{

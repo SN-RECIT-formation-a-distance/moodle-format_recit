@@ -24,13 +24,13 @@
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/course/format/renderer.php');
+require_once($CFG->dirroot.'/filter/recitactivity/filter.php');
 
 //js_reset_all_caches();
 
 class TreeTopics 
 {
     const ID_APPEND = 'tt-';
-    const ID_TAB_APPEND = '-tab';
 
     protected $moodleRenderer = null;
     protected $course = null;
@@ -39,6 +39,13 @@ class TreeTopics
     protected $courseFormat = null;
     protected $sectionList = array();
     protected $sectionTree = array();
+    protected $autoLinkFilter = null;
+
+    public function __construct(){
+        global $COURSE;
+        $context = context_course::instance($COURSE->id);
+        $this->autoLinkFilter = new filter_recitactivity($context, array());
+    }
 
     public function render($moodleRenderer, $course){
         global $PAGE;
@@ -239,13 +246,18 @@ class TreeTopics
         $url = moodle_url::make_pluginfile_url($format_options['ttsectionimage-context'], $format_options['ttsectionimage-component'], $format_options['ttsectionimage-filearea'], $format_options['ttsectionimage-itemid'], $format_options['ttsectionimage-filepath'], $format_options['ttsectionimage-filename']);
         $imgSource = $url->out(false);
         $sectionTitle = ($format_options['ttsectiontitle'] ? "<div class='tt-section-title'>$sectionName</div>" : "");
-        $sectionSummary = $section->ttsectionimagesummary_editor;
+        $sectionSummary = $this->autoLinkFilter->filter($section->ttsectionimagesummary_editor);
+        $content = "";
+        if($section->ttsectionshowactivities == 1){
+            $content = $this->moodleRenderer->getCourseSectionCmList($this->course, $section);
+        }
         $html = 
         "<div id='$sectionId' class='tt-imagebuttons auto2' data-section='$sectionId'>
             <div class='tt-section-image-link tt-grid-element tt-section-image-link-selected' data='$sectionId' style='position:relative;'>
                 <img class='tt-section-image' src='$imgSource' alt='$sectionName'>
                 $sectionTitle
                 $sectionSummary
+                $content
             </div>
         </div>";
 
@@ -266,7 +278,10 @@ class TreeTopics
             $sectionStyle = ' current';
         }
 
-        $content = $this->moodleRenderer->getCourseSectionCmList($this->course, $section);
+        $content = "";
+        if($section->ttsectionshowactivities == 1){
+            $content = $this->moodleRenderer->getCourseSectionCmList($this->course, $section);
+        }
 
         if($section->section == 0){
             $nextSection = $this->sectionList[1];
@@ -306,8 +321,9 @@ class TreeTopics
      * @return the section's string id
      */
 	protected function get_section_id($section){
-        $specialchars = array("'", '"', '\\', '/', '@', '$', '%', '!', '#', '?', '&', '*', '(', ')', '+', ' ', '-', '=', ';', ':', '^', '`', '<', '>', '«', '»', '.');
-		return self::ID_APPEND . str_replace($specialchars, '', get_section_name($this->course, $section));
+        //$specialchars = array("'", '"', '\\', '/', '@', '$', '%', '!', '#', '?', '&', '*', '(', ')', '+', ' ', '-', '=', ';', ':', '^', '`', '<', '>', '«', '»', '.');
+        //return self::ID_APPEND . str_replace($specialchars, '', get_section_name($this->course, $section));
+        return sprintf("section-%d", $section->section);
     }
     
     protected function getSectionName($section) {

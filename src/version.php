@@ -31,5 +31,6 @@ $plugin->maturity = MATURITY_ALPHA;
 $plugin->release = 'Version 0.1.3-alpha';
 $plugin->dependencies = [                                                                                                           
     'local_recitcommon' => '2020020500',
-    'theme_recit' => '2020020500'
+    'theme_recit' => '2020020500',
+    'filter_recitactivity' => '2020013000'
 ];
