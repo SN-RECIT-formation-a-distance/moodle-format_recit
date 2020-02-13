@@ -31,7 +31,7 @@ defined('MOODLE_INTERNAL') || die();
  * @return bool result
  */
 function xmldb_format_treetopics_upgrade($oldversion) {
-    global $CFG, $DB;
+    /*global $CFG, $DB;
     
     $dbman = $DB->get_manager();
 
@@ -57,7 +57,7 @@ function xmldb_format_treetopics_upgrade($oldversion) {
 
         // Treetopics savepoint reached.
         upgrade_plugin_savepoint(true, 2019041603, 'format', 'treetopics');
-    }
+    }*/
 
     return true;
 }
