@@ -243,8 +243,10 @@ class TreeTopics
         $sectionName =  $this->getSectionName($section);
 
         $format_options = format_base::instance($this->course)->get_format_options($section);
-        $url = moodle_url::make_pluginfile_url($format_options['ttsectionimage-context'], $format_options['ttsectionimage-component'], $format_options['ttsectionimage-filearea'], $format_options['ttsectionimage-itemid'], $format_options['ttsectionimage-filepath'], $format_options['ttsectionimage-filename']);
-        $imgSource = $url->out(false);
+        //$url = moodle_url::make_pluginfile_url($format_options['ttsectionimage-context'], $format_options['ttsectionimage-component'], $format_options['ttsectionimage-filearea'], $format_options['ttsectionimage-itemid'], $format_options['ttsectionimage-filepath'], $format_options['ttsectionimage-filename']);        
+        //$imgSource = $url->out(false);
+        $imgSource = (isset($format_options['ttsectionimageurl']) ? $format_options['ttsectionimageurl'] : "");
+
         $sectionTitle = ($format_options['ttsectiontitle'] ? "<div class='tt-section-title'>$sectionName</div>" : "");
         $sectionSummary = $this->autoLinkFilter->filter($section->ttsectionimagesummary_editor);
         $content = "";

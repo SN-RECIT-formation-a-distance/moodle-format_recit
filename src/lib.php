@@ -464,6 +464,8 @@ class format_treetopics extends format_base {
      * @return array
      */
     public function section_format_options($foreditform = false) {
+        global $CFG;
+
         /*static */$sectionformatoptions = false;
         if ($sectionformatoptions === false) {
             $sectionformatoptions = array(
@@ -479,15 +481,15 @@ class format_treetopics extends format_base {
                     'default' => true,
                     'type' => PARAM_BOOL
                 ),
-                'ttsectionfile' => array(
+                /*'ttsectionfile' => array(
                     'default' => '',
                     'type' => PARAM_FILE
-                ),
+                ),*/
                 'ttsectiontitle' => array(
                     'default' => true,
                     'type' => PARAM_BOOL
                 ),
-                'ttsectionimage-context' => array(
+                /*'ttsectionimage-context' => array(
                     'default' => '',
                     'type' => PARAM_TEXT
                 ),
@@ -510,7 +512,13 @@ class format_treetopics extends format_base {
                 'ttsectionimage-filename' => array(
                     'default' => '',
                     'type' => PARAM_TEXT
+                ),*/
+                'ttsectionimageurl' => array(
+                    'default' => '',
+                    'type' => PARAM_TEXT
                 ),
+                'btnSeeDepFiles' => array(),
+                'btnUploadDepFiles' => array(),
                 'ttsectionimagesummary_editor' => array(
                     'default' => '',
                     'type' => PARAM_RAW
@@ -520,6 +528,7 @@ class format_treetopics extends format_base {
         if ($foreditform/* && !isset($sectionformatoptions['ttsectioncontentdisplay']['label'])*/) {
             $course = $this->get_course();
             $coursesections = array();
+            $contextCourse = context_course::instance($course->id);
             $sectionformatoptionsedit = array(
                 'ttsectiondisplay' => array(
                     'label' => new lang_string('sectiondisplay', 'format_treetopics'),
@@ -553,7 +562,7 @@ class format_treetopics extends format_base {
                     'help_component' => 'format_treetopics',
                     'element_type' => 'checkbox'
                 ),
-                'ttsectionfile' => array(
+                /*'ttsectionfile' => array(
                     'label' => new lang_string('sectionimage', 'format_treetopics'),
                     'help' => 'sectionimage',
                     'help_component' => 'format_treetopics',
@@ -563,14 +572,14 @@ class format_treetopics extends format_base {
                         'maxfiles' => 1,
                         'subdirs' => 0
                     )
-                ),
+                ),*/
                 'ttsectiontitle' => array(
                     'label' => new lang_string('showsectiontitle', 'format_treetopics'),
                     'help' => 'showsectiontitle',
                     'help_component' => 'format_treetopics',
                     'element_type' => 'checkbox'
                 ),
-                'ttsectionimage-context' => array(
+               /* 'ttsectionimage-context' => array(
                     'label' => new lang_string('sectionimagecontext', 'format_treetopics'),
                     'help' => 'sectionimagecontext',
                     'help_component' => 'format_treetopics',
@@ -605,6 +614,26 @@ class format_treetopics extends format_base {
                     'help' => 'sectionimagefilename',
                     'help_component' => 'format_treetopics',
                     'element_type' => 'hidden'
+                ),*/
+                'ttsectionimageurl' => array(
+                    'label' => new lang_string('sectionimageurl', 'format_treetopics'),
+                    'help' => 'sectionimageurl',
+                    'help_component' => 'format_treetopics',
+                    'element_type' => 'text'
+                ),
+                'btnSeeDepFiles' => array(
+                    'label' => sprintf("<i class='fa fa-file'></i> %s",get_string('btnSeeDepFiles', 'format_treetopics')), //new lang_string('sectionimageurl', 'format_treetopics'),
+                    'element_type' => 'button',
+                    'element_attributes' => array(
+                        array('onclick' => sprintf("window.open('%s/%s%ld','_blank')", $CFG->wwwroot, "files/index.php?contextid=", $contextCourse->id))
+                    )
+                ),
+                'btnUploadDepFiles' => array(
+                    'label' => sprintf("<i class='fa fa-upload'></i> %s", get_string('btnUploadDepFiles', 'format_treetopics')),//new lang_string('sectionimageurl', 'format_treetopics'),
+                    'element_type' => 'button',
+                    'element_attributes' => array(
+                        array('onclick' => sprintf("window.open('%s/%s%ld','_blank')", $CFG->wwwroot, "files/coursefilesedit.php?contextid=", $contextCourse->id))
+                    )
                 ),
                 'ttsectionimagesummary_editor' => array(
                     'label' => new lang_string('sectionimagesummary', 'format_treetopics'),
@@ -681,7 +710,7 @@ class format_treetopics extends format_base {
         return $this->update_format_options($data);
     }
     
-    public function update_section_format_options($data) {
+    /*public function update_section_format_options($data) {
         global $CFG;
         $data = (array)$data;
         $course = $this->get_course();
@@ -695,24 +724,6 @@ class format_treetopics extends format_base {
         foreach ($files as $file) {
           if($file->get_itemid() == $data['id'])
           {
-              /*switch($file->get_mimetype())
-              {
-                  case 'image/png':
-                    $ext = '.png';
-                    break;
-                  case 'image/jpeg':
-                    $ext = '.jpg';
-                    break;
-                  case 'image/gif':
-                    $ext = '.gif';
-                    break;
-                  default:
-                    $ext = '.bin';
-                  continue;
-              }*/
-              //$local = '/course/format/treetopics/sectionimages/'.$course->id.'_'.$data['id'].$ext;
-              //$file->copy_content_to($CFG->dirroot.$local);
-              //$data['ttsectionimage'] = $CFG->wwwroot.$local;
               $data['ttsectionimage-context'] = $file->get_contextid();
               $data['ttsectionimage-component'] = $file->get_component();
               $data['ttsectionimage-filearea'] = $file->get_filearea();
@@ -725,7 +736,7 @@ class format_treetopics extends format_base {
         }
         
         return $this->update_format_options($data, $data['id']);
-    }
+    }*/
     
     /**
      * Updates format options for a course or section

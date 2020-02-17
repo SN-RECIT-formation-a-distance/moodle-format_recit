@@ -64,6 +64,7 @@ $string['sectionimagefilearea'] = 'Image Filearea';
 $string['sectionimageitemid'] = 'Image ItemID';
 $string['sectionimagefilepath'] = 'Image Filepath';
 $string['sectionimagefilename'] = 'Image Filename';
+$string['sectionimageurl'] = 'Image URL';
 
 $string['showsectiontitle'] = 'Show section title';
 $string['sectionimagewidth'] = 'Image Width Scale';
@@ -86,7 +87,10 @@ $string['sectionimageitemid_help'] = 'Image ItemID';
 $string['sectionimagefilepath_help'] = 'Image Filepath';
 $string['sectionimagefilename_help'] = 'Image Filename';
 $string['sectionimagesummary'] = 'Image Summary';
-$string['sectionimagesummary_help'] = "Sommaire image";
+$string['sectionimagesummary_help'] = "Image Summary";
+$string['sectionimageurl_help'] = "Image URL";
+$string['btnSeeDepFiles'] = "Select file";
+$string['btnUploadDepFiles'] = "Upload file";
 
 $string['tabsmodel_help'] = 'Tabs Model Help';
 $string['imagewidth_help'] = "Width of the images in the grid in pixel. The height will be adjusted with the image's ratio";

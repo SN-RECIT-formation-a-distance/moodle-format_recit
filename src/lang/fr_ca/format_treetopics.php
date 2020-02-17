@@ -64,6 +64,10 @@ $string['sectionimagefilearea'] = 'Image Filearea';
 $string['sectionimageitemid'] = 'Image ItemID';
 $string['sectionimagefilepath'] = 'Image Filepath';
 $string['sectionimagefilename'] = 'Nom du fichier image';
+$string['sectionimageurl'] = 'Image URL';
+$string['sectionimageurl_help'] = "Image URL";
+$string['btnSeeDepFiles'] = "Sélectionnez un fichier";
+$string['btnUploadDepFiles'] = "Téléversez un fichier";
 
 $string['showsectiontitle'] = 'Afficher le titre de la section';
 $string['sectionimagewidth'] = 'Proportion de la largeur de l\'image';
