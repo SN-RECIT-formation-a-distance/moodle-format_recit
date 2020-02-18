@@ -229,7 +229,7 @@ class TreeTopics
     protected function renderSectionContentItem($section, $subContent = ""){
         // the section 0 is required to display as tab in order to display all the children
         if(($section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES) && ($section->section > 0)){
-           $html = $this->getSectionDisplayImage($section);
+           $html = $this->getSectionDisplayImage($section, $subContent);
         }
         else{
             $html = $this->getSectionDisplayTab($section, $subContent);
@@ -238,7 +238,7 @@ class TreeTopics
         return $html;
     }
 
-    protected function getSectionDisplayImage($section){
+    protected function getSectionDisplayImage($section, $subContent){
         $sectionId = $this->get_section_id($section);
         $sectionName =  $this->getSectionName($section);
 
@@ -260,6 +260,7 @@ class TreeTopics
                 $sectionTitle
                 $sectionSummary
                 $content
+                <div style='display: flex;'>$subContent</div>
             </div>
         </div>";
 
