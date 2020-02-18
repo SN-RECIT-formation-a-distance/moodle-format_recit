@@ -24,13 +24,12 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2020020500;        // The current plugin version (Date: YYYYMMDDXX).
+$plugin->version   = 2020020502;        // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires  = 2018051700;        // Requires this Moodle version.
 $plugin->component = 'format_treetopics';    // Full name of the plugin (used for diagnostics).
 $plugin->maturity = MATURITY_ALPHA;
-$plugin->release = 'Version 0.1.3-alpha';
+$plugin->release = 'R1-2020020502';
 $plugin->dependencies = [                                                                                                           
     'local_recitcommon' => '2020020500',
-    'theme_recit' => '2020020500',
     'filter_recitactivity' => '2020013000'
 ];

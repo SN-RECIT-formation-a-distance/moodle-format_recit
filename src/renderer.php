@@ -57,7 +57,8 @@ class TreeTopics
 
         $this->modinfo = get_fast_modinfo($course);
         $this->courseFormat = course_get_format($course);
-          
+        $this->sectionList = $this->modinfo->get_section_info_all();
+
         $orientation = ($this->isMenuHorizontal() ? "horizontal" : "vertical");
         $html = "<div class='treetopics $orientation'>%s</div>";
 
@@ -65,7 +66,6 @@ class TreeTopics
             $html = sprintf($html, $this->renderContract());    
         }
         else{
-            $this->sectionList = $this->modinfo->get_section_info_all();
             $this->createSectionTree();
             $html = sprintf($html, $this->renderSections());
         }
@@ -285,11 +285,11 @@ class TreeTopics
             $content = $this->moodleRenderer->getCourseSectionCmList($this->course, $section);
         }
 
-        if($section->section == 0){
+        /*if($section->section == 0){
             $nextSection = $this->sectionList[1];
             $nextId = $this->get_section_id($nextSection);
             $content .= "<a href='#' data-section='$sectionId' class='btn btn-primary' id='tt-btn-start-course'  onclick='M.recit.course.format.TreeTopics.instance.goToSection(null,\"$nextId\")'>Commencer le cours</a>";
-        }
+        }*/
 
         // prepare the container to receive the section display image
         $colSize = 100 / max($this->course->ttimagegridcolumns, 1);
@@ -355,45 +355,42 @@ class TreeTopics
         global $DB, $USER;
         
         if(!$this->contract_is_signed()){
-            $DB->insert_record('format_treetopics_contract', array('courseid' => $this->course->id, 'userid' => $USER->id));
+            $DB->insert_record('format_treetopics_contract', array('courseid' => $this->course->id, 'userid' => $USER->id, 'timemodified' => time()));
         }
     }
     
-    protected function contract_unsign(){
+    /*protected function contract_unsign(){
         global $DB, $USER;
         
         if($this->contract_is_signed()){
             $DB->delete_records('format_treetopics_contract', ['courseid' => $this->course->id, 'userid' => $USER->id]);
         }
-    }
+    }*/
     
     protected function renderContract(){
         global $CFG;
         
         $signed = $this->contract_is_signed();
         
-        $o = '';
-        $o .= html_writer::start_tag('div', array('class' => self::ID_APPEND . 'contract'));
-        $o .= html_writer::tag('h2', "Contrat d'engagement", array('class' => self::ID_APPEND . 'contract-title'));
-        $o .= html_writer::tag('pre', $this->course->ttcontract, array('class' => self::ID_APPEND . 'contract-content'));
+        $section = $this->sectionList[0];
+        $html = $this->renderSectionContentItem($section);
 
-        $o .= html_writer::start_tag('div');
-        if($signed)
-            $o .= html_writer::tag('label', "Contrat Signé", array('id' => self::ID_APPEND . 'contract-read', 'type' => 'checkbox', 'disabled' => 'disabled'));
-        else
-            $o .= html_writer::tag('input', "J'ai lu, je comprends et j'accepte les termes du contrat", array('id' => self::ID_APPEND . 'contract-read', 'type' => 'checkbox'));
-        $o .= html_writer::end_tag('div');
+        $html .= "<br/><br/>";
+        $html .= html_writer::start_tag('div', array('class' => self::ID_APPEND . 'contract'));
+            $html .= html_writer::tag('h2', "Contrat d'engagement", array('class' => self::ID_APPEND . 'contract-title'));
+            $html .= html_writer::tag('pre', $section->ttcontract_editor, array('class' => self::ID_APPEND . 'contract-content'));
+
+            $html .= "<div>";
+            $html .= sprintf("<label><input id='%s' type='checkbox'/> J'ai lu, je comprends et j'accepte les termes du contrat</label>", self::ID_APPEND.'contract-read');
+            $html .= "</div>";
         
-        $o .= html_writer::start_tag('div');
-        if($signed)
-            $o .= html_writer::tag('button', 'Retour', array('id' => self::ID_APPEND . 'contract-sign', 'type' => 'submit', 'href' => $CFG->wwwroot.'/course/view.php?id='.$this->course->id));
-        else
-            $o .= html_writer::tag('button', 'Signer le contrat', array('id' => self::ID_APPEND . 'contract-sign', 'type' => 'submit', 'disabled' => 'disabled', 'href' => $CFG->wwwroot.'/course/view.php?id='.$this->course->id.'&ttc=1'));
-        $o .= html_writer::end_tag('div');
+        $html .= html_writer::start_tag('div');
+            $html .= html_writer::tag('button', 'Signer le contrat', array('id' => self::ID_APPEND . 'contract-sign', 'type' => 'submit', 'disabled' => 'disabled', 
+                    'href' => $CFG->wwwroot.'/course/view.php?id='.$this->course->id.'&ttc=1#section-1', 'class' => 'btn btn-primary'));
+            $html .= html_writer::end_tag('div');        
+        $html .= html_writer::end_tag('div');
         
-        $o .= html_writer::end_tag('div');
-        
-        return $o;
+        return $html;
     }
 }
 
@@ -650,10 +647,13 @@ class format_treetopics_renderer extends format_section_renderer_base {
             <input data-component="ttRadioSectionLevel" type="radio" value="%s" autocomplete="off" %s> %s
         </label>';
 
-        $level = sprintf('<div class="btn-group btn-group-toggle btn-group-sm" style="margin-right:1rem;" data-toggle="buttons">%s%s%s</div>',
-                sprintf($radioSectionLevel, ($section->ttsectiondisplay == 1 ? "active" : ""), "1", ($section->ttsectiondisplay == 1 ? "checked" : ""), get_string('displaytabslev1', 'format_treetopics')),
-                sprintf($radioSectionLevel, ($section->ttsectiondisplay == 2 ? "active" : ""), "2", ($section->ttsectiondisplay == 2 ? "checked" : ""), get_string('displaytabslev2', 'format_treetopics')),
-                sprintf($radioSectionLevel, ($section->ttsectiondisplay == 3 ? "active" : ""), "3", ($section->ttsectiondisplay == 3 ? "checked" : ""), get_string('displaytabslev3', 'format_treetopics')));
+        $level = "";
+        if($section->section > 0){
+            $level = sprintf('<div class="btn-group btn-group-toggle btn-group-sm" style="margin-right:1rem;" data-toggle="buttons">%s%s%s</div>',
+            sprintf($radioSectionLevel, ($section->ttsectiondisplay == 1 ? "active" : ""), "1", ($section->ttsectiondisplay == 1 ? "checked" : ""), get_string('displaytabslev1', 'format_treetopics')),
+            sprintf($radioSectionLevel, ($section->ttsectiondisplay == 2 ? "active" : ""), "2", ($section->ttsectiondisplay == 2 ? "checked" : ""), get_string('displaytabslev2', 'format_treetopics')),
+            sprintf($radioSectionLevel, ($section->ttsectiondisplay == 3 ? "active" : ""), "3", ($section->ttsectiondisplay == 3 ? "checked" : ""), get_string('displaytabslev3', 'format_treetopics')));    
+        }
         
         $radioSectionContentDisplay = 
             '<label class="btn btn-outline-primary %s" >

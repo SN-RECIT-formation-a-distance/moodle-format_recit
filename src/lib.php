@@ -33,7 +33,7 @@ const TT_DISPLAY_IMAGES = -2;
 const TT_DISPLAY_TABS_LEVEL_1 = 1;
 const TT_DISPLAY_TABS_LEVEL_2 = 2;
 const TT_DISPLAY_TABS_LEVEL_3 = 3;
-
+/*
 function format_treetopics_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=[]) {
     // Make sure the user is logged in and has access to the module (plugins that are not course modules should leave out the 'cm' part).
     require_login($course, true, $cm);
@@ -61,7 +61,7 @@ function format_treetopics_pluginfile($course, $cm, $context, $filearea, $args, 
  
     // We can now send the file back to the browser - in this case with a cache lifetime of 1 day and no filtering. 
     send_stored_file($file, 86400, 0, $forcedownload, $options);
-}
+}*/
 
 /**
  * Default form for editing course section
@@ -85,6 +85,10 @@ class tt_editsection_form  extends editsection_form {
         $default_values->ttsectionimagesummary =  $default_values->ttsectionimagesummary_editor;
         $default_values = file_prepare_standard_editor($default_values, 'ttsectionimagesummary', $editoroptions,
                 $editoroptions['context'], 'course', 'section', $default_values->id);
+
+        $default_values->ttcontract = $default_values->ttcontract_editor;
+        $default_values = file_prepare_standard_editor($default_values, 'ttcontract', $editoroptions,
+                $editoroptions['context'], 'course', 'section', $default_values->id);
                 
         parent::set_data($default_values);
     }
@@ -102,13 +106,19 @@ class tt_editsection_form  extends editsection_form {
             $editoroptions = tt_editsection_form::EDITOR_OPTIONS; //$this->_customdata['editoroptions'];
             $data = file_postupdate_standard_editor($data, 'ttsectionimagesummary', $editoroptions,
                     $editoroptions['context'], 'course', 'section', $data->id);
-            //$course = $this->_customdata['course'];
+                    
+            $data = file_postupdate_standard_editor($data, 'ttcontract', $editoroptions,
+            $editoroptions['context'], 'course', 'section', $data->id);
         }
         return $data;
     }
 
     public function getEditorOptions(){
         return $this->_customdata['editoroptions'];
+    }
+
+    public function getForm(){
+        return $this->_form;
     }
 }
 
@@ -332,10 +342,6 @@ class format_treetopics extends format_base {
                 'tthascontract' => array(
                     'default' => false,
                     'type' => PARAM_BOOL,
-                ),
-                'ttcontract' => array(
-                    'default' => '',
-                    'type' => PARAM_TEXT,
                 )
             );
         }
@@ -398,13 +404,6 @@ class format_treetopics extends format_base {
                     'help' => 'hascontract',
                     'help_component' => 'format_treetopics',
                     'element_type' => 'checkbox'
-                ),
-                'ttcontract' => array(
-                    'label' => new lang_string('contract', 'format_treetopics'),
-                    'help' => 'contract',
-                    'help_component' => 'format_treetopics',
-                    'element_type' => 'textarea',
-                    'element_attributes' => array('wrap="virtual" rows="20" cols="80"')
                 )
             );
             $courseformatoptions = array_merge_recursive($courseformatoptions, $courseformatoptionsedit);
@@ -434,6 +433,24 @@ class format_treetopics extends format_base {
         $result = new tt_editsection_form($action, $customdata);
 
         //$this->editorOptions = $result->getEditorOptions();
+        $form = $result->getForm();
+        
+        $disabled = array('disabled'=> 'disabled');
+        if($customdata['cs']->__get('section') > 0){
+            //$form->getElement('ttcontract_editor')->updateAttributes($disabled);
+            $form->getElement('ttcontract_editor')->freeze();
+        }
+        else{
+            $form->getElement('ttsectiondisplay')->updateAttributes($disabled);
+            $form->getElement('ttsectionshowactivities')->updateAttributes($disabled);
+            $form->getElement('ttsectiontitle')->updateAttributes($disabled);
+            $form->getElement('ttsectionimageurl')->updateAttributes($disabled);
+            $form->getElement('btnSeeDepFiles')->updateAttributes($disabled);
+            $form->getElement('btnUploadDepFiles')->updateAttributes($disabled);
+            //$form->getElement('ttsectionimagesummary_editor')->updateAttributes($disabled);
+            $form->getElement('ttsectionimagesummary_editor')->freeze();
+        }
+        
 
         return $result;
     }
@@ -481,38 +498,10 @@ class format_treetopics extends format_base {
                     'default' => true,
                     'type' => PARAM_BOOL
                 ),
-                /*'ttsectionfile' => array(
-                    'default' => '',
-                    'type' => PARAM_FILE
-                ),*/
                 'ttsectiontitle' => array(
                     'default' => true,
                     'type' => PARAM_BOOL
                 ),
-                /*'ttsectionimage-context' => array(
-                    'default' => '',
-                    'type' => PARAM_TEXT
-                ),
-                'ttsectionimage-component' => array(
-                    'default' => '',
-                    'type' => PARAM_TEXT
-                ),
-                'ttsectionimage-filearea' => array(
-                    'default' => '',
-                    'type' => PARAM_TEXT
-                ),
-                'ttsectionimage-itemid' => array(
-                    'default' => '',
-                    'type' => PARAM_TEXT
-                ),
-                'ttsectionimage-filepath' => array(
-                    'default' => '',
-                    'type' => PARAM_TEXT
-                ),
-                'ttsectionimage-filename' => array(
-                    'default' => '',
-                    'type' => PARAM_TEXT
-                ),*/
                 'ttsectionimageurl' => array(
                     'default' => '',
                     'type' => PARAM_TEXT
@@ -522,6 +511,10 @@ class format_treetopics extends format_base {
                 'ttsectionimagesummary_editor' => array(
                     'default' => '',
                     'type' => PARAM_RAW
+                ),
+                'ttcontract_editor' => array(
+                    'default' => '',
+                    'type' => PARAM_RAW,
                 )
             );
         }
@@ -561,60 +554,13 @@ class format_treetopics extends format_base {
                     'help' => 'sectionshowactivities',
                     'help_component' => 'format_treetopics',
                     'element_type' => 'checkbox'
-                ),
-                /*'ttsectionfile' => array(
-                    'label' => new lang_string('sectionimage', 'format_treetopics'),
-                    'help' => 'sectionimage',
-                    'help_component' => 'format_treetopics',
-                    'element_type' => 'filemanager',
-                    'element_attributes' => array(
-                        'accepted_types' => array('image'),
-                        'maxfiles' => 1,
-                        'subdirs' => 0
-                    )
-                ),*/
+                ),                
                 'ttsectiontitle' => array(
                     'label' => new lang_string('showsectiontitle', 'format_treetopics'),
                     'help' => 'showsectiontitle',
                     'help_component' => 'format_treetopics',
                     'element_type' => 'checkbox'
-                ),
-               /* 'ttsectionimage-context' => array(
-                    'label' => new lang_string('sectionimagecontext', 'format_treetopics'),
-                    'help' => 'sectionimagecontext',
-                    'help_component' => 'format_treetopics',
-                    'element_type' => 'hidden'
-                ),
-                'ttsectionimage-component' => array(
-                    'label' => new lang_string('sectionimagecomponent', 'format_treetopics'),
-                    'help' => 'sectionimagecomponent',
-                    'help_component' => 'format_treetopics',
-                    'element_type' => 'hidden'
-                ),
-                'ttsectionimage-filearea' => array(
-                    'label' => new lang_string('sectionimagefilearea', 'format_treetopics'),
-                    'help' => 'sectionimagefilearea',
-                    'help_component' => 'format_treetopics',
-                    'element_type' => 'hidden'
-                ),
-                'ttsectionimage-itemid' => array(
-                    'label' => new lang_string('sectionimageitemid', 'format_treetopics'),
-                    'help' => 'sectionimageitemid',
-                    'help_component' => 'format_treetopics',
-                    'element_type' => 'hidden'
-                ),
-                'ttsectionimage-filepath' => array(
-                    'label' => new lang_string('sectionimagefilepath', 'format_treetopics'),
-                    'help' => 'sectionimagefilepath',
-                    'help_component' => 'format_treetopics',
-                    'element_type' => 'hidden'
-                ),
-                'ttsectionimage-filename' => array(
-                    'label' => new lang_string('sectionimagefilename', 'format_treetopics'),
-                    'help' => 'sectionimagefilename',
-                    'help_component' => 'format_treetopics',
-                    'element_type' => 'hidden'
-                ),*/
+                ),              
                 'ttsectionimageurl' => array(
                     'label' => new lang_string('sectionimageurl', 'format_treetopics'),
                     'help' => 'sectionimageurl',
@@ -638,6 +584,13 @@ class format_treetopics extends format_base {
                 'ttsectionimagesummary_editor' => array(
                     'label' => new lang_string('sectionimagesummary', 'format_treetopics'),
                     'help' => 'sectionimagesummary',
+                    'help_component' => 'format_treetopics',
+                    'element_type' => 'editor',
+                    'element_attributes' => tt_editsection_form::EDITOR_OPTIONS
+                ),
+                'ttcontract_editor' => array(
+                    'label' => new lang_string('contract', 'format_treetopics'),
+                    'help' => 'contract',
                     'help_component' => 'format_treetopics',
                     'element_type' => 'editor',
                     'element_attributes' => tt_editsection_form::EDITOR_OPTIONS

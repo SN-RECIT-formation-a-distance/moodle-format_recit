@@ -31,33 +31,22 @@ defined('MOODLE_INTERNAL') || die();
  * @return bool result
  */
 function xmldb_format_treetopics_upgrade($oldversion) {
-    /*global $CFG, $DB;
-    
+    global $CFG, $DB;
     $dbman = $DB->get_manager();
 
-    require_once($CFG->dirroot . '/course/format/treetopics/db/upgradelib.php');
-    
-    if ($oldversion < 2019041603) {
+    /// Add a new columns suggestednote and teachertip
+    if ($oldversion < 2020020502) {
+           // Define field jsoncontent to be added to filter_wiris_formulas.
+           $table = new xmldb_table('format_treetopics_contract');
+           $field = new xmldb_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
+   
+           // Conditionally launch add field jsoncontent.
+           if (!$dbman->field_exists($table, $field)) {
+               $dbman->add_field($table, $field);
+           }
 
-        // Define table format_treetopics_contract to be created.
-        $table = new xmldb_table('format_treetopics_contract');
-
-        // Adding fields to table format_treetopics_contract.
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-
-        // Adding keys to table format_treetopics_contract.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-
-        // Conditionally launch create table for format_treetopics_contract.
-        if (!$dbman->table_exists($table)) {
-            $dbman->create_table($table);
-        }
-
-        // Treetopics savepoint reached.
-        upgrade_plugin_savepoint(true, 2019041603, 'format', 'treetopics');
-    }*/
+           upgrade_plugin_savepoint(true, 2020020502, 'format', 'treetopics');
+    }
 
     return true;
 }
