@@ -96,6 +96,7 @@ M.recit.course.format.TreeTopics = class{
         this.onChangeContentDisplay = this.onChangeContentDisplay.bind(this);
 
         this.filter = null;
+        this.pagination = null;
 
         this.init();
     }    
@@ -148,6 +149,10 @@ M.recit.course.format.TreeTopics = class{
         }*/
 
         this.goToSection(null, sectionId);
+
+        this.pagination = document.getElementById('sectionPagination');
+
+        this.ctrlPagination();
     }
 
     initRadioSectionLevel(){
@@ -267,7 +272,6 @@ M.recit.course.format.TreeTopics = class{
         if(sectionId.length === 0){
             return;
         }
-
         
         window.location.href = `${window.location.origin}${window.location.pathname}${window.location.search}#${sectionId}`;
         document.body.scrollTop = 0; // For Safari
@@ -313,6 +317,42 @@ M.recit.course.format.TreeTopics = class{
         if((btn !== null) && (btn.getAttribute('aria-expanded') === 'true')){
             btn.click();
         }
+
+        this.ctrlPagination();
+    }
+
+    ctrlPagination(){
+        if(this.pagination === null){ return; }
+
+        let sections = document.getElementsByClassName('tt-section');
+
+        let currentSection = this.getCookie('section');
+        let btnPrevious = this.pagination.firstChild.firstChild;
+        let btnNext = this.pagination.firstChild.lastChild;
+        
+        let iSection = 0;
+        for(iSection = 0; iSection < sections.length; iSection++){
+            if(sections[iSection].getAttribute('id') == currentSection){
+                break;
+            }
+        }
+      
+        if(iSection <= 0){
+            btnPrevious.classList.add("disabled");
+        }
+        else{
+            btnPrevious.classList.remove("disabled");
+            btnPrevious.firstChild.setAttribute('data-section', sections[iSection-1].getAttribute('id'));
+        }
+        
+        if(iSection >= sections.length - 1){
+            btnNext.classList.add("disabled");
+        }
+        else{
+            btnNext.classList.remove("disabled");
+            btnNext.firstChild.setAttribute('data-section', sections[iSection+1].getAttribute('id'));
+        }
+
     }
 }
 

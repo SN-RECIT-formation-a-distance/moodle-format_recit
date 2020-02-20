@@ -68,6 +68,7 @@ class TreeTopics
         else{
             $this->createSectionTree();
             $html = sprintf($html, $this->renderSections());
+            $html .= $this->renderPagination();
         }
 
         echo $html;
@@ -315,6 +316,21 @@ class TreeTopics
 
     protected function isMenuHorizontal(){
         return ($this->course->ttmenudisplay == 0);
+    }
+
+    protected function renderPagination(){
+        $result = "<nav id='sectionPagination' aria-label='Pagination de sections' style='margin-top: 3rem; border-top: 1px solid #efefef; padding-top: 1rem;'>";
+        $result .= '<ul class="pagination justify-content-center ">';
+        $result .= '<li class="page-item">';
+        $result .= "<a class='page-link' href='#' tabindex='-1' onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'><i class='fa fa-arrow-left'></i> Précédente</a>";
+        $result .= '</li>';
+        $result .= '<li class="page-item">';
+        $result .= "<a class='page-link' href='#' tabindex='-1'  onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>Suivante <i class='fa fa-arrow-right'></i></a>";
+        $result .= '</li>';
+        $result .= '</ul>';
+        $result .= '</nav>';
+ 
+        return $result;
     }
 
 	/**
