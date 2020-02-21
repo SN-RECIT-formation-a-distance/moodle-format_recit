@@ -116,7 +116,7 @@ class TreeTopics
     }
 
     protected function renderSectionMenu(){
-        $navbar = "<nav class='navbar navbar-dark %s' id='tt-recit-nav'>%s</nav>";
+        $navbar = "<nav class='navbar navbar-dark %s theme-bg-color' id='tt-recit-nav'>%s</nav>";
 
         $collapse = "<button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarTogglerCourse' aria-controls='navbarTogglerCourse' aria-expanded='false' aria-label='Toggle navigation'>
                         <span class='navbar-toggler-icon'></span>

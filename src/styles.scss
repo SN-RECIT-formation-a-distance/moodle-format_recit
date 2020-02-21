@@ -1,11 +1,11 @@
-$primary:#0069bf;
+//$primary:#0069bf;
 $menu-item-height:30px;
 
 .treetopics{
     display: grid; margin: -1rem; // the tree topics navbar has no padding
 
     #tt-recit-nav{
-        background-color: $primary;
+        //background-color: $primary;
         
         
         .nav-item.dropdown{padding-right: 1rem;}
@@ -26,7 +26,7 @@ $menu-item-height:30px;
                 .nav-link:hover{color: rgba(255,255,255,.5);}
             }
             ul.dropdown-menu{
-                background-color: $primary;
+                //background-color: $primary;
                 margin: 0;
                 border-radius: 0px;
                 border: none;
