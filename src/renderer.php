@@ -165,7 +165,7 @@ class TreeTopics
                     $dropdownid = $sectionid.'DropdownMenuLink';
                     $html = "<li class='nav-item dropdown'>
                                 <a class='nav-link dropdown-toggle' data-section='$sectionid' href='#' id='$dropdownid' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>". $this->getSectionName($section) ."</a>
-                                <ul class='dropdown-menu' aria-labelledby='$dropdownid'>$subSection</ul>
+                                <ul class='dropdown-menu theme-bg-color' aria-labelledby='$dropdownid'>$subSection</ul>
                             </li>";                
                 }
             }
@@ -179,7 +179,7 @@ class TreeTopics
                     $dropdownid = $sectionid.'DropdownMenuLink';
                     $html = "<li class='dropdown-submenu'>
                                 <a class='dropdown-item dropdown-toggle' data-section='$sectionid' href='#' id='$dropdownid' onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>". $this->getSectionName($section) ."</a>
-                                <ul class='dropdown-menu'>$subSection</ul>
+                                <ul class='dropdown-menu theme-bg-color'>$subSection</ul>
                             </li>";                
                 }
             }
