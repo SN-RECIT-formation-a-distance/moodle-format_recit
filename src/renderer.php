@@ -300,11 +300,12 @@ class TreeTopics
             $griTemplateCols .= "$colSize% ";
         }
 
+        $sectionSummary = $this->autoLinkFilter->filter($section->summary);
         $html = "<div id='$sectionId' class='section main clearfix tt-section $sectionStyle' role='region' aria-label='$sectionName' style='display: none;'>
                     <h2>$sectionName</h2>
                     <div class='content'>
                         $sectionAvail
-                        <div class='summary'>$section->summary</div>
+                        <div class='summary'>$sectionSummary</div>
                         $content
                         <!-- sections display image type container -->
                         <div class='grid{$this->course->ttimagegridcolumns}' style='display: grid;  grid-template-columns: $griTemplateCols'>$subContent</div>
