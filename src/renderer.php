@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/course/format/renderer.php');
-require_once($CFG->dirroot.'/filter/recitactivity/filter.php');
+//require_once($CFG->dirroot.'/filter/recitactivity/filter.php');
 
 //js_reset_all_caches();
 
@@ -39,12 +39,12 @@ class TreeTopics
     protected $courseFormat = null;
     protected $sectionList = array();
     protected $sectionTree = array();
-    protected $autoLinkFilter = null;
+   // protected $autoLinkFilter = null;
 
     public function __construct(){
         global $COURSE;
         $context = context_course::instance($COURSE->id);
-        $this->autoLinkFilter = new filter_recitactivity($context, array());
+    //    $this->autoLinkFilter = new filter_recitactivity($context, array());
     }
 
     public function render($moodleRenderer, $course){
@@ -249,7 +249,8 @@ class TreeTopics
         $imgSource = (isset($format_options['ttsectionimageurl']) ? $format_options['ttsectionimageurl'] : "");
 
         $sectionTitle = ($format_options['ttsectiontitle'] ? "<div class='tt-section-title'>$sectionName</div>" : "");
-        $sectionSummary = $this->autoLinkFilter->filter($section->ttsectionimagesummary_editor);
+        //$sectionSummary = $this->autoLinkFilter->filter($section->ttsectionimagesummary_editor);
+		$sectionSummary = format_text($section->summary, FORMAT_MOODLE, array('noclean' => true,'filter' => true));
         $content = "";
         if($section->ttsectionshowactivities == 1){
             $content = $this->moodleRenderer->getCourseSectionCmList($this->course, $section);
@@ -267,7 +268,18 @@ class TreeTopics
 
         return $html;
     }    
+/*protected function format_summary_text($section) {
+        $context = context_course::instance($section->course);
+        $summarytext = file_rewrite_pluginfile_urls($section->summary, 'pluginfile.php',
+            $context->id, 'course', 'section', $section->id);
 
+        $options = new stdClass();
+        $options->noclean = true;
+        $options->overflowdiv = true;
+		$options->filter = true;
+        return format_text($summarytext, $section->summaryformat, $options);
+    }*/
+	
     protected function getSectionDisplayTab($section, $subContent){
         $sectionId = $this->get_section_id($section);
         $sectionName =  $this->getSectionName($section);
@@ -299,8 +311,8 @@ class TreeTopics
         for($i = 0; $i < $this->course->ttimagegridcolumns; $i++){
             $griTemplateCols .= "$colSize% ";
         }
-
-        $sectionSummary = $this->autoLinkFilter->filter($section->summary);
+$sectionSummary = format_text($section->summary, FORMAT_MOODLE, array('noclean' => true,'filter' => true));
+       // $sectionSummary = $this->autoLinkFilter->filter($section->summary);
         $html = "<div id='$sectionId' class='section main clearfix tt-section $sectionStyle' role='region' aria-label='$sectionName' style='display: none;'>
                     <h2>$sectionName</h2>
                     <div class='content'>
