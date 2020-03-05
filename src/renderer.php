@@ -128,7 +128,7 @@ class TreeTopics
         $menuItems = "<ul class='navbar-nav mr-auto mt-2 mt-lg-0'>%s</ul>";
 
         $hMenu = sprintf($navbar, "navbar-expand-lg",  sprintf($collapse, $menuItems));
-        $vMenu = sprintf($navbar, "flex-column", $menuItems);
+        $vMenu = sprintf($navbar, "navbar-expand-lg", sprintf($collapse, $menuItems));
         $html = ($this->isMenuHorizontal() ? $hMenu : $vMenu);
 
         $tmp1 = "";

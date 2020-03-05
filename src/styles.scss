@@ -110,8 +110,21 @@ $menu-item-height:30px;
     grid-template-columns: 80% 20%;
     grid-template-rows: auto;
 
+    .navbar{align-items: baseline; align-content: baseline;}
+
+    @media (min-width: 992px){
+        .navbar-expand-lg{
+            .navbar-nav{
+                flex-direction: column;
+                .dropdown-menu{position: relative;}
+            }
+        }  
+    }
+        
     #tt-recit-nav{
-        min-width: 10vw;
+        //min-width: 10vw;
+        .dropdown-submenu>.dropdown-menu{left: 0; top: 100%;}
+
         ul.navbar-nav{
             ul.dropdown-menu{
                 li.dropdown-submenu{
@@ -145,7 +158,16 @@ $menu-item-height:30px;
 
 
 @media  screen and (max-width: 992px){
-   
+    .treetopics.vertical{
+        grid-template-columns: none;
+        grid-template-rows: none;
+        display: block;
+
+        #tt-recit-nav{
+            position: absolute; top: 0; right: 0;
+        }
+    }
+
     #tt-recit-nav{
         ul.navbar-nav{
             li.nav-item{text-align: left !important;}
