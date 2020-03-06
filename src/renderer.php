@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/course/format/renderer.php');
 //require_once($CFG->dirroot.'/filter/recitactivity/filter.php');
 
-//js_reset_all_caches();
+js_reset_all_caches();
 
 class TreeTopics 
 {
@@ -39,12 +39,12 @@ class TreeTopics
     protected $courseFormat = null;
     protected $sectionList = array();
     protected $sectionTree = array();
-   // protected $autoLinkFilter = null;
+   //protected $autoLinkFilter = null;
 
     public function __construct(){
         global $COURSE;
         $context = context_course::instance($COURSE->id);
-    //    $this->autoLinkFilter = new filter_recitactivity($context, array());
+        //$this->autoLinkFilter = new filter_recitactivity($context, array());
     }
 
     public function render($moodleRenderer, $course){
@@ -250,7 +250,7 @@ class TreeTopics
 
         $sectionTitle = ($format_options['ttsectiontitle'] ? "<div class='tt-section-title'>$sectionName</div>" : "");
         //$sectionSummary = $this->autoLinkFilter->filter($section->ttsectionimagesummary_editor);
-		$sectionSummary = format_text($section->summary, FORMAT_MOODLE, array('noclean' => true,'filter' => true));
+		$sectionSummary = format_text($section->ttsectionimagesummary_editor, FORMAT_MOODLE, array('noclean' => true,'filter' => true));
         $content = "";
         if($section->ttsectionshowactivities == 1){
             $content = $this->moodleRenderer->getCourseSectionCmList($this->course, $section);
@@ -320,7 +320,7 @@ $sectionSummary = format_text($section->summary, FORMAT_MOODLE, array('noclean' 
                         <div class='summary'>$sectionSummary</div>
                         $content
                         <!-- sections display image type container -->
-                        <div class='grid{$this->course->ttimagegridcolumns}' style='display: grid;  grid-template-columns: $griTemplateCols'>$subContent</div>
+                        <div class='grid{$this->course->ttimagegridcolumns}' style=''>$subContent</div>
                     </div>
                 </div>";
 
