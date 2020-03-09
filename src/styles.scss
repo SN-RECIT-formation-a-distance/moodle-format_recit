@@ -76,131 +76,70 @@ $menu-item-height:30px;
         }
         .tt-grid-element:hover{ cursor: pointer; filter: grayscale(0%);}        
     }
-	@media only screen and (max-width: 600px) {
-    grid1, .grid2, .grid3, .grid4, .grid5, .grid6 {
-		display: grid;
-		grid-template-columns: 100%;
-		.tt-section-image{
-					width: 540px;
-					height: 300px;
-					/*float: left;*/}
-	}}
-/* Small devices (portrait tablets and large phones, 600px and up) */
-	@media only screen and (min-width: 600px) {
-		.grid1, .grid2, .grid3, .grid4, .grid5, .grid6 {
-		display: grid;
-		grid-template-columns: 100%;
-		.tt-section-image{
-					width: 540px;
-					height: 300px;
-					/*float: left;*/}
-	}}
-	
-/* Medium devices (landscape tablets, 768px and up) */
-@media only screen and (min-width: 768px) {
-	.grid1{
-		display: grid;
-		grid-template-columns: 100%;
-		.tt-section-image{
-					width: 768px;
-					height: 423px;/*float: left;*/}
-	}
-	.grid2, .grid3, .grid4, .grid5, .grid6 {
-		display: grid;
-		grid-template-columns: 50% 50%;
-		.tt-section-image{
-					width: 384px;
-					height: 212px;
-					/*float: left;*/}
-	}
-	}
-/* Large devices (laptops/desktops, 992px and up) */
-@media only screen and (min-width: 992px) {
-	.grid1{
-		display: grid;
-		grid-template-columns: 100%;
-		.tt-section-image{
-					width: 992px;
-					height: 552px;
-					/*float: left;*/}
-	}
-	.grid2{
-		display: grid;
-		grid-template-columns: 50% 50%;
-		.tt-section-image{
-					width: 496px;
-					height: 276px;
-					/*float: left;*/}
-		}
-	.grid3{
-		display: grid;
-		grid-template-columns: 33% 33% 34%;
-		.tt-section-image{
-					width: 331px;
-					height: 184px;
-					/*float: left;*/}
-		}
-	.grid4, .grid5, .grid6{
-		display: grid;
-		grid-template-columns: 25% 25% 25% 25%;
-		.tt-section-image{
-					width: 248px;
-					height: 138px;
-					/*float: left;*/}
-		}
-	}
-/* Extra large devices (large laptops and desktops, 1200px and up) */
-				@media only screen and (min-width: 1200px) {
-	.grid1{
-		display: grid;
-		grid-template-columns: 100%;
-		.tt-section-image{
-					width: 1200px;
-					height: 670px;;
-					/*float: left;*/}
-	}
-	.grid2{
-		display: grid;
-		grid-template-columns: 50% 50%;
-		.tt-section-image{
-					width: 600px;
-					height: 335px;
-					/*float: left;*/}
-		}
-	.grid3{
-		display: grid;
-		grid-template-columns: 33% 33% 34%;
-		.tt-section-image{
-					width: 400px;
-					height: 224px;
-					/*float: left;*/}
-		}
-	.grid4, {
-		display: grid;
-		grid-template-columns: 25% 25% 25% 25%;
-		.tt-section-image{
-					width: 300px;
-					height: 167px;
-					/*float: left;*/}
-		}
-	.grid5 {
-		display: grid;
-		grid-template-columns: 20% 20% 20% 20% 20%;
-		.tt-section-image{
-					width: 240px;
-					height: 134px;
-					/*float: left;*/}
-		}
-	.grid6 {
-		display: grid;
-		grid-template-columns: 16% 16% 16% 16% 16% 17%;
-		.tt-section-image{
-					width: 200px;
-					height: 112px;
-					/*float: left;*/}
-		}
-	}
 
+	@media only screen and (max-width: 600px) {
+        .grid1, .grid2, .grid3, .grid4, .grid5, .grid6 {
+		    display: grid;
+		    grid-template-columns: 100%;
+		    .tt-section-image{width: 540px;height: 300px;/*float: left;*/}
+        }
+    }
+
+    /* Small devices (portrait tablets and large phones, 600px and up) */
+	@media only screen and (min-width: 600px) {
+		.grid1, .grid2, .grid3, .grid4, .grid5, .grid6 { display: grid; grid-template-columns: 100%;
+        .tt-section-image{width: 540px;height: 300px;/*float: left;*/}
+        }
+    }
+	
+    /* Medium devices (landscape tablets, 768px and up) */
+    @media only screen and (min-width: 768px) {
+        .grid1{display: grid;grid-template-columns: 100%;
+            .tt-section-image{width: 768px; height: 423px;/*float: left;*/}
+        }
+        .grid2, .grid3, .grid4, .grid5, .grid6 {display: grid; grid-template-columns: 50% 50%;
+            .tt-section-image{ width: 384px; height: 212px; /*float: left;*/}
+        }
+    }
+    
+    /* Large devices (laptops/desktops, 992px and up) */
+    @media only screen and (min-width: 992px) {
+        .grid1{ display: grid; grid-template-columns: 100%;
+            .tt-section-image{ width: 992px; height: 552px; /*float: left;*/}
+        }
+        .grid2{display: grid; grid-template-columns: 50% 50%;
+            .tt-section-image{ width: 496px; height: 276px; /*float: left;*/}
+        }
+        .grid3{display: grid; grid-template-columns: 33% 33% 34%;
+            .tt-section-image{ width: 331px; height: 184px; /*float: left;*/}
+        }
+        .grid4, .grid5, .grid6{ display: grid; grid-template-columns: 25% 25% 25% 25%;
+            .tt-section-image{ width: 248px; height: 138px; /*float: left;*/}
+        }
+    }
+    
+    /* Extra large devices (large laptops and desktops, 1200px and up) */
+    @media only screen and (min-width: 1200px) {
+        .grid1{display: grid; grid-template-columns: 100%;
+            .tt-section-image{ width: 1200px; height: 670px; /*float: left;*/}
+        }
+        .grid2{display: grid; grid-template-columns: 50% 50%;
+            .tt-section-image{width: 600px; height: 335px; /*float: left;*/}
+        }
+        .grid3{display: grid; grid-template-columns: 33% 33% 34%;
+            .tt-section-image{width: 400px; height: 224px;/*float: left;*/}
+        }
+        .grid4 { display: grid; grid-template-columns: 25% 25% 25% 25%;
+            .tt-section-image{width: 300px; height: 167px;/*float: left;*/}
+        }
+        .grid5 {display: grid;grid-template-columns: 20% 20% 20% 20% 20%;
+            .tt-section-image{width: 240px;height: 134px;/*float: left;*/}
+        }
+        .grid6 {display: grid; grid-template-columns: 16% 16% 16% 16% 16% 17%;
+            .tt-section-image{width: 200px;height: 112px;/*float: left;*/}
+        }
+    }
+}
 
 .treetopics.horizontal{
     grid-template-columns: auto;
@@ -298,4 +237,4 @@ $menu-item-height:30px;
             }
         }
     }
-}}
+}
