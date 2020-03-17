@@ -220,7 +220,7 @@ $menu-item-height:30px;
         display: block;
 
         #tt-recit-nav{
-            position: absolute; top: 0; right: 0;
+            position: absolute; top: 0; right: 0; width: 100%; justify-content: flex-end; z-index: 100;
         }
     }
 
