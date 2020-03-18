@@ -520,10 +520,10 @@ class format_treetopics_renderer extends format_section_renderer_base {
         $ttModeEditionFilter ='
             <div class="btn-group btn-group-toggle" data-toggle="buttons" id="ttModeEditionFilter">
                 <label class="btn btn-outline-primary  %s">
-                    <input type="checkbox" value="act" autocomplete="off" %s> Afficher les activités
+                    <input type="checkbox" value="sum" autocomplete="off" %s> Affiche le sommaire de la section
                 </label>
                 <label class="btn btn-outline-primary  %s">
-                    <input type="checkbox" value="sum" autocomplete="off" %s> Affiche le sommaire de la section
+                    <input type="checkbox" value="act" autocomplete="off" %s> Afficher les activités
                 </label>
             </div><br/><br/>
         ';
