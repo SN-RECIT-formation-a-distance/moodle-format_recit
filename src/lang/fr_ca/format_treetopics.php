@@ -50,6 +50,7 @@ $string['vertical'] = 'Vertical';
 $string['backtotableofcontent'] = '<- Retour au menu principal';
 
 $string['menudisplay'] = 'Affichage menu';
+$string['displayshortcuts'] = "Afficher les raccourcis lorsque le mode d'édition est activé";
 $string['sectionsecondarydisplay'] = 'Affichage des sections secondaires';
 $string['sectiondisplay'] = 'Affichage';
 $string['sectioncontentdisplay'] = 'Affichage des niveaux sous jacents';
@@ -76,6 +77,7 @@ $string['hascontract'] = 'Utiliser le contrat';
 $string['contract'] = 'Contrat d\'engagement';
 
 $string['menudisplay_help'] = 'Choisir le mode d\'affichage de menu';
+$string['displayshortcuts_help'] = 'Aide affichage';
 $string['sectiondisplay_help'] = 'Aide affichage';
 $string['sectioncontentdisplay_help'] = 'Aide affichage contenu';
 $string['subsections_help'] = 'Aide Subsections';

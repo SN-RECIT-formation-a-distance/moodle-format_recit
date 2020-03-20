@@ -331,6 +331,10 @@ class format_treetopics extends format_base {
                     'default' => 0,
                     'type' => PARAM_INT,
                 ),
+                'ttdisplayshortcuts' => array(
+                    'default' => false,
+                    'type' => PARAM_BOOL,
+                ),
                 'tttabsmodel' => array(
                     'default' => 5,
                     'type' => PARAM_INT,
@@ -370,6 +374,12 @@ class format_treetopics extends format_base {
                             1 => new lang_string('vertical', 'format_treetopics')
                         )
                     )
+                ),
+                'ttdisplayshortcuts' => array(
+                    'label' => new lang_string('displayshortcuts', 'format_treetopics'),
+                    'help' => 'displayshortcuts',
+                    'help_component' => 'format_treetopics',
+                    'element_type' => 'checkbox'
                 ),
                 'tttabsmodel' => array(
                     'label' => new lang_string('tabsmodel', 'format_treetopics'),

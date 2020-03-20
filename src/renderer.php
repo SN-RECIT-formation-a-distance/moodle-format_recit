@@ -516,20 +516,22 @@ class format_treetopics_renderer extends format_section_renderer_base {
         // Now the list of sections..
         echo $this->start_section_list();       
 
-        $filterValues = (isset($_COOKIE['ttModeEditionFilter']) ? explode(",", $_COOKIE['ttModeEditionFilter']) : array());
-        $ttModeEditionFilter ='
-            <div class="btn-group btn-group-toggle" data-toggle="buttons" id="ttModeEditionFilter">
-                <label class="btn btn-outline-primary  %s">
-                    <input type="checkbox" value="sum" autocomplete="off" %s> Affiche le sommaire de la section
-                </label>
-                <label class="btn btn-outline-primary  %s">
-                    <input type="checkbox" value="act" autocomplete="off" %s> Afficher les activités
-                </label>
-            </div><br/><br/>
-        ';
-        
-        echo sprintf($ttModeEditionFilter, (in_array("act",$filterValues) ? 'active' : ''), (in_array("act",$filterValues) ? 'checked' : ''),
-                                    (in_array("sum",$filterValues) ? 'active' : ''), (in_array("sum",$filterValues) ? 'checked' : ''));
+        if($course->ttdisplayshortcuts){
+            $filterValues = (isset($_COOKIE['ttModeEditionFilter']) ? explode(",", $_COOKIE['ttModeEditionFilter']) : array("sum", "act"));
+            $ttModeEditionFilter ='
+                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="ttModeEditionFilter">
+                    <label class="btn btn-outline-primary  %s">
+                        <input type="checkbox" value="sum" autocomplete="off" %s> Affiche le sommaire de la section
+                    </label>
+                    <label class="btn btn-outline-primary  %s">
+                        <input type="checkbox" value="act" autocomplete="off" %s> Afficher les activités
+                    </label>
+                </div><br/><br/>
+            ';
+            
+            echo sprintf($ttModeEditionFilter, (in_array("sum",$filterValues) ? 'active' : ''), (in_array("sum",$filterValues) ? 'checked' : ''),
+                                    (in_array("act",$filterValues) ? 'active' : ''), (in_array("act",$filterValues) ? 'checked' : ''));
+        }        
 
         $numsections = course_get_format($course)->get_last_section_number();
         
@@ -672,28 +674,33 @@ class format_treetopics_renderer extends format_section_renderer_base {
     public function section_title($section, $course) {
         $sectionName = $this->render(course_get_format($course)->inplace_editable_render_section_name($section));
 
-        $radioSectionLevel = 
-        '<label class="btn btn-outline-primary %s" >
-            <input data-component="ttRadioSectionLevel" type="radio" value="%s" autocomplete="off" %s> %s
-        </label>';
-
         $level = "";
-        if($section->section > 0){
-            $level = sprintf('<div class="btn-group btn-group-toggle btn-group-sm" style="margin-right:1rem;" data-toggle="buttons">%s%s%s</div>',
-            sprintf($radioSectionLevel, ($section->ttsectiondisplay == 1 ? "active" : ""), "1", ($section->ttsectiondisplay == 1 ? "checked" : ""), get_string('displaytabslev1', 'format_treetopics')),
-            sprintf($radioSectionLevel, ($section->ttsectiondisplay == 2 ? "active" : ""), "2", ($section->ttsectiondisplay == 2 ? "checked" : ""), get_string('displaytabslev2', 'format_treetopics')),
-            sprintf($radioSectionLevel, ($section->ttsectiondisplay == 3 ? "active" : ""), "3", ($section->ttsectiondisplay == 3 ? "checked" : ""), get_string('displaytabslev3', 'format_treetopics')));    
+        $contentDisplay = "";
+
+        if($course->ttdisplayshortcuts){
+            $radioSectionLevel = 
+            '<label class="btn btn-outline-primary %s" >
+                <input data-component="ttRadioSectionLevel" type="radio" value="%s" autocomplete="off" %s> %s
+            </label>';
+    
+            $level = "";
+            if($section->section > 0){
+                $level = sprintf('<div class="btn-group btn-group-toggle btn-group-sm" style="margin-right:1rem;" data-toggle="buttons">%s%s%s</div>',
+                sprintf($radioSectionLevel, ($section->ttsectiondisplay == 1 ? "active" : ""), "1", ($section->ttsectiondisplay == 1 ? "checked" : ""), get_string('displaytabslev1', 'format_treetopics')),
+                sprintf($radioSectionLevel, ($section->ttsectiondisplay == 2 ? "active" : ""), "2", ($section->ttsectiondisplay == 2 ? "checked" : ""), get_string('displaytabslev2', 'format_treetopics')),
+                sprintf($radioSectionLevel, ($section->ttsectiondisplay == 3 ? "active" : ""), "3", ($section->ttsectiondisplay == 3 ? "checked" : ""), get_string('displaytabslev3', 'format_treetopics')));    
+            }
+            
+            $radioSectionContentDisplay = 
+                '<label class="btn btn-outline-primary %s" >
+                    <input data-component="ttRadioSectionContentDisplay" type="radio" value="%s" autocomplete="off" %s> %s
+                </label>';
+    
+            $contentDisplay = sprintf('<div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">%s%s</div>',
+                sprintf($radioSectionContentDisplay, ($section->ttsectioncontentdisplay == -1 ? "active" : ""), "-1", ($section->ttsectioncontentdisplay == -1 ? "checked" : ""), get_string('displaytabs', 'format_treetopics')),
+                sprintf($radioSectionContentDisplay, ($section->ttsectioncontentdisplay == -2 ? "active" : ""), "-2", ($section->ttsectioncontentdisplay == -2 ? "checked" : ""), get_string('displayimages', 'format_treetopics')));   
         }
         
-        $radioSectionContentDisplay = 
-            '<label class="btn btn-outline-primary %s" >
-                <input data-component="ttRadioSectionContentDisplay" type="radio" value="%s" autocomplete="off" %s> %s
-            </label>';
-
-        $contentDisplay = sprintf('<div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">%s%s</div>',
-            sprintf($radioSectionContentDisplay, ($section->ttsectioncontentdisplay == -1 ? "active" : ""), "-1", ($section->ttsectioncontentdisplay == -1 ? "checked" : ""), get_string('displaytabs', 'format_treetopics')),
-            sprintf($radioSectionContentDisplay, ($section->ttsectioncontentdisplay == -2 ? "active" : ""), "-2", ($section->ttsectioncontentdisplay == -2 ? "checked" : ""), get_string('displayimages', 'format_treetopics')));
-
         $html = sprintf("<span>%s%s%s</span>", $sectionName, $level, $contentDisplay);
 
         return $html;
