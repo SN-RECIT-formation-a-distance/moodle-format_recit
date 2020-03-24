@@ -110,7 +110,7 @@ class TreeTopics
             $menu = $this->renderSectionMenu();    
         }
         
-        $content = sprintf("<div>%s</div>", $this->renderSectionContent());
+        $content = sprintf("<div>%s%s</div>", $this->renderSectionContent(), $this->getMapSections());
 
         return ($this->isMenuHorizontal() == 1 ? $menu.$content : $content.$menu);
     }
@@ -125,7 +125,12 @@ class TreeTopics
                         %s
                     </div>";
 
-        $menuItems = "<ul class='navbar-nav mr-auto mt-2 mt-lg-0'>%s</ul>";
+        $menuItems = "<ul class='navbar-nav mr-auto mt-2 mt-lg-0'>
+                        <li class='nav-item'>
+                            <a class='nav-link' href='#' data-section='map' onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'><i class='fa fa-map'></i></a>
+                        </li>
+                        %s
+                    </ul>";
 
         $hMenu = sprintf($navbar, "navbar-expand-lg",  sprintf($collapse, $menuItems));
         $vMenu = sprintf($navbar, "navbar-expand-lg", sprintf($collapse, $menuItems));
@@ -256,8 +261,8 @@ class TreeTopics
             $content = $this->moodleRenderer->getCourseSectionCmList($this->course, $section);
         }
         $html = 
-        "<div id='$sectionId' class='tt-imagebuttons auto2' data-section='$sectionId'>
-            <div class='tt-section-image-link tt-grid-element tt-section-image-link-selected' data='$sectionId' style='position:relative;'>
+        "<div class='tt-imagebuttons auto2' data-section='$sectionId'>
+            <div class='tt-section-image-link tt-grid-element tt-section-image-link-selected' style='position:relative;'>
                 <img class='tt-section-image' src='$imgSource' alt='$sectionName'>
                 $sectionTitle
                 $sectionSummary
@@ -311,9 +316,10 @@ class TreeTopics
         for($i = 0; $i < $this->course->ttimagegridcolumns; $i++){
             $griTemplateCols .= "$colSize% ";
         }
-$sectionSummary = format_text($section->summary, FORMAT_MOODLE, array('noclean' => true,'filter' => true));
+        
+        $sectionSummary = format_text($section->summary, FORMAT_MOODLE, array('noclean' => true,'filter' => true));
        // $sectionSummary = $this->autoLinkFilter->filter($section->summary);
-        $html = "<div id='$sectionId' class='section main clearfix tt-section $sectionStyle' role='region' aria-label='$sectionName' style='display: none;'>
+        $html = "<div class='section main clearfix tt-section $sectionStyle' role='region' aria-label='$sectionName' style='display: none;' data-section='$sectionId'>
                     <h2>$sectionName</h2>
                     <div class='content'>
                         $sectionAvail
@@ -325,6 +331,51 @@ $sectionSummary = format_text($section->summary, FORMAT_MOODLE, array('noclean' 
                 </div>";
 
         return $html;
+    }
+
+    protected function getMapSections(){        
+        $tmp1 = "";
+        foreach($this->sectionTree as $item1){
+            $tmp2 = "";
+            foreach($item1->child as $item2){
+                $tmp3 = "";
+                foreach($item2->child as $item3){
+                    $tmp3 .= $this->getMapLink($item3->section);
+                }                
+                
+                $tmp2 .= $this->getMapLink($item2->section); 
+
+                if(strlen($tmp3) > 0){
+                    $tmp2 .= "<ul>$tmp3</ul>";
+                }
+            }
+
+            $tmp1 .= $this->getMapLink($item1->section); 
+
+            if(strlen($tmp2) > 0){
+                $tmp1 .= "<ul>$tmp2</ul>";
+            }
+        }
+
+        $content = "<ul style='font-size: 20px; line-height: 3rem; padding-left: 4rem;'>$tmp1</ul>";
+
+        $html = "<div class='section main clearfix tt-section' role='region' aria-label='carte' style='display: none;' data-section='map'>
+                <h2>Carte</h2>
+                <div class='content'>
+                    $content
+                </div>
+            </div>";
+
+        return $html;
+    }
+
+    protected function getMapLink($section){
+        if($section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES){
+            return sprintf("<li>%s</li>", $this->getSectionName($section));
+        }
+        else{
+            return sprintf("<li><a href='#' data-section='%s' onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s<a/></li>", $this->get_section_id($section), $this->getSectionName($section));
+        }
     }
 
     protected function isMenuHorizontal(){

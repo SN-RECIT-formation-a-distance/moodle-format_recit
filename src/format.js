@@ -139,7 +139,8 @@ M.recit.course.format.TreeTopics = class{
             
         let params = this.getUrlVars();
         let anchors = params.id.split("#", 2);
-        let sectionId = anchors[1] || this.getCookie('section') || 'section-0';  // if there is no sectionId defined then it displays the section-0
+
+        let sectionId = params.sectionId || anchors[1] || this.getCookie('section') || 'section-0';  // if there is no sectionId defined then it displays the section-0
         
         /*if(sectionId === ''){
             let el = document.getElementById("navbarTogglerCourse");
@@ -264,18 +265,24 @@ M.recit.course.format.TreeTopics = class{
     }
 
     goToSection(event, sectionId) {
+        sectionId = sectionId || '';
+
         if(event !== null){
             event.preventDefault();
-            sectionId = event.target.getAttribute('data-section');
+            sectionId = event.currentTarget.getAttribute('data-section');
         }
         
         if(sectionId.length === 0){
             return;
         }
         
-        window.location.href = `${window.location.origin}${window.location.pathname}${window.location.search}#${sectionId}`;
-        document.body.scrollTop = 0; // For Safari
-        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+       /* let url = `${window.location.origin}${window.location.pathname}${window.location.search}#${sectionId}`;
+        if(url !== window.location.href){
+            window.location.href = url;
+        }*/
+        
+        //document.body.scrollTop = 0; // For Safari
+        //document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
         
         document.cookie = 'section=' + sectionId;
         /*$('.tt-section').css('display', 'none');
@@ -287,26 +294,26 @@ M.recit.course.format.TreeTopics = class{
         let elems = document.getElementsByClassName('tt-section');
         for(let el of elems){
             el.style.display = 'none';
-        }
 
-        // look for the specific section and display it
-        let el = document.getElementById(`${sectionId}`);
-        if(el !== null){
-            el.style.display = 'block';
-            // if the section has subsections then display them too
-            let children = el.getElementsByClassName('tt-section');
-            for(let item of children){
-                item.style.display = 'block';
-            }
+            // look for the specific section and display it
+            if(el.getAttribute('data-section') === sectionId){
+                el.style.display = 'block';
 
-            // if the section has a parent section then display it too
-            let grid = el.parentElement;
-            if(grid !== null){
-                let content = grid.parentElement;
-                if(content !== null){
-                    let section = content.parentElement;
-                    if(section !== null){
-                        section.style.display = "block";
+                // if the section has subsections then display them too
+                let children = el.getElementsByClassName('tt-section');
+                for(let item of children){
+                    item.style.display = 'block';
+                }
+    
+                // if the section has a parent section then display it too
+                let grid = el.parentElement;
+                if(grid !== null){
+                    let content = grid.parentElement;
+                    if(content !== null){
+                        let section = content.parentElement;
+                        if(section !== null){
+                            section.style.display = "block";
+                        }
                     }
                 }
             }
@@ -332,7 +339,7 @@ M.recit.course.format.TreeTopics = class{
         
         let iSection = 0;
         for(iSection = 0; iSection < sections.length; iSection++){
-            if(sections[iSection].getAttribute('id') == currentSection){
+            if(sections[iSection].getAttribute('data-section') == currentSection){
                 break;
             }
         }
@@ -342,7 +349,7 @@ M.recit.course.format.TreeTopics = class{
         }
         else{
             btnPrevious.classList.remove("disabled");
-            btnPrevious.firstChild.setAttribute('data-section', sections[iSection-1].getAttribute('id'));
+            btnPrevious.firstChild.setAttribute('data-section', sections[iSection-1].getAttribute('data-section'));
         }
         
         if(iSection >= sections.length - 1){
@@ -350,7 +357,7 @@ M.recit.course.format.TreeTopics = class{
         }
         else{
             btnNext.classList.remove("disabled");
-            btnNext.firstChild.setAttribute('data-section', sections[iSection+1].getAttribute('id'));
+            btnNext.firstChild.setAttribute('data-section', sections[iSection+1].getAttribute('data-section'));
         }
 
     }
