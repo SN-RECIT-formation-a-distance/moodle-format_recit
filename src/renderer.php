@@ -357,9 +357,9 @@ class TreeTopics
             }
         }
 
-        $content = "<ul style='font-size: 20px; line-height: 3rem; padding-left: 4rem;'>$tmp1</ul>";
+        $content = "<ul class='root'>$tmp1</ul>";
 
-        $html = "<div class='section main clearfix tt-section' role='region' aria-label='carte' style='display: none;' data-section='map'>
+        $html = "<div class='section main clearfix tt-section menu-map' role='region' aria-label='carte' style='display: none;' data-section='map'>
                 <h2>Carte</h2>
                 <div class='content'>
                     $content
@@ -371,10 +371,11 @@ class TreeTopics
 
     protected function getMapLink($section){
         if($section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES){
-            return sprintf("<li>%s</li>", $this->getSectionName($section));
+            return sprintf("<li>%s<div class='activity-list'>%s</div></li>", $this->getSectionName($section), $this->moodleRenderer->getCourseSectionCmList($this->course, $section));
         }
         else{
-            return sprintf("<li><a href='#' data-section='%s' onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s<a/></li>", $this->get_section_id($section), $this->getSectionName($section));
+            return sprintf("<li><a href='#' data-section='%s' onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s<a/><div class='activity-list'>%s</div></li>", 
+                        $this->get_section_id($section), $this->getSectionName($section), $this->moodleRenderer->getCourseSectionCmList($this->course, $section));
         }
     }
 
