@@ -304,7 +304,8 @@ class format_treetopics extends format_base {
     public function get_default_blocks() {
         return array(
             BLOCK_POS_LEFT => array(),
-            BLOCK_POS_RIGHT => array()
+            BLOCK_POS_RIGHT => array(),
+			BLOCK_POS_TOP => array()
         );
     }
 
@@ -388,8 +389,8 @@ class format_treetopics extends format_base {
                     'element_type' => 'select',
                     'element_attributes' => array(
                         array(
-                            1 => 'Model 1',
-                            5 => 'Model 5'
+                           // 1 => 'Model 1',
+                            5 => new lang_string('tabmodel5', 'format_treetopics')
                         )
                     )
                 ),

@@ -46,6 +46,7 @@ $string['displayimages'] = 'Image';
 $string['tabsmodel'] = 'Tabs Model';
 $string['horizontal'] = 'Horizontal';
 $string['vertical'] = 'Vertical';
+$string['tabmodel5'] = 'RÉCIT Classique';
 
 $string['backtotableofcontent'] = '<- Back to menu';
 
