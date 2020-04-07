@@ -103,3 +103,5 @@ $string['showsectiontitle_help'] = 'Ce réglage permet d\'afficher le titre de l
 //$string['sectionimageheight_help'] = 'Aide concernant la hauteur de l\'image';
 $string['hascontract_help'] = 'Lorsque la case "Utiliser le contract d\'engagement est cochée, le contrat d\'engagement s\'affiche à l\'élève. Ce dernier doit alors le lire le et le signer pour avoir accès à son cours.';
 $string['contract_help'] = 'Le contract d\'engagement est un texte expliquant à l\'élève ce qui est attendu de lui au point de vue comportement et méthode de travail. Ce texte s\'affiche à l\'élève au début du cours et bloque l\'accès aux activités tant que le contract n\'est pas signé.';
+$string['prev_section'] = 'Section précédente';
+$string['next_section'] = 'Section suivante';

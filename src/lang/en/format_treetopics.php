@@ -21,6 +21,7 @@
 // @author     RECIT {@link https://recitfad.ca}
 // @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
 // @developer  Studio XP : {@link https://www.studioxp.ca}
+// @developer  SN RECITFAD : {@link https://recitfad.ca}
 
 $string['addsections'] = 'Add topics';
 $string['currentsection'] = 'This topic';
@@ -102,3 +103,5 @@ $string['sectionimagewidth_help'] = 'Help Section Image Width';
 $string['sectionimageheight_help'] = 'Help Section Image Height';
 $string['hascontract_help'] = 'Help Use a contract';
 $string['contract_help'] = 'Help Contract content';
+$string['prev_section'] = 'Previous section';
+$string['next_section'] = 'Next section';
