@@ -302,8 +302,10 @@ M.recit.course.format.TreeTopics = class{
         let selectedElem = selectMenuItem(sectionId);
 
         // select menu level2 item
-        let parentSectionId = selectedElem.parentElement.parentElement.getAttribute("data-parent-section");        
-        selectMenuItem(parentSectionId);
+        if(selectedElem){
+            let parentSectionId = selectedElem.parentElement.parentElement.getAttribute("data-parent-section");        
+            selectMenuItem(parentSectionId);
+        }
     }
 
     goToSection(event, sectionId) {
