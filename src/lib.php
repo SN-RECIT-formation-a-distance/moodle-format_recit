@@ -389,7 +389,7 @@ class format_treetopics extends format_base {
                     'element_type' => 'select',
                     'element_attributes' => array(
                         array(
-                           // 1 => 'Model 1',
+                            1 => new lang_string('tabmodel1', 'format_treetopics'),
                             5 => new lang_string('tabmodel5', 'format_treetopics')
                         )
                     )

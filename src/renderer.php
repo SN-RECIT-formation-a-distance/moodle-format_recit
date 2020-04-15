@@ -104,10 +104,14 @@ class TreeTopics
     protected function renderSections(){
         // la section 0 controle le mode d'affichage
         $mode = $this->sectionList[0]->ttsectioncontentdisplay;
+        $model = $this->course->tttabsmodel;
 
         $menu = "";
         if($mode == TT_DISPLAY_TABS){
-            $menu = $this->renderSectionMenu();    
+            switch($model){
+                case 1: $menu = $this->renderSectionMenuM1(); break;
+                case 5: $menu = $this->renderSectionMenuM5(); break;
+            }
         }
         
         $content = sprintf("<div>%s%s</div>", $this->renderSectionContent(), $this->getMapSections());
@@ -115,7 +119,40 @@ class TreeTopics
         return ($this->isMenuHorizontal() == 1 ? $menu.$content : $content.$menu);
     }
 
-    protected function renderSectionMenu(){
+    protected function renderSectionMenuM1(){
+        $menuItemTemplate = 
+                "<li class='menuM1-item  theme-bg-color'>
+                    <a class='menuM1-item-desc' href='#' data-section='%s' onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s</a>
+                    <div class='arrow'></div>
+                </li>";
+
+        $html = "
+                <nav class='menuM1' id='menuM1'>
+                    <ul class='menuM1-level1'>%s</ul>
+                    %s
+                </nav>";
+
+
+        $tmp1 = "";
+        $tmp2 = "";        
+
+        $tmp1 .= sprintf($menuItemTemplate, "map", "<i class='fa fa-map'></i>");
+        foreach($this->sectionTree as $item1){
+            if ($item1->section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES){ continue; }
+            $tmp2 = sprintf("<ul class='menuM1-level2' data-parent-section='%s'>", $this->get_section_id($item1->section));
+            foreach($item1->child as $item2){
+                if ($item2->section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES){ continue; }
+                $tmp2 .= sprintf($menuItemTemplate, $this->get_section_id($item2->section), $this->getSectionName($item2->section));
+            }
+            $tmp2 .= "</ul>";
+
+            $tmp1 .= sprintf($menuItemTemplate, $this->get_section_id($item1->section), $this->getSectionName($item1->section));
+        }
+
+        return sprintf($html, $tmp1, $tmp2);
+    }
+
+    protected function renderSectionMenuM5(){
         $navbar = "<nav class='navbar navbar-dark %s theme-bg-color' id='tt-recit-nav'>%s</nav>";
 
         $collapse = "<button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarTogglerCourse' aria-controls='navbarTogglerCourse' aria-expanded='false' aria-label='Toggle navigation'>
@@ -142,19 +179,19 @@ class TreeTopics
         foreach($this->sectionTree as $item1){
             foreach($item1->child as $item2){
                 foreach($item2->child as $item3){
-                    $tmp3 .= $this->renderSectionMenuItem($item3->section);
+                    $tmp3 .= $this->renderSectionMenuM5Item($item3->section);
                 }
-                $tmp2 .= $this->renderSectionMenuItem($item2->section, $tmp3);
+                $tmp2 .= $this->renderSectionMenuM5Item($item2->section, $tmp3);
                 $tmp3 = "";
             }
-            $tmp1 .= $this->renderSectionMenuItem($item1->section, $tmp2);
+            $tmp1 .= $this->renderSectionMenuM5Item($item1->section, $tmp2);
             $tmp2 = "";
         }
 
         return sprintf($html, $tmp1);
     }
 
-    protected function renderSectionMenuItem($section, $subSection = ""){
+    protected function renderSectionMenuM5Item($section, $subSection = ""){
         $html = "";
 
         $sectionid = $this->get_section_id($section);

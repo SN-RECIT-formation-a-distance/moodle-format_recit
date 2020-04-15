@@ -264,8 +264,50 @@ M.recit.course.format.TreeTopics = class{
         }
     }
 
+    ctrlMenuM1(sectionId){
+        let menu = document.getElementById("menuM1");
+
+        if(menu === null){ return;}
+
+        let selectMenuItem = function(id){
+            let el = menu.querySelector(`[data-section=${id}]`);
+            if(el !== null){
+                el.parentElement.setAttribute("data-selected", "1");
+            }
+
+            // if the menu level1 item has a branch then it also select it
+            let branch = menu.querySelector(`[data-parent-section=${id}]`);
+            if(branch !== null){
+                el.parentElement.setAttribute("data-selected", "1");
+                el.nextElementSibling.style.display = 'none'; // remove the arrow on parent element
+                branch.setAttribute("data-selected", "1");
+            }
+
+            return el;
+        }
+
+        // reset menu level 1 selection
+        let elems = menu.getElementsByClassName('menuM1-item');
+        for(let el of elems){
+            el.setAttribute("data-selected", "0");
+        }
+
+        // reset menu level 2 selection
+        elems = menu.querySelectorAll('[data-parent-section]');
+        for(let el of elems){
+            el.setAttribute("data-selected", "0");
+        }
+
+        // select menu level1 item
+        let selectedElem = selectMenuItem(sectionId);
+
+        // select menu level2 item
+        let parentSectionId = selectedElem.parentElement.parentElement.getAttribute("data-parent-section");        
+        selectMenuItem(parentSectionId);
+    }
+
     goToSection(event, sectionId) {
-        sectionId = sectionId || '';
+        sectionId = sectionId || '';       
 
         if(event !== null){
             event.preventDefault();
@@ -276,6 +318,8 @@ M.recit.course.format.TreeTopics = class{
             return;
         }
         
+        this.ctrlMenuM1(sectionId);
+
        /* let url = `${window.location.origin}${window.location.pathname}${window.location.search}#${sectionId}`;
         if(url !== window.location.href){
             window.location.href = url;

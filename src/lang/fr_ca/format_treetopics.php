@@ -45,6 +45,7 @@ $string['displaytabslev2'] = 'Contenu de niveau 2';
 $string['displaytabslev3'] = 'Contenu de niveau 3';
 $string['displayimages'] = 'Affichage sous forme d\'images';
 $string['tabsmodel'] = 'Modèle d\'onglet';
+$string['tabmodel1'] = 'École ouverte';
 $string['tabmodel5'] = 'RÉCIT Classique';
 $string['horizontal'] = 'Horizontal';
 $string['vertical'] = 'Vertical';
