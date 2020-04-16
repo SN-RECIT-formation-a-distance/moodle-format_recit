@@ -421,7 +421,8 @@ class TreeTopics
     }
 
     protected function renderPagination(){
-        
+        if(!$this->course->ttshownavsection){ return "";}
+
         $result = "<nav id='sectionPagination' aria-label='Pagination de sections' style='margin-top: 3rem; border-top: 1px solid #efefef; padding-top: 1rem;'>";
                 $result .= '<ul class="pagination justify-content-center ">';
         $result .= '<li class="page-item">';

@@ -75,6 +75,7 @@ $string['sectionimagewidth'] = 'Image Width Scale';
 $string['sectionimageheight'] = 'Image Height Scale';
 $string['hascontract'] = 'Use a contract';
 $string['contract'] = 'Contract content';
+$string['navsection'] = 'Show navigation by section';
 
 $string['menudisplay_help'] = 'Help';
 $string['displayshortcuts_help'] = 'Help';
@@ -106,3 +107,4 @@ $string['hascontract_help'] = 'Help Use a contract';
 $string['contract_help'] = 'Help Contract content';
 $string['prev_section'] = 'Previous section';
 $string['next_section'] = 'Next section';
+$string['navsection_help'] = 'Show navigation by section';

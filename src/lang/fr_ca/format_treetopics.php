@@ -78,6 +78,7 @@ $string['showsectiontitle'] = 'Afficher le titre de la section sous l\'image';
 //$string['sectionimageheight'] = 'Proportion de la hauteur de l\'image';
 $string['hascontract'] = 'Utiliser le contrat d\'engagement';
 $string['contract'] = 'Contrat d\'engagement';
+$string['navsection'] = 'Afficher la navigation par section';
 
 $string['menudisplay_help'] = 'Le menu de navigation peut se présenter au dessus du contenu principal ou à sa doite. Vous pouvez choisir le mode d\'affichage de menu désiré.';
 $string['displayshortcuts_help'] = 'Ce format de cours permet de masquer ou afficher les ressources et activités ainsi que le résumé de section. Si vous selectionnez cette option, les boutons seront affichés.';
@@ -106,3 +107,4 @@ $string['hascontract_help'] = 'Lorsque la case "Utiliser le contract d\'engageme
 $string['contract_help'] = 'Le contract d\'engagement est un texte expliquant à l\'élève ce qui est attendu de lui au point de vue comportement et méthode de travail. Ce texte s\'affiche à l\'élève au début du cours et bloque l\'accès aux activités tant que le contract n\'est pas signé.';
 $string['prev_section'] = 'Section précédente';
 $string['next_section'] = 'Section suivante';
+$string['navsection_help'] = 'Afficher la navigation par section';

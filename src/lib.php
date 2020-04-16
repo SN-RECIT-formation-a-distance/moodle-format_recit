@@ -347,6 +347,10 @@ class format_treetopics extends format_base {
                 'tthascontract' => array(
                     'default' => false,
                     'type' => PARAM_BOOL,
+                ),
+                'ttshownavsection' => array(
+                    'default' => true,
+                    'type' => PARAM_BOOL,
                 )
             );
         }
@@ -413,6 +417,12 @@ class format_treetopics extends format_base {
                 'tthascontract' => array(
                     'label' => new lang_string('hascontract', 'format_treetopics'),
                     'help' => 'hascontract',
+                    'help_component' => 'format_treetopics',
+                    'element_type' => 'checkbox'
+                ),
+                'ttshownavsection' => array(
+                    'label' => new lang_string('navsection', 'format_treetopics'),
+                    'help' => 'navsection',
                     'help_component' => 'format_treetopics',
                     'element_type' => 'checkbox'
                 )
@@ -658,13 +668,18 @@ class format_treetopics extends format_base {
      */
     public function update_course_format_options($data, $oldcourse = null) {
         $data = (array)$data;
+
         if ($oldcourse !== null) {
             $oldcourse = (array)$oldcourse;
             $options = $this->course_format_options();
             //var_dump($data);
             foreach ($options as $key => $unused) {
                 if (!array_key_exists($key, $data)) {
-                    if (array_key_exists($key, $oldcourse)) {
+                    // make sure to set the boolean value to 0 (this property is not sent by post when check input is unchecked)
+                    if(in_array($key, array('ttdisplayshortcuts', 'tthascontract', 'ttshownavsection'))){
+                        $data[$key] = 0;
+                    }
+                    else if (array_key_exists($key, $oldcourse)) {
                         $data[$key] = $oldcourse[$key];
                     }
                 }
