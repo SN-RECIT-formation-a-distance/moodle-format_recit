@@ -139,12 +139,15 @@ class TreeTopics
         $tmp1 .= sprintf($menuItemTemplate, "map", "<i class='fa fa-map'></i>");
         foreach($this->sectionTree as $item1){
             if ($item1->section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES){ continue; }
-            $tmp2 = sprintf("<ul class='menuM1-level2' data-parent-section='%s'>", $this->get_section_id($item1->section));
+
+            $tmp3 = "";
             foreach($item1->child as $item2){
                 if ($item2->section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES){ continue; }
-                $tmp2 .= sprintf($menuItemTemplate, $this->get_section_id($item2->section), $this->getSectionName($item2->section));
+                $tmp3 .= sprintf($menuItemTemplate, $this->get_section_id($item2->section), $this->getSectionName($item2->section));
             }
-            $tmp2 .= "</ul>";
+            if(strlen($tmp3) > 0){
+                $tmp2 .= sprintf("<ul class='menuM1-level2' data-parent-section='%s'>%s</ul>", $this->get_section_id($item1->section), $tmp3);
+            }
 
             $tmp1 .= sprintf($menuItemTemplate, $this->get_section_id($item1->section), $this->getSectionName($item1->section));
         }

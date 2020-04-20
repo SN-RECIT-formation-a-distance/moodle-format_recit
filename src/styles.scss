@@ -8,7 +8,7 @@ $menu-item-height:30px;
         position: relative;        
 
         .menuM1-level{
-            width: 100%; list-style: none; margin: auto; display: flex; flex-direction: row; justify-content: center; padding: 0;
+            width: 100%; list-style: none; margin: auto; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; padding: 0;
 
             .menuM1-item{
                 padding: .3rem; margin: .1rem;  opacity: 0.5; flex-grow: 1;
@@ -118,66 +118,68 @@ $menu-item-height:30px;
 
 	@media only screen and (max-width: 600px) {
         .grid1, .grid2, .grid3, .grid4, .grid5, .grid6 {
-		    display: grid;
-		    grid-template-columns: 100%;
-		    .tt-section-image{width: 540px;height: 300px;/*float: left;*/}
+            display: grid; grid-template-columns: 100%;
+            .tt-imagebuttons{ 
+                margin: 0;
+                .tt-section-image{width: 375px;height: 150px;}
+            }
         }
     }
 
     /* Small devices (portrait tablets and large phones, 600px and up) */
-	@media only screen and (min-width: 600px) {
+	/*@media only screen and (min-width: 600px) {
 		.grid1, .grid2, .grid3, .grid4, .grid5, .grid6 { display: grid; grid-template-columns: 100%;
-        .tt-section-image{width: 540px;height: 300px;/*float: left;*/}
+        .tt-section-image{width: 540px;height: 300px;}
         }
-    }
+    }*/
 	
     /* Medium devices (landscape tablets, 768px and up) */
     @media only screen and (min-width: 768px) {
         .grid1{display: grid;grid-template-columns: 100%;
-            .tt-section-image{width: 768px; height: 423px;/*float: left;*/}
+            .tt-section-image{width: 100%; height: 400px;}
         }
         .grid2, .grid3, .grid4, .grid5, .grid6 {display: grid; grid-template-columns: 50% 50%;
-            .tt-section-image{ width: 384px; height: 212px; /*float: left;*/}
+            .tt-section-image{ width: 335px; height: 170px;}
         }
     }
     
     /* Large devices (laptops/desktops, 992px and up) */
     @media only screen and (min-width: 992px) {
         .grid1{ display: grid; grid-template-columns: 100%;
-            .tt-section-image{ width: 992px; height: 552px; /*float: left;*/}
+            .tt-section-image{ width: 100%; height: 552px; }
         }
         .grid2{display: grid; grid-template-columns: 50% 50%;
-            .tt-section-image{ width: 496px; height: 276px; /*float: left;*/}
+            .tt-section-image{ width: 100%; height: 276px; }
         }
         .grid3{display: grid; grid-template-columns: 33% 33% 34%;
-            .tt-section-image{ width: 331px; height: 184px; /*float: left;*/}
+            .tt-section-image{ width: 100%; height: 184px; }
         }
         .grid4, .grid5, .grid6{ display: grid; grid-template-columns: 25% 25% 25% 25%;
-            .tt-section-image{ width: 248px; height: 138px; /*float: left;*/}
+            .tt-section-image{ width: 100%; height: 138px; }
         }
     }
     
     /* Extra large devices (large laptops and desktops, 1200px and up) */
-    @media only screen and (min-width: 1200px) {
+   /* @media only screen and (min-width: 1200px) {
         .grid1{display: grid; grid-template-columns: 100%;
-            .tt-section-image{ width: 1200px; height: 670px; /*float: left;*/}
+            .tt-section-image{ width: 1200px; height: 670px; }
         }
         .grid2{display: grid; grid-template-columns: 50% 50%;
-            .tt-section-image{width: 600px; height: 335px; /*float: left;*/}
+            .tt-section-image{width: 600px; height: 335px;}
         }
         .grid3{display: grid; grid-template-columns: 33% 33% 34%;
-            .tt-section-image{width: 400px; height: 224px;/*float: left;*/}
+            .tt-section-image{width: 400px; height: 224px;}
         }
         .grid4 { display: grid; grid-template-columns: 25% 25% 25% 25%;
-            .tt-section-image{width: 300px; height: 167px;/*float: left;*/}
+            .tt-section-image{width: 300px; height: 167px;}
         }
         .grid5 {display: grid;grid-template-columns: 20% 20% 20% 20% 20%;
-            .tt-section-image{width: 240px;height: 134px;/*float: left;*/}
+            .tt-section-image{width: 240px;height: 134px;}
         }
         .grid6 {display: grid; grid-template-columns: 16% 16% 16% 16% 16% 17%;
-            .tt-section-image{width: 200px;height: 112px;/*float: left;*/}
+            .tt-section-image{width: 200px;height: 112px;}
         }
-    }
+    }*/
 
     .menu-map{
         .root{font-size: 20px; line-height: 3rem; padding-left: 4rem;}
