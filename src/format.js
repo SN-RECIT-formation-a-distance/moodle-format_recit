@@ -279,7 +279,7 @@ M.recit.course.format.TreeTopics = class{
             let branch = menu.querySelector(`[data-parent-section=${id}]`);
             if(branch !== null){
                 el.parentElement.setAttribute("data-selected", "1");
-                el.nextElementSibling.style.display = 'none'; // remove the arrow on parent element
+                el.previousElementSibling.style.display = 'none'; // remove the arrow on parent element
                 branch.setAttribute("data-selected", "1");
             }
 

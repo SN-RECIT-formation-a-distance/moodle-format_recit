@@ -121,14 +121,16 @@ class TreeTopics
 
     protected function renderSectionMenuM1(){
         $menuItemTemplate = 
-                "<li class='menuM1-item  theme-bg-color'>
+                "<li class='menuM1-item'>
+                    <div class='arrow'></div>    
                     <a class='menuM1-item-desc' href='#' data-section='%s' onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s</a>
-                    <div class='arrow'></div>
                 </li>";
+
+        $menuSeparator = "<li></li>";
 
         $html = "
                 <nav class='menuM1' id='menuM1'>
-                    <ul class='menuM1-level1'>%s</ul>
+                    <ul class='menuM1-level1 tt-menu-color1'>%s</ul>
                     %s
                 </nav>";
 
@@ -137,6 +139,7 @@ class TreeTopics
         $tmp2 = "";        
 
         $tmp1 .= sprintf($menuItemTemplate, "map", "<i class='fa fa-map'></i>");
+        $tmp1 .= $menuSeparator;
         foreach($this->sectionTree as $item1){
             if ($item1->section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES){ continue; }
 
@@ -144,12 +147,14 @@ class TreeTopics
             foreach($item1->child as $item2){
                 if ($item2->section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES){ continue; }
                 $tmp3 .= sprintf($menuItemTemplate, $this->get_section_id($item2->section), $this->getSectionName($item2->section));
+                $tmp3 .= $menuSeparator;
             }
             if(strlen($tmp3) > 0){
-                $tmp2 .= sprintf("<ul class='menuM1-level2' data-parent-section='%s'>%s</ul>", $this->get_section_id($item1->section), $tmp3);
+                $tmp2 .= sprintf("<ul class='menuM1-level2 tt-menu-color2' data-parent-section='%s'>%s</ul>", $this->get_section_id($item1->section), $tmp3);
             }
 
             $tmp1 .= sprintf($menuItemTemplate, $this->get_section_id($item1->section), $this->getSectionName($item1->section));
+            $tmp1 .= $menuSeparator;
         }
 
         return sprintf($html, $tmp1, $tmp2);

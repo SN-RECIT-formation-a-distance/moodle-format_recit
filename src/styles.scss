@@ -11,31 +11,44 @@ $menu-item-height:30px;
             width: 100%; list-style: none; margin: auto; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; padding: 0;
 
             .menuM1-item{
-                padding: .3rem; margin: .1rem;  opacity: 0.5; flex-grow: 1;
-                .menuM1-item-desc{padding: .3rem;    font-size: 16px;    color: #fff;    font-weight: 600;    width: 100%;    
-                    white-space: nowrap;    -webkit-hyphens: none;    -ms-hyphens: none;    hyphens: none; display: inline-block; text-align: center; white-space: normal;
-                   
+                padding: .3rem; margin: .1rem;  min-width: 120px; align-self: center; display: flex; justify-content: center; align-items: center;
+                .menuM1-item-desc{padding: .3rem;    font-size: 16px;      font-weight: 600;    
+                    white-space: nowrap;    -webkit-hyphens: none;    -ms-hyphens: none;    hyphens: none; white-space: normal;
                 }
             }
+            li:empty{ height: 30px; align-self: center; width: 2px; border-right: 1px solid #FFF;}
+            li:empty:last-child{ display: none;}
+
             .menuM1-item[data-selected="1"]{
-                opacity: 1;
                 .arrow{display: block;}
             }       
         }
 
         .arrow{
-            border-top: 10px solid #FFF; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; margin: auto; display: none; margin-bottom: .3rem;
+            border-width: 10px; border-style: solid; border-color: transparent; width: 0; height: 0; margin: 0px; display: none; 
+            border-left-color: #666; border-right-width: 0px;
         }
 
         .menuM1-level1{
             @extend .menuM1-level;
+            .menuM1-item{
+                .menuM1-item-desc{color: #666;}
+            }
+            .menuM1-item[data-selected="1"]{
+                .menuM1-item-desc{color: #fff;}
+                .arrow{display: block;  border-left-color: #fff; }
+            } 
         }
         
         .menuM1-level2{
-            @extend .menuM1-level; justify-content: left; display: none; 
+            @extend .menuM1-level; display: none; 
             .menuM1-item{
-                .menuM1-item-desc{font-weight: 400; }
+                .menuM1-item-desc{font-weight: 400;  color: #fff; }
             }
+            .menuM1-item[data-selected="1"]{
+                .menuM1-item-desc{color: #EAC167;}
+                .arrow{display: block;  border-left-color: #EAC167; }
+            } 
         }
 
         .menuM1-level2[data-selected="1"]{
