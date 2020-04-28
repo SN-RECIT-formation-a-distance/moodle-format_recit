@@ -788,7 +788,8 @@ class format_treetopics_renderer extends format_section_renderer_base {
                 $level = sprintf('<div class="btn-group btn-group-toggle btn-group-sm" style="margin-right:1rem;" data-toggle="buttons">%s%s%s</div>',
                 sprintf($radioSectionLevel, ($section->ttsectiondisplay == 1 ? "active" : ""), "1", ($section->ttsectiondisplay == 1 ? "checked" : ""), get_string('displaytabslev1', 'format_treetopics')),
                 sprintf($radioSectionLevel, ($section->ttsectiondisplay == 2 ? "active" : ""), "2", ($section->ttsectiondisplay == 2 ? "checked" : ""), get_string('displaytabslev2', 'format_treetopics')),
-                sprintf($radioSectionLevel, ($section->ttsectiondisplay == 3 ? "active" : ""), "3", ($section->ttsectiondisplay == 3 ? "checked" : ""), get_string('displaytabslev3', 'format_treetopics')));    
+                "");
+            //    sprintf($radioSectionLevel, ($section->ttsectiondisplay == 3 ? "active" : ""), "3", ($section->ttsectiondisplay == 3 ? "checked" : ""), get_string('displaytabslev3', 'format_treetopics')));    
             }
             
             $radioSectionContentDisplay = 

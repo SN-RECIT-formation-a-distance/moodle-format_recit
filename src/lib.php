@@ -553,7 +553,7 @@ class format_treetopics extends format_base {
                         array(
                             TT_DISPLAY_TABS_LEVEL_1 => new lang_string('displaytabslev1', 'format_treetopics'),
                             TT_DISPLAY_TABS_LEVEL_2 => new lang_string('displaytabslev2', 'format_treetopics'),
-                            TT_DISPLAY_TABS_LEVEL_3 => new lang_string('displaytabslev3', 'format_treetopics'),
+                            //TT_DISPLAY_TABS_LEVEL_3 => new lang_string('displaytabslev3', 'format_treetopics'),
                             TT_DISPLAY_IMAGES => new lang_string('displayimages', 'format_treetopics')
                         )
                     )

@@ -270,9 +270,7 @@ $menu-item-height:30px;
     }
 }
 
-
-
-@media  screen and (max-width: 992px){
+@media screen and (max-width: 992px){
     .treetopics.vertical{
         grid-template-columns: none;
         grid-template-rows: none;
@@ -294,6 +292,18 @@ $menu-item-height:30px;
                     }
                 }
             }
+        }
+    }
+}
+
+@media screen and (max-width: 767px){
+    .menuM1{
+        .menuM1-level{
+            flex-direction: column;
+            .menuM1-item{
+                padding: 0px;
+            }
+            li:empty{ display: none;}
         }
     }
 }
