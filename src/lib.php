@@ -328,10 +328,10 @@ class format_treetopics extends format_base {
                     'default' => $courseconfig->hiddensections,
                     'type' => PARAM_INT,
                 ),
-                'ttmenudisplay' => array(
+               /* 'ttmenudisplay' => array(
                     'default' => 0,
                     'type' => PARAM_INT,
-                ),
+                ),*/
                 'ttdisplayshortcuts' => array(
                     'default' => false,
                     'type' => PARAM_BOOL,
@@ -368,7 +368,7 @@ class format_treetopics extends format_base {
                             )
                         )
                 ),
-                'ttmenudisplay' => array(
+                /*'ttmenudisplay' => array(
                     'label' => new lang_string('menudisplay', 'format_treetopics'),
                     'help' => 'menudisplay',
                     'help_component' => 'format_treetopics',
@@ -379,7 +379,7 @@ class format_treetopics extends format_base {
                             1 => new lang_string('vertical', 'format_treetopics')
                         )
                     )
-                ),
+                ),*/
                 'ttdisplayshortcuts' => array(
                     'label' => new lang_string('displayshortcuts', 'format_treetopics'),
                     'help' => 'displayshortcuts',
@@ -394,6 +394,7 @@ class format_treetopics extends format_base {
                     'element_attributes' => array(
                         array(
                             1 => new lang_string('tabmodel1', 'format_treetopics'),
+                            2 => new lang_string('tabmodel2', 'format_treetopics'),
                             5 => new lang_string('tabmodel5', 'format_treetopics')
                         )
                     )

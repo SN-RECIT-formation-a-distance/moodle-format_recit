@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/course/format/renderer.php');
 //require_once($CFG->dirroot.'/filter/recitactivity/filter.php');
 
-js_reset_all_caches();
+//js_reset_all_caches();
 
 class TreeTopics 
 {
@@ -39,12 +39,10 @@ class TreeTopics
     protected $courseFormat = null;
     protected $sectionList = array();
     protected $sectionTree = array();
-   //protected $autoLinkFilter = null;
 
     public function __construct(){
         global $COURSE;
         $context = context_course::instance($COURSE->id);
-        //$this->autoLinkFilter = new filter_recitactivity($context, array());
     }
 
     public function render($moodleRenderer, $course){
@@ -110,6 +108,7 @@ class TreeTopics
         if($mode == TT_DISPLAY_TABS){
             switch($model){
                 case 1: $menu = $this->renderSectionMenuM1(); break;
+                case 2: $menu = $this->renderSectionMenuM5(); break;
                 case 5: $menu = $this->renderSectionMenuM5(); break;
             }
         }
@@ -425,7 +424,8 @@ class TreeTopics
     }
 
     protected function isMenuHorizontal(){
-        return ($this->course->ttmenudisplay == 0);
+        $options = array(1, 5);
+        return (in_array($this->course->tttabsmodel, $options));
     }
 
     protected function renderPagination(){

@@ -44,11 +44,12 @@ $string['displaytabslev1'] = 'Onglet Level 1';
 $string['displaytabslev2'] = 'Onglet Level 2';
 $string['displaytabslev3'] = 'Onglet Level 3';
 $string['displayimages'] = 'Image';
-$string['tabsmodel'] = 'Tabs Model';
+$string['tabsmodel'] = 'Menu Model';
 $string['horizontal'] = 'Horizontal';
 $string['vertical'] = 'Vertical';
-$string['tabmodel1'] = '2 Levels';
-$string['tabmodel5'] = 'RÉCIT Classique';
+$string['tabmodel1'] = 'Horizontal 2 Levels';
+$string['tabmodel2'] = 'Vertical';
+$string['tabmodel5'] = 'Horizontal 1 Level';
 
 $string['backtotableofcontent'] = '<- Back to menu';
 
@@ -98,7 +99,7 @@ $string['sectionimageurl_help'] = "Image URL";
 $string['btnSeeDepFiles'] = "Select file";
 $string['btnUploadDepFiles'] = "Upload file";
 
-$string['tabsmodel_help'] = 'Tabs Model Help';
+$string['tabsmodel_help'] = 'The menu may have a different visual. You can choose the model that suits you';
 $string['imagewidth_help'] = "Width of the images in the grid in pixel. The height will be adjusted with the image's ratio";
 $string['showsectiontitle_help'] = 'Help Section Title';
 $string['sectionimagewidth_help'] = 'Help Section Image Width';
@@ -107,4 +108,4 @@ $string['hascontract_help'] = 'Help Use a contract';
 $string['contract_help'] = 'Help Contract content';
 $string['prev_section'] = 'Previous section';
 $string['next_section'] = 'Next section';
-$string['navsection_help'] = 'Show navigation by section';
+$string['navsection_help'] = 'Allows to display buttons at the bottom of the page in order to navigate between the different sections of the course';

@@ -54,10 +54,5 @@ $renderer = $PAGE->get_renderer('format_treetopics');
 
 $renderer->renderTreeTopics($course);
 
-if ($PAGE->user_is_editing()) {
-    $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/local/recitcommon/js/RecitApi.js'), true);
-    $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/local/recitcommon/js/Utils.js'), true);
-}
-
 // Include course format js module
 $PAGE->requires->js('/course/format/treetopics/format.js');

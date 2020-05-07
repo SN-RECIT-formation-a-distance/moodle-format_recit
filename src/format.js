@@ -89,11 +89,72 @@ M.course.format.process_sections = function(Y, sectionlist, response, sectionfro
 M.recit = M.recit || {};
 M.recit.course = M.recit.course || {};
 M.recit.course.format = M.recit.course.format || {};
+M.recit.course.format.TreeTopicsWebApi = class{
+    constructor(){
+        this.gateway = this.getGateway();
+
+        this.post = this.post.bind(this);
+        this.onError = this.onError.bind(this);
+    }
+
+    getGateway(){
+        return `${M.cfg.wwwroot}/course/format/treetopics/Gateway.php`;
+    }
+    
+    onError(jqXHR, textStatus) {
+        alert("Error on server communication ("+ textStatus +").\n\nSee console for more details");
+        console.log(jqXHR);
+    };
+
+    post(url, data, callbackSuccess){
+        data = JSON.stringify(data);
+
+        let xhr = new XMLHttpRequest();
+        xhr.open("post", url, true);
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8'); // header sent to the server, specifying a particular format (the content of message body)
+        xhr.setRequestHeader('Accept', 'json'); // what kind of response to expect.
+            
+        xhr.onload = function(event){
+            if(this.clientOnLoad !== null){
+                let result = null;
+    
+                try{               
+                    result = JSON.parse(event.target.response); 
+                }
+                catch(error){
+                    console.log(error, this);
+                }
+
+                callbackSuccess.call(this, result);
+            }
+        }
+
+        xhr.onerror = this.onError;
+
+        xhr.send(data);
+    }
+
+	setSectionLevel(data, onSuccess){
+        let options = {};
+        options.data = data;
+        options.service = "setSectionLevel";
+        this.post(this.gateway, options, onSuccess);
+    }
+	
+	setSectionContentDisplay(data, onSuccess){
+        let options = {};
+        options.data = data;
+        options.service = "setSectionContentDisplay";
+        this.post(this.gateway, options, onSuccess);
+    }
+}
+
 M.recit.course.format.TreeTopics = class{
     constructor(){
         this.onChangeFilter = this.onChangeFilter.bind(this);
         this.onChangeLevel = this.onChangeLevel.bind(this);
         this.onChangeContentDisplay = this.onChangeContentDisplay.bind(this);
+        this.webApi = new M.recit.course.format.TreeTopicsWebApi();
 
         this.filter = null;
         this.pagination = null;
@@ -115,7 +176,15 @@ M.recit.course.format.TreeTopics = class{
           }
         }
         return "";
-    }   
+    }  
+    
+    setCookie(id, value, minutesExpire) {
+        minutesExpire = minutesExpire || 1440;
+        let d = new Date();
+        d.setTime(d.getTime() + (minutesExpire*60*1000));
+        let expires = "expires="+d.toUTCString();
+        document.cookie = id + "=" + value + "; " + expires;
+    };
 
     getUrlVars(){
         var vars, uri;
@@ -156,6 +225,16 @@ M.recit.course.format.TreeTopics = class{
         this.ctrlPagination();
     }
 
+    getQueryVariable(name){
+        let query = window.location.search.substring(1);
+        let vars = query.split("&");
+        for (let i=0;i<vars.length;i++) {
+            let pair = vars[i].split("=");
+            if(pair[0] == name){return pair[1];}
+        }
+        return(false);
+    }
+
     initRadioSectionLevel(){
         let sectionList = document.querySelectorAll("[data-section-id]");
         
@@ -177,8 +256,8 @@ M.recit.course.format.TreeTopics = class{
                 alert(M.recit.course.format.TreeTopics.messages.error);
             }
         }
-        let courseId = recit.utils.getQueryVariable("id");
-        recit.http.WebApi.instance().setSectionLevel({courseId: courseId, sectionId: section.getAttribute("data-section-id"), level: radio.value}, callback);
+        let courseId = this.getQueryVariable("id");
+        this.webApi.setSectionLevel({courseId: courseId, sectionId: section.getAttribute("data-section-id"), level: radio.value}, callback);
     }
 
     initRadioSectionContentDisplay(){
@@ -199,8 +278,8 @@ M.recit.course.format.TreeTopics = class{
                 alert(M.recit.course.format.TreeTopics.messages.error);
             }
         }
-        let courseId = recit.utils.getQueryVariable("id");
-        recit.http.WebApi.instance().setSectionContentDisplay({courseId: courseId, sectionId: section.getAttribute("data-section-id"), value: radio.value}, callback);
+        let courseId = this.getQueryVariable("id");
+        this.webApi.setSectionContentDisplay({courseId: courseId, sectionId: section.getAttribute("data-section-id"), value: radio.value}, callback);
     }
 
     initFilter(){
@@ -234,7 +313,7 @@ M.recit.course.format.TreeTopics = class{
             }
         }
 
-        recit.utils.setCookie('ttModeEditionFilter', cookies.join(","));
+        this.setCookie('ttModeEditionFilter', cookies.join(","));
     }
 
     displayActivities(display){
