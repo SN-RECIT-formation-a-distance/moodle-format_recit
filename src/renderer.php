@@ -317,17 +317,6 @@ class TreeTopics
 
         return $html;
     }    
-/*protected function format_summary_text($section) {
-        $context = context_course::instance($section->course);
-        $summarytext = file_rewrite_pluginfile_urls($section->summary, 'pluginfile.php',
-            $context->id, 'course', 'section', $section->id);
-
-        $options = new stdClass();
-        $options->noclean = true;
-        $options->overflowdiv = true;
-		$options->filter = true;
-        return format_text($summarytext, $section->summaryformat, $options);
-    }*/
 	
     protected function getSectionDisplayTab($section, $subContent){
         $sectionId = $this->get_section_id($section);
@@ -348,12 +337,6 @@ class TreeTopics
             $content = $this->moodleRenderer->getCourseSectionCmList($this->course, $section);
         }
 
-        /*if($section->section == 0){
-            $nextSection = $this->sectionList[1];
-            $nextId = $this->get_section_id($nextSection);
-            $content .= "<a href='#' data-section='$sectionId' class='btn btn-primary' id='tt-btn-start-course'  onclick='M.recit.course.format.TreeTopics.instance.goToSection(null,\"$nextId\")'>Commencer le cours</a>";
-        }*/
-
         // prepare the container to receive the section display image
         $colSize = 100 / max($this->course->ttimagegridcolumns, 1);
         $griTemplateCols = "";
@@ -361,8 +344,11 @@ class TreeTopics
             $griTemplateCols .= "$colSize% ";
         }
         
-        $sectionSummary = format_text($section->summary, FORMAT_MOODLE, array('noclean' => true,'filter' => true));
-       // $sectionSummary = $this->autoLinkFilter->filter($section->summary);
+        $context = context_course::instance($this->course->id);
+        $sectionSummary = file_rewrite_pluginfile_urls($section->summary, 'pluginfile.php', $context->id, 'course', 'section', $section->id);
+        
+        $sectionSummary = format_text($sectionSummary,  $section->summaryformat, array('noclean' => true, 'overflowdiv' => true, 'filter' => true));
+       
         $html = "<div class='section main clearfix tt-section $sectionStyle' role='region' aria-label='$sectionName' style='display: none;' data-section='$sectionId'>
                     <h2>$sectionName</h2>
                     <div class='content'>
