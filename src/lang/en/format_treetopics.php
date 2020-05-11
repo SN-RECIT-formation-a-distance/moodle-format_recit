@@ -39,10 +39,10 @@ $string['showfromothers'] = 'Show topic';
 $string['privacy:metadata'] = 'The Topics format plugin does not store any personal data.';
 
 $string['displaynone'] = 'None';
-$string['displaytabs'] = 'Onglet';
-$string['displaytabslev1'] = 'Onglet Level 1';
-$string['displaytabslev2'] = 'Onglet Level 2';
-$string['displaytabslev3'] = 'Onglet Level 3';
+$string['displaytabs'] = 'Tab';
+$string['displaytabslev1'] = 'Tab Level 1';
+$string['displaytabslev2'] = 'Tab Level 2';
+$string['displaytabslev3'] = 'Tab Level 3';
 $string['displayimages'] = 'Image';
 $string['tabsmodel'] = 'Menu Model';
 $string['horizontal'] = 'Horizontal';
