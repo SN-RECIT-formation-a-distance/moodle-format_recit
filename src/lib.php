@@ -89,6 +89,8 @@ class tt_editsection_form  extends editsection_form {
         $default_values->ttcontract = $default_values->ttcontract_editor;
         $default_values = file_prepare_standard_editor($default_values, 'ttcontract', $editoroptions,
                 $editoroptions['context'], 'course', 'section', $default_values->id);
+
+        $default_values->ttsectionimageurl = format_treetopics::rewrite_file_url($default_values->ttsectionimageurl);
                 
         parent::set_data($default_values);
     }
@@ -109,6 +111,8 @@ class tt_editsection_form  extends editsection_form {
                     
             $data = file_postupdate_standard_editor($data, 'ttcontract', $editoroptions,
             $editoroptions['context'], 'course', 'section', $data->id);
+
+            $data->ttsectionimageurl = format_treetopics::rewrite_file_url($data->ttsectionimageurl, true);
         }
         return $data;
     }
@@ -130,6 +134,15 @@ class tt_editsection_form  extends editsection_form {
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class format_treetopics extends format_base {
+
+    public static function rewrite_file_url($fileurl, $reverse = false){
+        global $CFG, $COURSE;
+
+        $baseURL = "{$CFG->wwwroot}/file.php?file=%2F{$COURSE->id}%2F";
+        $code = '$@FILEPHP@$$@SLASH@$';
+        return ($reverse ?  str_replace($baseURL, $code, $fileurl) : str_replace($code, $baseURL, $fileurl));
+    }
+
     /**
      * Returns true if this course format uses sections
      *

@@ -54,15 +54,16 @@ class TreeTopics
 
         $this->modinfo = get_fast_modinfo($course);
         $this->courseFormat = course_get_format($course);
-        $this->sectionList = $this->modinfo->get_section_info_all();
-
-        $orientation = ($this->isMenuHorizontal() ? "horizontal" : "vertical");
-        $html = "<div class='treetopics $orientation'>%s</div>";
+        $this->sectionList = $this->modinfo->get_section_info_all();        
 
         if($this->showContract()){
+            $html = "<div class='treetopics'>%s</div>";
             $html = sprintf($html, $this->renderContract());    
         }
         else{
+            $orientation = ($this->isMenuHorizontal() ? "horizontal" : "vertical");
+            $html = "<div class='treetopics $orientation'>%s</div>";
+
             $this->createSectionTree();
             $html = sprintf($html, $this->renderSections());
             $html .= $this->renderPagination();
@@ -294,7 +295,7 @@ class TreeTopics
         $format_options = format_base::instance($this->course)->get_format_options($section);
         //$url = moodle_url::make_pluginfile_url($format_options['ttsectionimage-context'], $format_options['ttsectionimage-component'], $format_options['ttsectionimage-filearea'], $format_options['ttsectionimage-itemid'], $format_options['ttsectionimage-filepath'], $format_options['ttsectionimage-filename']);        
         //$imgSource = $url->out(false);
-        $imgSource = (isset($format_options['ttsectionimageurl']) ? $format_options['ttsectionimageurl'] : "");
+        $imgSource = (isset($format_options['ttsectionimageurl']) ? format_treetopics::rewrite_file_url($format_options['ttsectionimageurl']) : "");
 
         $sectionTitle = ($format_options['ttsectiontitle'] ? "<div class='tt-section-title'>$sectionName</div>" : "");
         //$sectionSummary = $this->autoLinkFilter->filter($section->ttsectionimagesummary_editor);
