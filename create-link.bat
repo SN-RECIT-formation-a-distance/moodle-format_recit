@@ -1,5 +1,5 @@
 echo off
-set pluginPath=..\moodle\course\format\treetopics
+set pluginPath=..\moodledev2\course\format\treetopics
 
 rem remove the current link
 ..\outils\junction -d src
