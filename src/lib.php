@@ -1,49 +1,56 @@
 <?php
-// This file is part of a plugin written to be used on the free teaching platform : Moodle
-// Copyright (C) 2019 recit
-// 
-// This program is free software: you can redistribute it and/or modify
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
+//
+// Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// @package    format_treetopics
-// @subpackage RECIT
-// @copyright  RECIT {@link https://recitfad.ca}
-// @author     RECIT {@link https://recitfad.ca}
-// @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
-// @developer  Studio XP : {@link https://www.studioxp.ca}
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Treetopics lib file.
+ *
+ * @package    format_treetopics
+ * @copyright  RECITFAD
+ * @author     RECITFAD
+ * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
+ */
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot. '/course/format/lib.php');
 require_once($CFG->dirroot. '/course/editsection_form.php');
-
+/** @var int */
 const TT_DISPLAY_NONE = 0;
+/** @var int */
 const TT_DISPLAY_TABS = -1;
+/** @var int */
 const TT_DISPLAY_IMAGES = -2;
 
+/** @var int */
 const TT_DISPLAY_TABS_LEVEL_1 = 1;
+/** @var int */
 const TT_DISPLAY_TABS_LEVEL_2 = 2;
+/** @var int */
 const TT_DISPLAY_TABS_LEVEL_3 = 3;
 /*
 function format_treetopics_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=[]) {
-    // Make sure the user is logged in and has access to the module (plugins that are not course modules should leave out the 'cm' part).
+    // Make sure the user is logged in and has access to the module (plugins that are not course modules should
+    // leave out the 'cm' part).
     require_login($course, true, $cm);
- 
+
     // Leave this line out if you set the itemid to null in make_pluginfile_url (set $itemid to 0 instead).
     $itemid = array_shift($args); // The first item in the $args array.
- 
+
     // Use the itemid to retrieve any relevant data records and perform any security checks to see if the
     // user really does have access to the file in question.
- 
+
     // Extract the filename / filepath from the $args array.
     $filename = array_pop($args); // The last item in the $args array.
     if (!$args) {
@@ -51,15 +58,15 @@ function format_treetopics_pluginfile($course, $cm, $context, $filearea, $args, 
     } else {
         $filepath = '/'.implode('/', $args).'/'; // $args contains elements of the filepath
     }
- 
+
     // Retrieve the file from the Files API.
     $fs = get_file_storage();
     $file = $fs->get_file($context->id, 'format_treetopics', $filearea, $itemid, $filepath, $filename);
     if (!$file) {
         return false; // The file does not exist.
     }
- 
-    // We can now send the file back to the browser - in this case with a cache lifetime of 1 day and no filtering. 
+
+    // We can now send the file back to the browser - in this case with a cache lifetime of 1 day and no filtering.
     send_stored_file($file, 86400, 0, $forcedownload, $options);
 }*/
 
@@ -69,30 +76,32 @@ function format_treetopics_pluginfile($course, $cm, $context, $filearea, $args, 
  * Course format plugins may specify different editing form to use
  */
 class tt_editsection_form  extends editsection_form {
-    public const EDITOR_OPTIONS =  array('context' => null, 'maxfiles' => 0, 'trusttext' => false, 'noclean' => true, 'maxbytes' => 0);
+    /** @var array */
+    public const EDITOR_OPTIONS = array('context' => null, 'maxfiles' => 0, 'trusttext' => false,
+            'noclean' => true, 'maxbytes' => 0);
     /**
      * Load in existing data as form defaults
      *
-     * @param stdClass|array $default_values object or array of default values
+     * @param stdClass|array $defaultvalue object or array of default values
      */
-    function set_data($default_values) {
-        if (!is_object($default_values)) {
-            // we need object for file_prepare_standard_editor
-            $default_values = (object)$default_values;
+    public function set_data($defaultvalue) {
+        if (!is_object($defaultvalue)) {
+            // We need object for file_prepare_standard_editor.
+            $defaultvalue = (object)$defaultvalue;
         }
 
-        $editoroptions =  tt_editsection_form::EDITOR_OPTIONS; //$this->_customdata['editoroptions'];
-        $default_values->ttsectionimagesummary =  $default_values->ttsectionimagesummary_editor;
-        $default_values = file_prepare_standard_editor($default_values, 'ttsectionimagesummary', $editoroptions,
-                $editoroptions['context'], 'course', 'section', $default_values->id);
+        $editoroptions = self::EDITOR_OPTIONS;
+        $defaultvalue->ttsectionimagesummary = $defaultvalue->ttsectionimagesummary_editor;
+        $defaultvalue = file_prepare_standard_editor($defaultvalue, 'ttsectionimagesummary', $editoroptions,
+                $editoroptions['context'], 'course', 'section', $defaultvalue->id);
 
-        $default_values->ttcontract = $default_values->ttcontract_editor;
-        $default_values = file_prepare_standard_editor($default_values, 'ttcontract', $editoroptions,
-                $editoroptions['context'], 'course', 'section', $default_values->id);
+        $defaultvalue->ttcontract = $defaultvalue->ttcontract_editor;
+        $defaultvalue = file_prepare_standard_editor($defaultvalue, 'ttcontract', $editoroptions,
+                $editoroptions['context'], 'course', 'section', $defaultvalue->id);
 
-        $default_values->ttsectionimageurl = format_treetopics::rewrite_file_url($default_values->ttsectionimageurl);
-                
-        parent::set_data($default_values);
+        $defaultvalue->ttsectionimageurl = format_treetopics::rewrite_file_url($defaultvalue->ttsectionimageurl);
+
+        parent::set_data($defaultvalue);
     }
 
     /**
@@ -101,14 +110,14 @@ class tt_editsection_form  extends editsection_form {
      *
      * @return object submitted data; NULL if not valid or not submitted or cancelled
      */
-    function get_data() {
+    public function get_data() {
         $data = parent::get_data();
 
         if ($data !== null) {
-            $editoroptions = tt_editsection_form::EDITOR_OPTIONS; //$this->_customdata['editoroptions'];
+            $editoroptions = self::EDITOR_OPTIONS;
             $data = file_postupdate_standard_editor($data, 'ttsectionimagesummary', $editoroptions,
                     $editoroptions['context'], 'course', 'section', $data->id);
-                    
+
             $data = file_postupdate_standard_editor($data, 'ttcontract', $editoroptions,
             $editoroptions['context'], 'course', 'section', $data->id);
 
@@ -117,11 +126,18 @@ class tt_editsection_form  extends editsection_form {
         return $data;
     }
 
-    public function getEditorOptions(){
+    /**
+     * Function of class tt_editsection_form
+     */
+    public function get_editor_options() {
         return $this->_customdata['editoroptions'];
     }
 
-    public function getForm(){
+    /**
+     * Function of class tt_editsection_form
+     * @return MoodleQuickForm
+     */
+    public function get_form() {
         return $this->_form;
     }
 }
@@ -135,12 +151,18 @@ class tt_editsection_form  extends editsection_form {
  */
 class format_treetopics extends format_base {
 
-    public static function rewrite_file_url($fileurl, $reverse = false){
+    /**
+     * Function of class format_treetopics.
+     * @param string $fileurl
+     * @param boolean $reverse
+     * @return string
+     */
+    public static function rewrite_file_url($fileurl, $reverse = false) {
         global $CFG, $COURSE;
 
-        $baseURL = "{$CFG->wwwroot}/file.php?file=%2F{$COURSE->id}%2F";
+        $baseurl = "{$CFG->wwwroot}/file.php?file=%2F{$COURSE->id}%2F";
         $code = '$@FILEPHP@$$@SLASH@$';
-        return ($reverse ?  str_replace($baseURL, $code, $fileurl) : str_replace($code, $baseURL, $fileurl));
+        return ($reverse ? str_replace($baseurl, $code, $fileurl) : str_replace($code, $baseurl, $fileurl));
     }
 
     /**
@@ -224,7 +246,7 @@ class format_treetopics extends format_base {
                     $usercoursedisplay = COURSE_DISPLAY_SINGLEPAGE;
                 }
             } else {
-                //$usercoursedisplay = $course->coursedisplay;
+                // Code $usercoursedisplay = $course->coursedisplay;.
                 $usercoursedisplay = COURSE_DISPLAY_SINGLEPAGE;
             }
             if ($sectionno != 0 && $usercoursedisplay == COURSE_DISPLAY_MULTIPAGE) {
@@ -261,7 +283,7 @@ class format_treetopics extends format_base {
      */
     public function extend_course_navigation($navigation, navigation_node $node) {
         global $PAGE;
-        // if section is specified in course/view.php, make sure it is expanded in navigation
+        // If section is specified in course/view.php, make sure it is expanded in navigation.
         if ($navigation->includesectionnum === false) {
             $selectedsection = optional_param('section', null, PARAM_INT);
             if ($selectedsection !== null && (!defined('AJAX_SCRIPT') || AJAX_SCRIPT == '0') &&
@@ -270,7 +292,7 @@ class format_treetopics extends format_base {
             }
         }
 
-        // check if there are callbacks to extend course navigation
+        // ...check if there are callbacks to extend course navigation.
         parent::extend_course_navigation($navigation, $node);
 
         // We want to remove the general section if it is empty.
@@ -294,7 +316,7 @@ class format_treetopics extends format_base {
      *
      * @return array This will be passed in ajax respose
      */
-    function ajax_section_move() {
+    public function ajax_section_move() {
         global $PAGE;
         $titles = array();
         $course = $this->get_course();
@@ -318,7 +340,7 @@ class format_treetopics extends format_base {
         return array(
             BLOCK_POS_LEFT => array(),
             BLOCK_POS_RIGHT => array(),
-			BLOCK_POS_TOP => array()
+            BLOCK_POS_TOP => array()
         );
     }
 
@@ -341,10 +363,6 @@ class format_treetopics extends format_base {
                     'default' => $courseconfig->hiddensections,
                     'type' => PARAM_INT,
                 ),
-               /* 'ttmenudisplay' => array(
-                    'default' => 0,
-                    'type' => PARAM_INT,
-                ),*/
                 'ttdisplayshortcuts' => array(
                     'default' => false,
                     'type' => PARAM_BOOL,
@@ -381,18 +399,6 @@ class format_treetopics extends format_base {
                             )
                         )
                 ),
-                /*'ttmenudisplay' => array(
-                    'label' => new lang_string('menudisplay', 'format_treetopics'),
-                    'help' => 'menudisplay',
-                    'help_component' => 'format_treetopics',
-                    'element_type' => 'select',
-                    'element_attributes' => array(
-                        array(
-                            0 => new lang_string('horizontal', 'format_treetopics'),
-                            1 => new lang_string('vertical', 'format_treetopics')
-                        )
-                    )
-                ),*/
                 'ttdisplayshortcuts' => array(
                     'label' => new lang_string('displayshortcuts', 'format_treetopics'),
                     'help' => 'displayshortcuts',
@@ -445,12 +451,12 @@ class format_treetopics extends format_base {
         }
         return $courseformatoptions;
     }
-    
+
     /**
      * Return an instance of moodleform to edit a specified section
      *
      * Default implementation returns instance of editsection_form that automatically adds
-     * additional fields defined in {@link format_base::section_format_options()}
+     * additional fields defined in {@see format_base::section_format_options()}
      *
      * Format plugins may extend editsection_form if they want to have custom edit section form.
      *
@@ -467,25 +473,21 @@ class format_treetopics extends format_base {
         }
         $result = new tt_editsection_form($action, $customdata);
 
-        //$this->editorOptions = $result->getEditorOptions();
-        $form = $result->getForm();
-        
-        $disabled = array('disabled'=> 'disabled');
-        if($customdata['cs']->__get('section') > 0){
-            //$form->getElement('ttcontract_editor')->updateAttributes($disabled);
+        // Code "$this->editorOptions = $result->get_editor_options();".
+        $form = $result->get_form();
+
+        $disabled = array('disabled' => 'disabled');
+        if ($customdata['cs']->__get('section') > 0) {
             $form->getElement('ttcontract_editor')->freeze();
-        }
-        else{
+        } else {
             $form->getElement('ttsectiondisplay')->updateAttributes($disabled);
             $form->getElement('ttsectionshowactivities')->updateAttributes($disabled);
             $form->getElement('ttsectiontitle')->updateAttributes($disabled);
             $form->getElement('ttsectionimageurl')->updateAttributes($disabled);
             $form->getElement('btnSeeDepFiles')->updateAttributes($disabled);
             $form->getElement('btnUploadDepFiles')->updateAttributes($disabled);
-            //$form->getElement('ttsectionimagesummary_editor')->updateAttributes($disabled);
             $form->getElement('ttsectionimagesummary_editor')->freeze();
         }
-        
 
         return $result;
     }
@@ -493,12 +495,12 @@ class format_treetopics extends format_base {
     /**
      * Definitions of the additional options that this course format uses for section
      *
-     * See {@link format_base::course_format_options()} for return array definition.
+     * See {@see format_base::course_format_options()} for return array definition.
      *
      * Additionally section format options may have property 'cache' set to true
-     * if this option needs to be cached in {@link get_fast_modinfo()}. The 'cache' property
-     * is recommended to be set only for fields used in {@link format_base::get_section_name()},
-     * {@link format_base::extend_course_navigation()} and {@link format_base::get_view_url()}
+     * if this option needs to be cached in {@see get_fast_modinfo()}. The 'cache' property
+     * is recommended to be set only for fields used in {@see format_base::get_section_name()},
+     * {@see format_base::extend_course_navigation()} and {@see format_base::get_view_url()}
      *
      * For better performance cached options are recommended to have 'cachedefault' property
      * Unlike 'default', 'cachedefault' should be static and not access get_config().
@@ -518,7 +520,7 @@ class format_treetopics extends format_base {
     public function section_format_options($foreditform = false) {
         global $CFG;
 
-        /*static */$sectionformatoptions = false;
+        $sectionformatoptions = false;
         if ($sectionformatoptions === false) {
             $sectionformatoptions = array(
                 'ttsectiondisplay' => array(
@@ -553,10 +555,10 @@ class format_treetopics extends format_base {
                 )
             );
         }
-        if ($foreditform/* && !isset($sectionformatoptions['ttsectioncontentdisplay']['label'])*/) {
+        if ($foreditform) {
             $course = $this->get_course();
             $coursesections = array();
-            $contextCourse = context_course::instance($course->id);
+            $contextcourse = context_course::instance($course->id);
             $sectionformatoptionsedit = array(
                 'ttsectiondisplay' => array(
                     'label' => new lang_string('sectiondisplay', 'format_treetopics'),
@@ -567,7 +569,7 @@ class format_treetopics extends format_base {
                         array(
                             TT_DISPLAY_TABS_LEVEL_1 => new lang_string('displaytabslev1', 'format_treetopics'),
                             TT_DISPLAY_TABS_LEVEL_2 => new lang_string('displaytabslev2', 'format_treetopics'),
-                            //TT_DISPLAY_TABS_LEVEL_3 => new lang_string('displaytabslev3', 'format_treetopics'),
+                            // Code "TT_DISPLAY_TABS_LEVEL_3 => new lang_string('displaytabslev3', 'format_treetopics'),".
                             TT_DISPLAY_IMAGES => new lang_string('displayimages', 'format_treetopics')
                         )
                     )
@@ -589,13 +591,13 @@ class format_treetopics extends format_base {
                     'help' => 'sectionshowactivities',
                     'help_component' => 'format_treetopics',
                     'element_type' => 'checkbox'
-                ),                
+                ),
                 'ttsectiontitle' => array(
                     'label' => new lang_string('showsectiontitle', 'format_treetopics'),
                     'help' => 'showsectiontitle',
                     'help_component' => 'format_treetopics',
                     'element_type' => 'checkbox'
-                ),              
+                ),
                 'ttsectionimageurl' => array(
                     'label' => new lang_string('sectionimageurl', 'format_treetopics'),
                     'help' => 'sectionimageurl',
@@ -603,17 +605,19 @@ class format_treetopics extends format_base {
                     'element_type' => 'text'
                 ),
                 'btnSeeDepFiles' => array(
-                    'label' => sprintf("<i class='fa fa-file'></i> %s",get_string('btnSeeDepFiles', 'format_treetopics')), //new lang_string('sectionimageurl', 'format_treetopics'),
+                    'label' => sprintf("<i class='fa fa-file'></i> %s", get_string('btnSeeDepFiles', 'format_treetopics')),
                     'element_type' => 'button',
                     'element_attributes' => array(
-                        array('onclick' => sprintf("window.open('%s/%s%ld','_blank')", $CFG->wwwroot, "files/index.php?contextid=", $contextCourse->id))
+                        array('onclick' => sprintf("window.open('%s/%s%ld','_blank')",
+                                $CFG->wwwroot, "files/index.php?contextid=", $contextcourse->id))
                     )
                 ),
                 'btnUploadDepFiles' => array(
-                    'label' => sprintf("<i class='fa fa-upload'></i> %s", get_string('btnUploadDepFiles', 'format_treetopics')),//new lang_string('sectionimageurl', 'format_treetopics'),
+                    'label' => sprintf("<i class='fa fa-upload'></i> %s", get_string('btnUploadDepFiles', 'format_treetopics')),
                     'element_type' => 'button',
                     'element_attributes' => array(
-                        array('onclick' => sprintf("window.open('%s/%s%ld','_blank')", $CFG->wwwroot, "files/coursefilesedit.php?contextid=", $contextCourse->id))
+                        array('onclick' => sprintf("window.open('%s/%s%ld','_blank')",
+                                $CFG->wwwroot, "files/coursefilesedit.php?contextid=", $contextcourse->id))
                     )
                 ),
                 'ttsectionimagesummary_editor' => array(
@@ -631,7 +635,7 @@ class format_treetopics extends format_base {
                     'element_attributes' => tt_editsection_form::EDITOR_OPTIONS
                 )
             );
-            
+
             $sectionformatoptions = array_merge_recursive($sectionformatoptions, $sectionformatoptionsedit);
         }
         return $sectionformatoptions;
@@ -640,7 +644,7 @@ class format_treetopics extends format_base {
     /**
      * Adds format options elements to the course/section edit form.
      *
-     * This function is called from {@link course_edit_form::definition_after_data()}.
+     * This function is called from {@see course_edit_form::definition_after_data()}.
      *
      * @param MoodleQuickForm $mform form the elements are added to.
      * @param bool $forsection 'true' if this is a section edit form, 'false' if this is course edit form.
@@ -648,7 +652,7 @@ class format_treetopics extends format_base {
      */
     public function create_edit_form_elements(&$mform, $forsection = false) {
         global $COURSE;
-        
+
         $elements = parent::create_edit_form_elements($mform, $forsection);
 
         if (!$forsection && (empty($COURSE->id) || $COURSE->id == SITEID)) {
@@ -675,8 +679,8 @@ class format_treetopics extends format_base {
      * In case if course format was changed to 'treetopics', we try to copy options
      * 'coursedisplay' and 'hiddensections' from the previous format.
      *
-     * @param stdClass|array $data return value from {@link moodleform::get_data()} or array with data
-     * @param stdClass $oldcourse if this function is called from {@link update_course()}
+     * @param stdClass|array $data return value from {@see moodleform::get_data()} or array with data
+     * @param stdClass $oldcourse if this function is called from {@see update_course()}
      *     this object contains information about the course before update
      * @return bool whether there were any changes to the options values
      */
@@ -686,32 +690,33 @@ class format_treetopics extends format_base {
         if ($oldcourse !== null) {
             $oldcourse = (array)$oldcourse;
             $options = $this->course_format_options();
-            //var_dump($data);
             foreach ($options as $key => $unused) {
                 if (!array_key_exists($key, $data)) {
-                    // make sure to set the boolean value to 0 (this property is not sent by post when check input is unchecked)
-                    if(in_array($key, array('ttdisplayshortcuts', 'tthascontract', 'ttshownavsection'))){
+                    // Make sure to set the boolean value to 0 (this property is not sent by post when check input is unchecked).
+                    if (in_array($key, array('ttdisplayshortcuts', 'tthascontract', 'ttshownavsection'))) {
                         $data[$key] = 0;
-                    }
-                    else if (array_key_exists($key, $oldcourse)) {
+                    } else if (array_key_exists($key, $oldcourse)) {
                         $data[$key] = $oldcourse[$key];
                     }
                 }
             }
         }
-        
+
         return $this->update_format_options($data);
     }
-    
-    /*public function update_section_format_options($data) {
+
+    /**
+     * public function update_section_format_options($data) {
         global $CFG;
         $data = (array)$data;
         $course = $this->get_course();
         $context = context_course::instance($course->id);
         $attachmentid = $data['ttsectionfile'];
-        
-        file_prepare_draft_area($attachmentid, $context->id, 'format_treetopics', 'attachment', $data['id'], array('subdirs' => 0, 'maxbytes' => 4096, 'maxfiles' => 64));
-        file_save_draft_area_files($attachmentid, $context->id, 'format_treetopics', 'attachment', $data['id'], array('subdirs' => 0, 'maxbytes' => 4096, 'maxfiles' => 64));
+
+        file_prepare_draft_area($attachmentid, $context->id, 'format_treetopics', 'attachment', $data['id'],
+            array('subdirs' => 0, 'maxbytes' => 4096, 'maxfiles' => 64));
+        file_save_draft_area_files($attachmentid, $context->id, 'format_treetopics', 'attachment', $data['id'],
+            array('subdirs' => 0, 'maxbytes' => 4096, 'maxfiles' => 64));
         $fs = get_file_storage();
         $files = $fs->get_area_files($context->id, 'format_treetopics', 'attachment', $data['id'], '', false);
         foreach ($files as $file) {
@@ -723,27 +728,27 @@ class format_treetopics extends format_base {
               $data['ttsectionimage-itemid'] = $file->get_itemid();
               $data['ttsectionimage-filepath'] = $file->get_filepath();
               $data['ttsectionimage-filename'] = $file->get_filename();
-              file_save_draft_area_files($attachmentid, $file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), array('subdirs' => 0));
+              file_save_draft_area_files($attachmentid, $file->get_contextid(), $file->get_component(), $file->get_filearea(),
+                    $file->get_itemid(), array('subdirs' => 0));
               break;
           }
         }
-        
+
         return $this->update_format_options($data, $data['id']);
     }*/
-    
+
     /**
      * Updates format options for a course or section
      *
      * If $data does not contain property with the option name, the option will not be updated
      *
-     * @param stdClass|array $data return value from {@link moodleform::get_data()} or array with data
-     * @param null|int null if these are options for course or section id (course_sections.id)
+     * @param stdClass|array $data return value from {@see moodleform::get_data()} or array with data
+     * @param null|int $sectionid Null if these are options for course or section id (course_sections.id)
      *     if these are options for section
      * @return bool whether there were any changes to the options values
      */
     protected function update_format_options($data, $sectionid = null) {
         global $DB;
-        //$data = $this->validate_format_options((array)$data, $sectionid);
         if (!$sectionid) {
             $allformatoptions = $this->course_format_options();
             $sectionid = 0;
@@ -751,7 +756,7 @@ class format_treetopics extends format_base {
             $allformatoptions = $this->section_format_options();
         }
         if (empty($allformatoptions)) {
-            // nothing to update anyway
+            // Nothing to update anyway.
             return false;
         }
         $defaultoptions = array();
@@ -772,8 +777,8 @@ class format_treetopics extends format_base {
         foreach ($defaultoptions as $key => $value) {
             if (isset($records[$key])) {
                 if (array_key_exists($key, $data) && $records[$key]->value !== $data[$key]) {
-                    $value = $data[$key];                    
-                    if(is_array($data[$key])){
+                    $value = $data[$key];
+                    if (is_array($data[$key])) {
                         $value = $data[$key]['text'];
                     }
                     $DB->set_field('course_format_options', 'value', $value, array('id' => $records[$key]->id));
@@ -787,11 +792,11 @@ class format_treetopics extends format_base {
                     $needrebuild = $needrebuild || $cached[$key];
                 } else {
                     $newvalue = $value;
-                    // we still insert entry in DB but there are no changes from user point of
-                    // view and no need to call rebuild_course_cache()
+                    // We still insert entry in DB but there are no changes from user point of
+                    // view and no need to call rebuild_course_cache().
                 }
-                
-                if(is_array($data[$key])){
+
+                if (is_array($data[$key])) {
                     $newvalue = $data[$key]['text'];
                 }
 
@@ -808,7 +813,7 @@ class format_treetopics extends format_base {
             rebuild_course_cache($this->courseid, true);
         }
         if ($changed) {
-            // reset internal caches
+            // Reset internal caches.
             if (!$sectionid) {
                 $this->course = false;
             }
@@ -820,7 +825,7 @@ class format_treetopics extends format_base {
     /**
      * Whether this format allows to delete sections
      *
-     * Do not call this function directly, instead use {@link course_can_delete_section()}
+     * Do not call this function directly, instead use {@see course_can_delete_section()}
      *
      * @param int|stdClass|section_info $section
      * @return bool
@@ -848,7 +853,7 @@ class format_treetopics extends format_base {
             $title = get_section_name($section->course, $section);
             $editlabel = new lang_string('newsectionname', 'format_treetopics', $title);
         }
-        
+
         return parent::inplace_editable_render_section_name($section, $linkifneeded, $editable, $edithint, $editlabel);
     }
 
@@ -874,6 +879,14 @@ class format_treetopics extends format_base {
         return !$section->section || $section->visible;
     }
 
+    /**
+     * Function of class format_treetopics.
+     * {@inheritDoc}
+     * @see format_base::section_action()
+     * @param string $section
+     * @param string $action
+     * @param string $sr
+     */
     public function section_action($section, $action, $sr) {
         global $PAGE;
 
@@ -901,8 +914,12 @@ class format_treetopics extends format_base {
         // Return everything (nothing to hide).
         return $this->get_format_options();
     }
-    
-    private function console_log( $data ){
+
+    /**
+     * Function of class format_treetopics.
+     * @param string $data
+     */
+    private function console_log( $data ) {
         echo '<script>';
         echo 'console.log('. json_encode( $data ) .')';
         echo '</script>';

@@ -1,27 +1,27 @@
 <?php
-// This file is part of a plugin written to be used on the free teaching platform : Moodle
-// Copyright (C) 2019 recit
-// 
-// This program is free software: you can redistribute it and/or modify
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
+//
+// Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// @package    format_treetopics
-// @subpackage RECIT
-// @copyright  RECIT {@link https://recitfad.ca}
-// @author     RECIT {@link https://recitfad.ca}
-// @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
-// @developer  Studio XP : {@link https://www.studioxp.ca}
-// @developer  SN RECITFAD : {@link https://recitfad.ca}
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Define french strings.
+ *
+ * @package     format_treetopics
+ * @copyright   RECITFAD
+ * @author      RECITFAD
+ * @license     {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
+ */
 
 $string['addsections'] = 'Ajouter une section';
 $string['currentsection'] = 'Cette section';
@@ -51,8 +51,6 @@ $string['tabmodel5'] = 'Horizontal 1 niveau';
 $string['horizontal'] = 'Horizontal';
 $string['vertical'] = 'Vertical';
 
-//$string['backtotableofcontent'] = '<- Retour au menu principal';
-
 $string['menudisplay'] = 'Présentation du menu de navigation';
 $string['displayshortcuts'] = 'Montrer les raccourcis d\'affichage lorsque le mode d\'édition est activé';
 $string['sectionsecondarydisplay'] = 'Affichage des sections secondaires';
@@ -75,8 +73,6 @@ $string['btnSeeDepFiles'] = "Sélectionnez un fichier";
 $string['btnUploadDepFiles'] = "Téléversez un fichier";
 
 $string['showsectiontitle'] = 'Afficher le titre de la section sous l\'image';
-//$string['sectionimagewidth'] = 'Proportion de la largeur de l\'image';
-//$string['sectionimageheight'] = 'Proportion de la hauteur de l\'image';
 $string['hascontract'] = 'Utiliser le contrat d\'engagement';
 $string['contract'] = 'Contrat d\'engagement';
 $string['navsection'] = 'Afficher la navigation par section';
@@ -102,8 +98,6 @@ $string['sectionimagesummary_help'] = "Le résumé de section en mode image est 
 $string['tabsmodel_help'] = 'Le menu peut avoir un visuel différent. Vous pouvez choisir le modèle qui vous convient';
 $string['imagewidth_help'] = "Width of the images in the grid in pixel. The height will be adjusted with the image's ratio";
 $string['showsectiontitle_help'] = 'Ce réglage permet d\'afficher le titre de la section.';
-//$string['sectionimagewidth_help'] = 'Aide concernant la largeur de \'image';
-//$string['sectionimageheight_help'] = 'Aide concernant la hauteur de l\'image';
 $string['hascontract_help'] = 'Lorsque la case "Utiliser le contract d\'engagement est cochée, le contrat d\'engagement s\'affiche à l\'élève. Ce dernier doit alors le lire le et le signer pour avoir accès à son cours.';
 $string['contract_help'] = 'Le contract d\'engagement est un texte expliquant à l\'élève ce qui est attendu de lui au point de vue comportement et méthode de travail. Ce texte s\'affiche à l\'élève au début du cours et bloque l\'accès aux activités tant que le contract n\'est pas signé.';
 $string['prev_section'] = 'Section précédente';

@@ -13,44 +13,43 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
- 
+
 /**
+ * Set the gateway.
  *
- * @copyright  2019 RÉCIT
+ * @copyright  RECITFAD
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
+
 require('../../../config.php');
 
 require_login();
 
-$refMoodleDB = new ReflectionObject($DB);
-$refProp1 = $refMoodleDB->getProperty('mysqli');
-$refProp1->setAccessible(TRUE);
-$mysqli = $refProp1->getValue($DB);
-        
+$refmoodledb = new ReflectionObject($DB);
+$refprop1 = $refmoodledb->getProperty('mysqli');
+$refprop1->setAccessible(true);
+$mysqli = $refprop1->getValue($DB);
+
 $request = (object) json_decode(file_get_contents('php://input'), true);
 $data = (object) $request->data;
 
-if($request->service == 'setSectionLevel'){
-    $query = "insert into mdl_course_format_options (courseid, format, sectionid, name, value) 
-        values($data->courseId, 'treetopics', $data->sectionId, 'ttsectiondisplay', '$data->level') 
+if ($request->service == 'setSectionLevel') {
+    $query = "insert into mdl_course_format_options (courseid, format, sectionid, name, value)
+        values($data->courseId, 'treetopics', $data->sectionId, 'ttsectiondisplay', '$data->level')
         ON DUPLICATE KEY UPDATE value = '$data->level'";
-}
-else if($request->service == 'setSectionContentDisplay'){
-    $query = "insert into mdl_course_format_options (courseid, format, sectionid, name, value) 
-    values($data->courseId, 'treetopics', $data->sectionId, 'ttsectioncontentdisplay', '$data->value') 
+} else if ($request->service == 'setSectionContentDisplay') {
+    $query = "insert into mdl_course_format_options (courseid, format, sectionid, name, value)
+    values($data->courseId, 'treetopics', $data->sectionId, 'ttsectioncontentdisplay', '$data->value')
     ON DUPLICATE KEY UPDATE value = '$data->value'";
 }
 
 $result = new stdClass();
 $result->success = false;
 
-try{
+try {
     $mysqli->query($query);
     $result->success = true;
-}
-catch(Exception $ex){
+} catch (Exception $ex) {
     $result->msg = $ex->GetMessage();
 }
 

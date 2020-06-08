@@ -1,27 +1,27 @@
 <?php
-// This file is part of a plugin written to be used on the free teaching platform : Moodle
-// Copyright (C) 2019 recit
-// 
-// This program is free software: you can redistribute it and/or modify
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
+//
+// Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// @package    format_treetopics
-// @subpackage RECIT
-// @copyright  RECIT {@link https://recitfad.ca}
-// @author     RECIT {@link https://recitfad.ca}
-// @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
-// @developer  Studio XP : {@link https://www.studioxp.ca}
-// @developer  SN RECITFAD : {@link https://recitfad.ca}
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Define english strings.
+ *
+ * @package     format_treetopics
+ * @copyright   RECITFAD
+ * @author      RECITFAD
+ * @license     {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
+ */
 
 $string['addsections'] = 'Add topics';
 $string['currentsection'] = 'This topic';
@@ -51,8 +51,6 @@ $string['tabmodel1'] = 'Horizontal 2 Levels';
 $string['tabmodel2'] = 'Vertical';
 $string['tabmodel5'] = 'Horizontal 1 Level';
 
-$string['backtotableofcontent'] = '<- Back to menu';
-
 $string['menudisplay'] = 'Menu display';
 $string['displayshortcuts'] = 'Display shortcuts when editing mode on';
 $string['sectionsecondarydisplay'] = 'Secondary sections display';
@@ -72,8 +70,6 @@ $string['sectionimagefilename'] = 'Image Filename';
 $string['sectionimageurl'] = 'Image URL';
 
 $string['showsectiontitle'] = 'Show section title';
-$string['sectionimagewidth'] = 'Image Width Scale';
-$string['sectionimageheight'] = 'Image Height Scale';
 $string['hascontract'] = 'Use a contract';
 $string['contract'] = 'Contract content';
 $string['navsection'] = 'Show navigation by section';
@@ -102,8 +98,6 @@ $string['btnUploadDepFiles'] = "Upload file";
 $string['tabsmodel_help'] = 'The menu may have a different visual. You can choose the model that suits you';
 $string['imagewidth_help'] = "Width of the images in the grid in pixel. The height will be adjusted with the image's ratio";
 $string['showsectiontitle_help'] = 'Help Section Title';
-$string['sectionimagewidth_help'] = 'Help Section Image Width';
-$string['sectionimageheight_help'] = 'Help Section Image Height';
 $string['hascontract_help'] = 'Help Use a contract';
 $string['contract_help'] = 'Help Contract content';
 $string['prev_section'] = 'Previous section';
