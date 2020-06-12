@@ -364,7 +364,7 @@ M.recit.course.format.TreeTopics = class{
     }
 
     ctrlMenuM1(sectionId){
-        let menu = document.getElementById("menuM1");
+        let menu = document.getElementById("tt-recit-nav");
 
         if(menu === null){ return;}
 
@@ -449,7 +449,7 @@ M.recit.course.format.TreeTopics = class{
             this.webApi.getSectionContent({sectionid: sectionId, courseid: params.id}, this.getSectionContentResult);
         }
 
-        // Simulate the menu button click to hide the menu.
+        // Simulate the menu button click to hide the menu (mode mobile).
         let btn = document.querySelector("[data-target='#navbarTogglerCourse']");
         if((btn !== null) && (btn.getAttribute('aria-expanded') === 'true')){
             btn.click();

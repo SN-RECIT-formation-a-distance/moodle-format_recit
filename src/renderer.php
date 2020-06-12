@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/course/format/renderer.php');
 
- js_reset_all_caches();
+ //js_reset_all_caches();
 /**
  * TreeTopics specifics functions.
  *
@@ -174,7 +174,7 @@ class TreeTopics
         $menuseparator = "<li></li>";
 
         $html = "
-                <nav class='menuM1' id='menuM1'>
+                <nav class='menuM1' id='tt-recit-nav'>
                     <ul class='menuM1-level1 tt-menu-color1'>%s</ul>
                     %s
                 </nav>";
