@@ -138,37 +138,32 @@ M.recit.course.format.TreeTopicsWebApi = class{
     setSectionLevel(data, onSuccess){
         let options = {};
         options.data = data;
-        options.service = "setSectionLevel";
+        options.service = "set_section_level";
         this.post(this.gateway, options, onSuccess);
     }
 
     setSectionContentDisplay(data, onSuccess){
         let options = {};
         options.data = data;
-        options.service = "setSectionContentDisplay";
+        options.service = "set_section_content_display";
+        this.post(this.gateway, options, onSuccess);
+    }
+
+    getSectionContent(data, onSuccess){
+        let options = {};
+        options.data = data;
+        options.service = "get_section_content";
         this.post(this.gateway, options, onSuccess);
     }
 }
 
-M.recit.course.format.TreeTopics = class{
-    constructor(){
-        this.onChangeFilter = this.onChangeFilter.bind(this);
-        this.onChangeLevel = this.onChangeLevel.bind(this);
-        this.onChangeContentDisplay = this.onChangeContentDisplay.bind(this);
-        this.webApi = new M.recit.course.format.TreeTopicsWebApi();
-
-        this.filter = null;
-        this.pagination = null;
-
-        this.init();
-    }
-
-    getCookie(cname) {
-        var name = cname + "=";
-        var decodedCookie = decodeURIComponent(document.cookie);
-        var ca = decodedCookie.split(';');
-        for(var i = 0; i < ca.length; i++) {
-            var c = ca[i];
+M.recit.course.format.TreeTopicsUtils = class{
+    static getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for(let i = 0; i < ca.length; i++) {
+            let c = ca[i];
             while (c.charAt(0) == ' ') {
                 c = c.substring(1);
             }
@@ -179,7 +174,7 @@ M.recit.course.format.TreeTopics = class{
         return "";
     }
 
-    setCookie(id, value, minutesExpire) {
+    static setCookie(id, value, minutesExpire) {
         minutesExpire = minutesExpire || 1440;
         let d = new Date();
         d.setTime(d.getTime() + (minutesExpire * 60 * 1000));
@@ -187,44 +182,40 @@ M.recit.course.format.TreeTopics = class{
         document.cookie = id + "=" + value + "; " + expires;
     };
 
-    getUrlVars(){
-        var vars, uri;
+    static getUrlVars(){
+        let vars, uri;
 
         vars = {};
 
         uri = decodeURI(window.location.href);
 
-        var parts = uri.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        let parts = uri.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
             vars[key] = value;
         });
 
         return vars;
+    }
+}
+
+M.recit.course.format.TreeTopicsEditingMode = class{
+    constructor(webApi){
+        this.onChangeFilter = this.onChangeFilter.bind(this);
+        this.onChangeLevel = this.onChangeLevel.bind(this);
+        this.onChangeContentDisplay = this.onChangeContentDisplay.bind(this);
+
+        this.webApi = new M.recit.course.format.TreeTopicsWebApi();
+
+        this.filter = null;
+
+        this.init();
     }
 
     init(){
         this.initRadioSectionLevel();
         this.initRadioSectionContentDisplay();
         this.initFilter();
-
-        let params = this.getUrlVars();
-        let anchors = params.id.split("#", 2);
-
-        let sectionId = params.sectionId || anchors[1] || this.getCookie('section') || 'section-0';
-        // If there is no sectionId defined then it displays the section-0.
-
-        /*if(sectionId === ''){
-            let el = document.getElementById("navbarTogglerCourse");
-            if((el !== null) && (el.firstChild !== null) && (el.firstChild.firstChild !== null)){
-                sectionId = el.firstChild.firstChild.firstChild.getAttribute('data-section');
-            }
-        }*/
-
-        this.goToSection(null, sectionId);
-
-        this.pagination = document.getElementById('sectionPagination');
-
-        this.ctrlPagination();
     }
+
 
     getQueryVariable(name){
         let query = window.location.search.substring(1);
@@ -314,7 +305,7 @@ M.recit.course.format.TreeTopics = class{
             }
         }
 
-        this.setCookie('ttModeEditionFilter', cookies.join(","));
+        M.recit.course.format.TreeTopicsUtils.setCookie('ttModeEditionFilter', cookies.join(","));
     }
 
     displayActivities(display){
@@ -342,6 +333,34 @@ M.recit.course.format.TreeTopics = class{
                 el.style.display = (display ? "block" : 'none');
             }
         }
+    }
+}
+
+M.recit.course.format.TreeTopics = class{
+    constructor(){
+        this.getSectionContentResult = this.getSectionContentResult.bind(this);
+
+        this.webApi = new M.recit.course.format.TreeTopicsWebApi();
+
+        this.sectionContent = null;
+        this.pagination = null;
+
+        this.init();
+    } 
+
+    init(){
+        let params = M.recit.course.format.TreeTopicsUtils.getUrlVars();
+
+        // If there is no sectionId defined then it displays the section-0.
+        let sectionId = params.sectionId || M.recit.course.format.TreeTopicsUtils.getCookie('section') || 'section-0';
+        
+        this.pagination = document.getElementById('sectionPagination');
+
+        this.sectionContent = document.getElementById("sectioncontent_placeholder");
+
+        this.goToSection(null, sectionId);
+
+        this.ctrlPagination();
     }
 
     ctrlMenuM1(sectionId){
@@ -388,6 +407,26 @@ M.recit.course.format.TreeTopics = class{
         }
     }
 
+    getSectionContentResult(result){
+        if(!result.success){
+            alert(M.recit.course.format.TreeTopics.messages.error);
+            console.log(result);
+            return;
+        }
+
+        if(result.data === null){
+            return;
+        }
+
+        let doc = new DOMParser().parseFromString(result.data, "text/html");
+        
+        while (this.sectionContent.lastElementChild) {
+            this.sectionContent.removeChild(this.sectionContent.lastElementChild);
+        }
+        
+        this.sectionContent.appendChild(doc.body.firstChild);
+    }
+
     goToSection(event, sectionId) {
         sectionId = sectionId || '';
 
@@ -402,47 +441,12 @@ M.recit.course.format.TreeTopics = class{
 
         this.ctrlMenuM1(sectionId);
 
-        /* let url = `${window.location.origin}${window.location.pathname}${window.location.search}#${sectionId}`;
-        if(url !== window.location.href){
-            window.location.href = url;
-        }*/
-
-        // Commented code document.body.scrollTop = 0; // For Safari.
-        // document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera.
-
         document.cookie = 'section=' + sectionId;
-        /*$('.tt-section').css('display', 'none');
-        $('.tt-imagebuttons').css('display', 'none');
-        $(`#${sectionId}-imagebuttons`).css('display', 'grid');
-        $(`#${sectionId}`).css('display', 'block');*/
 
-        // Hide all the sections.
-        let elems = document.getElementsByClassName('tt-section');
-        for(let el of elems){
-            el.style.display = 'none';
-
-            // Look for the specific section and display it.
-            if(el.getAttribute('data-section') === sectionId){
-                el.style.display = 'block';
-
-                // If the section has subsections then display them too.
-                let children = el.getElementsByClassName('tt-section');
-                for(let item of children){
-                    item.style.display = 'block';
-                }
-
-                // If the section has a parent section then display it too.
-                let grid = el.parentElement;
-                if(grid !== null){
-                    let content = grid.parentElement;
-                    if(content !== null){
-                        let section = content.parentElement;
-                        if(section !== null){
-                            section.style.display = "block";
-                        }
-                    }
-                }
-            }
+        let params = M.recit.course.format.TreeTopicsUtils.getUrlVars();
+        
+        if(this.sectionContent !== null){
+            this.webApi.getSectionContent({sectionid: sectionId, courseid: params.id}, this.getSectionContentResult);
         }
 
         // Simulate the menu button click to hide the menu.
@@ -457,33 +461,29 @@ M.recit.course.format.TreeTopics = class{
     ctrlPagination(){
         if(this.pagination === null){ return; }
 
-        let sections = document.getElementsByClassName('tt-section');
+        let navbar = document.getElementById('tt-recit-nav');
+        let sections = navbar.querySelectorAll('[data-section');
 
-        let currentSection = this.getCookie('section');
+        let currentSection = M.recit.course.format.TreeTopicsUtils.getCookie('section');
         let btnPrevious = this.pagination.firstChild.firstChild;
         let btnNext = this.pagination.firstChild.lastChild;
 
-        let iSection = 0;
-        for(iSection = 0; iSection < sections.length; iSection++){
-            if(sections[iSection].getAttribute('data-section') == currentSection){
-                break;
-            }
-        }
-
+        let iSection = parseInt(currentSection.split("-").pop()) || 0;
+        
         if(iSection <= 0){
             btnPrevious.classList.add("disabled");
         }
         else{
             btnPrevious.classList.remove("disabled");
-            btnPrevious.firstChild.setAttribute('data-section', sections[iSection - 1].getAttribute('data-section'));
+            btnPrevious.firstChild.setAttribute('data-section', `section-${iSection-1}`);
         }
 
-        if(iSection >= sections.length - 1){
+        if(iSection >= sections.length - 2){
             btnNext.classList.add("disabled");
         }
         else{
             btnNext.classList.remove("disabled");
-            btnNext.firstChild.setAttribute('data-section', sections[iSection + 1].getAttribute('data-section'));
+            btnNext.firstChild.setAttribute('data-section', `section-${iSection+1}`);
         }
 
     }
@@ -497,4 +497,5 @@ M.recit.course.format.TreeTopics.messages = {
 // Without jQuery (doesn't work in older IEs).
 document.addEventListener('DOMContentLoaded', function() {
     M.recit.course.format.TreeTopics.instance = new M.recit.course.format.TreeTopics();
+    M.recit.course.format.TreeTopicsEditingMode.instance = new M.recit.course.format.TreeTopicsEditingMode();
 }, false);

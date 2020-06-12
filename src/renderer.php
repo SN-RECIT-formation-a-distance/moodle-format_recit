@@ -26,6 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/course/format/renderer.php');
 
+ js_reset_all_caches();
 /**
  * TreeTopics specifics functions.
  *
@@ -50,12 +51,31 @@ class TreeTopics
     protected $sectionslist = array();
     /** @var array */
     protected $sectionstree = array();
+    /** @var boolean */
+    protected $sectionsingleloading = true;
     /**
      * Construc for TreeTopics
      */
     public function __construct() {
         global $COURSE;
         $context = context_course::instance($COURSE->id);
+    }
+
+     /**
+     * Function load of TreeTopics.
+     *
+     * @param format_treetopics_renderer $moodlerenderer
+     * @param stdClass $course
+     */
+    public function load($moodlerenderer, $course) {
+        $this->moodlerenderer = $moodlerenderer;
+        $this->course = $course;
+
+        $this->modinfo = get_fast_modinfo($course);
+        $this->courseformat = course_get_format($course);
+        $this->sectionslist = $this->modinfo->get_section_info_all();
+
+        $this->create_section_tree();
     }
 
     /**
@@ -65,15 +85,9 @@ class TreeTopics
      * @param stdClass $course
      */
     public function render($moodlerenderer, $course) {
-
-        $this->moodlerenderer = $moodlerenderer;
-        $this->course = $course;
+        $this->load($moodlerenderer, $course);
 
         $this->signing_contract();
-
-        $this->modinfo = get_fast_modinfo($course);
-        $this->courseformat = course_get_format($course);
-        $this->sectionslist = $this->modinfo->get_section_info_all();
 
         if ($this->show_contract()) {
             $html = "<div class='treetopics'>%s</div>";
@@ -81,8 +95,7 @@ class TreeTopics
         } else {
             $orientation = ($this->is_menu_horizontal() ? "horizontal" : "vertical");
             $html = "<div class='treetopics $orientation'>%s</div>";
-
-            $this->create_section_tree();
+            
             $html = sprintf($html, $this->render_sections());
             $html .= $this->render_pagination();
         }
@@ -141,7 +154,7 @@ class TreeTopics
             }
         }
 
-        $content = sprintf("<div>%s%s</div>", $this->render_section_content(), $this->get_map_sections());
+        $content = "<div id='sectioncontent_placeholder'></div>";
 
         return ($this->is_menu_horizontal() == 1 ? $menu.$content : $content.$menu);
     }
@@ -304,36 +317,44 @@ class TreeTopics
      *
      * @return string
      */
-    protected function render_section_content() {
-        $tmp1 = "";
-        $tmp2 = "";
-        $tmp3 = "";
-        foreach ($this->sectionstree as $item1) {
-            foreach ($item1->child as $item2) {
-                foreach ($item2->child as $item3) {
-                    $tmp3 .= $this->render_section_content_item($item3->section);
-                }
-
-                if ((isset($item2->child[0])) && ($item2->child[0]->section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES)) {
-                    $tmp2 .= $this->render_section_content_item($item2->section, $tmp3);
-                } else {
-                    $tmp2 .= $tmp3;
-                    $tmp2 .= $this->render_section_content_item($item2->section);
-                }
-
-                $tmp3 = "";
-            }
-
-            if ((isset($item1->child[0])) && ($item1->child[0]->section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES)) {
-                $tmp1 .= $this->render_section_content_item($item1->section, $tmp2);
-            } else {
-                $tmp1 .= $tmp2;
-                $tmp1 .= $this->render_section_content_item($item1->section);
-            }
-            $tmp2 = "";
+    public function render_section_content($sectionid) {
+        
+        if($sectionid === 'map'){
+            return $this->get_map_sections();
         }
 
-        return $tmp1;
+        $found = null; 
+        $result = "";
+        foreach ($this->sectionstree as $item1) {
+            $id = $this->get_section_id($item1->section);
+            if ($id == $sectionid) { 
+                $found = $item1;
+                break;
+            }
+
+            foreach ($item1->child as $item2) {
+                $id = $this->get_section_id($item2->section);
+                if ($id == $sectionid) { 
+                    $found = $item2;
+                    break;
+                }
+            }
+        }
+
+        if(empty($found)){
+            return null;
+        }
+
+        $tmp = "";
+        foreach ($found->child as $item) { 
+            if ($item->section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES) {
+                $tmp .= $this->render_section_content_item($item->section);
+            }
+        }
+
+        $result = $this->render_section_content_item($found->section, $tmp);
+
+        return $result;
     }
 
     /**
@@ -376,16 +397,15 @@ class TreeTopics
         if ($section->ttsectionshowactivities == 1) {
             $content = $this->moodlerenderer->get_course_section_cm_list($this->course, $section);
         }
-        $html =
-        "<div class='tt-imagebuttons auto2' data-section='$sectionid'>
-            <div class='tt-section-image-link tt-grid-element tt-section-image-link-selected' style='position:relative;'>
-                <img class='tt-section-image' src='$imgsource' alt='$sectionname'>
-                $sectiontitle
-                $sectionsummary
-                $content
-                <div style='display: flex;'>$subcontent</div>
-            </div>
-        </div>";
+        $html = "<div class='tt-imagebuttons auto2' data-section='$sectionid'>";
+        $html .= "<div class='tt-section-image-link tt-grid-element tt-section-image-link-selected' style='position:relative;'>";
+        $html .= "<img class='tt-section-image' src='$imgsource' alt='$sectionname'>";
+        $html .= "$sectiontitle";
+        $html .= "$sectionsummary";
+        $html .= "$content";
+        $html .= "<div style='display: flex;'>$subcontent</div>";
+        $html .= "</div>";
+        $html .= "</div>";
 
         return $html;
     }
@@ -430,17 +450,17 @@ class TreeTopics
         $sectionsummary = format_text($sectionsummary,  $section->summaryformat, array('noclean' => true, 'overflowdiv' => true,
                 'filter' => true));
 
-        $html = "<div class='section main clearfix tt-section $sectionstyle' role='region' aria-label='$sectionname'
-                        style='display: none;' data-section='$sectionid'>
-                    <h2>$sectionname</h2>
-                    <div class='content'>
-                        $sectionavail
-                        <div class='summary'>$sectionsummary</div>
-                        $content
-                        <!-- sections display image type container -->
-                        <div class='grid{$this->course->ttimagegridcolumns}' style=''>$subcontent</div>
-                    </div>
-                </div>";
+        $html = "<div class='section main clearfix tt-section $sectionstyle' role='region' aria-label='$sectionname'";
+        $html .= " data-section='$sectionid'>";
+        $html .= "<h2>$sectionname</h2>";
+        $html .= "<div class='content'>";
+        $html .= "$sectionavail";
+        $html .= "<div class='summary'>$sectionsummary</div>";
+        $html .= "$content";
+        $html .= "<!-- sections display image type container -->";
+        $html .= "<div class='grid{$this->course->ttimagegridcolumns}' style=''>$subcontent</div>";
+        $html .= "</div>";
+        $html .= "</div>";
 
         return $html;
     }
@@ -476,13 +496,13 @@ class TreeTopics
 
         $content = "<ul class='root'>$tmp1</ul>";
 
-        $html = "<div class='section main clearfix tt-section menu-map' role='region' aria-label='carte'
-                    style='display: none;' data-section='map'>
-                <h2>Carte</h2>
-                <div class='content'>
-                    $content
-                </div>
-            </div>";
+        $html = "<div class='section main clearfix tt-section menu-map' role='region' aria-label='carte'";
+        $html .= " data-section='map'>";
+        $html .= "<h2>Carte</h2>";
+        $html .= "<div class='content'>";
+        $html .= "$content";
+        $html .= "</div>";
+        $html .= "</div>";
 
         return $html;
     }
