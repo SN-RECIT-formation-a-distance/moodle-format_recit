@@ -39,11 +39,11 @@ $string['showfromothers'] = 'Montrer la section';
 $string['privacy:metadata'] = 'Ce format de cours ne conserve aucune donnée personnelle.';
 
 $string['displaynone'] = 'Aucun';
-$string['displaytabs'] = 'Affichage sous forme d\'onglets';
-$string['displaytabslev1'] = 'Section niveau 1';
-$string['displaytabslev2'] = 'Section niveau 2';
-$string['displaytabslev3'] = 'Section niveau 3';
-$string['displayimages'] = 'Affichage sous forme d\'images';
+$string['displaytabs'] = 'Onglets';
+$string['displaytabslev1'] = 'Niveau 1';
+$string['displaytabslev2'] = 'Niveau 2';
+$string['displaytabslev3'] = 'Niveau 3';
+$string['displayimages'] = 'Images';
 $string['tabsmodel'] = 'Modèle de menu';
 $string['tabmodel1'] = 'Horizontal 2 niveaux';
 $string['tabmodel2'] = 'Vertical';

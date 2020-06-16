@@ -40,9 +40,9 @@ $string['privacy:metadata'] = 'The Topics format plugin does not store any perso
 
 $string['displaynone'] = 'None';
 $string['displaytabs'] = 'Tab';
-$string['displaytabslev1'] = 'Tab Level 1';
-$string['displaytabslev2'] = 'Tab Level 2';
-$string['displaytabslev3'] = 'Tab Level 3';
+$string['displaytabslev1'] = 'Level 1';
+$string['displaytabslev2'] = 'Level 2';
+$string['displaytabslev3'] = 'Level 3';
 $string['displayimages'] = 'Image';
 $string['tabsmodel'] = 'Menu Model';
 $string['horizontal'] = 'Horizontal';
