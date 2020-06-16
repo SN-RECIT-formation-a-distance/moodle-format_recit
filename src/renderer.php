@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/course/format/renderer.php');
 
- //js_reset_all_caches();
+// js_reset_all_caches();
 /**
  * TreeTopics specifics functions.
  *
@@ -57,8 +57,9 @@ class TreeTopics
      * Construc for TreeTopics
      */
     public function __construct() {
-        global $COURSE;
+        global $COURSE, $OUTPUT;
         $context = context_course::instance($COURSE->id);
+        $this->output = $OUTPUT;
     }
 
      /**
@@ -81,12 +82,9 @@ class TreeTopics
     /**
      * Function render of TreeTopics.
      *
-     * @param format_treetopics_renderer $moodlerenderer
-     * @param stdClass $course
+     * @return string
      */
-    public function render($moodlerenderer, $course) {
-        $this->load($moodlerenderer, $course);
-
+    public function render() {
         $this->signing_contract();
 
         if ($this->show_contract()) {
@@ -141,7 +139,7 @@ class TreeTopics
         // La section 0 controle le mode d'affichage.
         $mode = $this->sectionslist[0]->ttsectioncontentdisplay;
         $model = $this->course->tttabsmodel;
-
+        
         $menu = "";
         if ($mode == TT_DISPLAY_TABS) {
             switch ($model) {
@@ -151,9 +149,14 @@ class TreeTopics
                     break;
                 case 5: $menu = $this->render_sections_menu_m5();
                     break;
+                default: 
+                    $menu = $this->render_sections_menu_m5();
             }
         }
-
+        else{
+            return "La section 0 doit être \"Affichage sous forme d'onglets\".";
+        }
+        
         $content = "<div id='sectioncontent_placeholder'></div>";
 
         return ($this->is_menu_horizontal() == 1 ? $menu.$content : $content.$menu);
@@ -161,9 +164,9 @@ class TreeTopics
 
     /**
      * Function render sections menu m1 of TreeTopics.
-     * @return Functions sprintf
+     * @return string
      */
-    protected function render_sections_menu_m1() {
+    protected function render_sections_menu_m1() {        
         $menuitemtemplate =
                 "<li class='menuM1-item'>
                     <div class='arrow'></div>
@@ -188,11 +191,21 @@ class TreeTopics
             if ($item1->section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES) {
                 continue;
             }
+            
+            if( !$item1->section->visible ){
+                continue; 
+            }
+
             $tmp3 = "";
             foreach ($item1->child as $item2) {
                 if ($item2->section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES) {
                     continue;
                 }
+
+                if( !$item2->section->visible ){
+                    continue; 
+                }
+
                 $tmp3 .= sprintf($menuitemtemplate, $this->get_section_id($item2->section),
                         $this->get_section_name($item2->section));
                 $tmp3 .= $menuseparator;
@@ -211,7 +224,7 @@ class TreeTopics
 
     /**
      * Function render sections menu m5 of TreeTopics.
-     * @return Functions sprintf
+     * @return string
      */
     protected function render_sections_menu_m5() {
         $navbar = "<nav class='navbar navbar-dark %s theme-bg-color' id='tt-recit-nav'>%s</nav>";
@@ -241,8 +254,21 @@ class TreeTopics
         $tmp2 = "";
         $tmp3 = "";
         foreach ($this->sectionstree as $item1) {
+            
+            if( !$item1->section->visible ){
+                continue; 
+            }
+
             foreach ($item1->child as $item2) {
+                if( !$item2->section->visible ){
+                    continue; 
+                }
+
                 foreach ($item2->child as $item3) {
+                    if( !$item3->section->visible ){
+                        continue; 
+                    }
+
                     $tmp3 .= $this->render_sections_menu_m5_items($item3->section);
                 }
                 $tmp2 .= $this->render_sections_menu_m5_items($item2->section, $tmp3);
@@ -326,6 +352,10 @@ class TreeTopics
         $found = null; 
         $result = "";
         foreach ($this->sectionstree as $item1) {
+            if( !$item1->section->visible ){
+                continue; 
+            }
+
             $id = $this->get_section_id($item1->section);
             if ($id == $sectionid) { 
                 $found = $item1;
@@ -333,6 +363,10 @@ class TreeTopics
             }
 
             foreach ($item1->child as $item2) {
+                if( !$item2->section->visible ){
+                    continue; 
+                }
+
                 $id = $this->get_section_id($item2->section);
                 if ($id == $sectionid) { 
                     $found = $item2;
@@ -347,6 +381,10 @@ class TreeTopics
 
         $tmp = "";
         foreach ($found->child as $item) { 
+            if( !$item->section->visible ){
+                continue; 
+            }
+
             if ($item->section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES) {
                 $tmp .= $this->render_section_content_item($item->section);
             }
@@ -665,6 +703,68 @@ class TreeTopics
 
         return $html;
     }
+
+    public function render_editing_mode($format_treetopics_renderer){
+        $result = '<div class="row">';
+        $result .= '<div class="col-12">';
+        $result .= '<div class="nav nav-justified nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical" style="background-color: #efefef;">';
+
+        $result .= sprintf('<a class="nav-item nav-link active" id="v-pills-%s-tab" data-toggle="pill" href="#v-pills-%s" role="tab"
+                             aria-controls="v-pills-%s" aria-selected="true">%s</a>', "menu", "menu", "menu", "Menu");
+
+        foreach ($this->sectionslist as $section) {
+            $sectionid = $this->get_section_id($section);
+            $result .= sprintf('<a class="nav-item nav-link" id="v-pills-%s-tab" data-toggle="pill" href="#v-pills-%s" role="tab"
+                             aria-controls="v-pills-%s" aria-selected="true">%s</a>', $sectionid, $sectionid, $sectionid, $this->get_section_name($section));
+        }
+        
+        $result .= '</div>';
+        $result .= '</div>';
+        $result .= '<div class="col-12">';
+        $result .= '<div class="tab-content" id="v-pills-tabContent" style="padding: 2rem;">';
+
+        $html = "";
+        foreach ($this->sectionslist as $section) {
+            $html .= $this->render_editing_mode_section_content($format_treetopics_renderer, $section, true);
+        }
+
+        $result .= sprintf('<div class="tab-pane fade show active editing-mode-menu" id="v-pills-%s" role="tabpanel" aria-labelledby="v-pills-%s-tab">%s</div>', "menu", "menu", $html);
+
+        foreach ($this->sectionslist as $section) {
+            $sectionid = $this->get_section_id($section);
+            $result .= sprintf('<div class="tab-pane fade show" id="v-pills-%s" role="tabpanel" aria-labelledby="v-pills-%s-tab">%s</div>', $sectionid, $sectionid, 
+                        $this->render_editing_mode_section_content($format_treetopics_renderer, $section));
+        }
+        
+        $result .= '</div>';
+        $result .= '</div>';
+        $result .= '</div>';
+        return $result;
+    }
+
+    protected function render_editing_mode_section_content($format_treetopics_renderer, $section, $showMenu = false){
+        // Title with completion help icon.
+        $completioninfo = new completion_info($this->course);
+        $sectionid = $this->get_section_id($section);
+
+        $result = "";
+        $result .= $completioninfo->display_help_icon();
+        
+        if($showMenu){
+            $result .= $format_treetopics_renderer->section_header($section, $this->course, false, 0, false);
+            $result .= sprintf("<div class='section_add_menus' id='add_menus-%s'></div>", $sectionid);
+            $result .= $format_treetopics_renderer->section_footer();
+        }
+        else{
+            //$result .= sprintf("<div class='summary'>%s</div>", $this->format_summary_text($section));
+            $result .= $format_treetopics_renderer->section_header($section, $this->course, false, 0, true, false);
+            $result .= $format_treetopics_renderer->get_course_section_cm_list($this->course, $section);
+            $result .= $format_treetopics_renderer->get_course_section_add_cm_control($this->course, $section->section);
+            $result .= $format_treetopics_renderer->section_footer();
+        }
+        
+        return $result;
+    }
 }
 
 /**
@@ -677,6 +777,13 @@ class format_treetopics_renderer extends format_section_renderer_base {
 
     /** @var TreeTopics */
     protected $treetopics = null;
+
+    /** 
+     * @const int
+     * Option 1 = All sections together (standard way)
+     * Option 2 = One section at once
+     */
+    public const EDITING_MODE_OPTION = 2;
 
     /**
      * Constructor method, calls the parent constructor
@@ -703,13 +810,23 @@ class format_treetopics_renderer extends format_section_renderer_base {
     public function render_tree_topics($course) {
 
         if ($this->page->user_is_editing()) {
-            $this->print_multiple_section_page($course, null, null, null, null);
+            switch (self::EDITING_MODE_OPTION) {
+                case 1: 
+                    $this->print_multiple_section_page($course, null, null, null, null);
+                    break;
+                case 2:
+                    $this->treetopics->load($this, course_get_format($course)->get_course());
+                    echo $this->treetopics->render_editing_mode($this);
+                    break;
+            }
         } else {
             echo $this->output->heading($this->page_title(), 2, 'accesshide');
             echo $this->course_activity_clipboard($course, 0);  // Copy activity clipboard..
-            $this->treetopics->render($this, $course);
+            $this->treetopics->load($this, course_get_format($course)->get_course());
+            $this->treetopics->render();
         }
     }
+
     /**
      * Generate the starting container html for a list of sections
      * @return string HTML to output.
@@ -744,15 +861,18 @@ class format_treetopics_renderer extends format_section_renderer_base {
     public function get_course_section_cm_list($course, $section) {
         return $this->courserenderer->course_section_cm_list($course, $section, 0);
     }
-
-    /**
+    
+     /**
      * Output the html for a multiple section page
+     * Renders HTML for the menus to add activities and resources to the current course
      *
      * @param stdClass $course The course entry from DB
      * @param string $sections
      * @param string $mods
      * @param string $modnames
      * @param string $modnamesused
+     * @param stdClass $course
+     * @return string
      */
     public function print_multiple_section_page($course, $sections, $mods, $modnames, $modnamesused) {
 
@@ -762,6 +882,8 @@ class format_treetopics_renderer extends format_section_renderer_base {
         $context = context_course::instance($course->id);
         // Title with completion help icon.
         $completioninfo = new completion_info($course);
+
+        echo "<div class='editing-mode-menu'>";
 
         echo $completioninfo->display_help_icon();
         echo $this->output->heading($this->page_title(), 2, 'accesshide');
@@ -851,8 +973,20 @@ class format_treetopics_renderer extends format_section_renderer_base {
         } else {
             echo $this->end_section_list();
         }
-    }
 
+        echo "</div>";
+    }
+    
+    /**
+     * Renders HTML for the menus to add activities and resources to the current course
+     *
+     * @param stdClass $course
+     * @return string
+     */
+    public function get_course_section_add_cm_control($course, $isection) {
+        return $this->courserenderer->course_section_add_cm_control($course, $isection, 0);
+    }
+    
     /**
      * OVERRIDE
      * Generate the display of the header part of a section before
@@ -862,9 +996,10 @@ class format_treetopics_renderer extends format_section_renderer_base {
      * @param stdClass $course The course entry from DB
      * @param bool $onsectionpage true if being printed on a single-section page
      * @param int $sectionreturn The section to return to after an action
+     * @param int $showsectionsummary 
      * @return string HTML to output.
      */
-    protected function section_header($section, $course, $onsectionpage, $sectionreturn=null) {
+    public function section_header($section, $course, $onsectionpage, $sectionreturn=null, $showsectionsummary=true, $showsectiondetails = true) {
 
         $o = '';
         $currenttext = '';
@@ -880,19 +1015,21 @@ class format_treetopics_renderer extends format_section_renderer_base {
             }
         }
 
+        $display = ($showsectiondetails ? '' : 'd-none');
+
         $o .= html_writer::start_tag('li', array('id' => 'section-'.$section->section,
-            'class' => 'section main clearfix'.$sectionstyle, 'role' => 'region',
+            'class' => "section main clearfix".$sectionstyle, 'role' => 'region',
             'aria-label' => get_section_name($course, $section), "data-section-level" => $section->ttsectiondisplay,
-            "data-section-id" => $section->id));
+            "data-section-id" => $section->id, 'style' => 'list-style: none;') );
 
         // Create a span that contains the section title to be used to create the keyboard section move menu.
-        $o .= html_writer::tag('span', get_section_name($course, $section), array('class' => 'hidden sectionname'));
+        $o .= html_writer::tag('span', get_section_name($course, $section), array('class' => "hidden sectionname $display"));
 
         $leftcontent = $this->section_left_content($section, $course, $onsectionpage);
-        $o .= html_writer::tag('div', $leftcontent, array('class' => 'left side'));
+        $o .= html_writer::tag('div', $leftcontent, array('class' => "left side $display"));
 
         $rightcontent = $this->section_right_content($section, $course, $onsectionpage);
-        $o .= html_writer::tag('div', $rightcontent, array('class' => 'right side'));
+        $o .= html_writer::tag('div', $rightcontent, array('class' => "right side $display"));
         $o .= html_writer::start_tag('div', array('class' => 'content'));
 
         // When not on a section page, we display the section titles except the general section if null.
@@ -905,7 +1042,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
         if ($hasnamenotsecpg || $hasnamesecpg) {
             $classes = '';
         }
-        $sectionname = html_writer::tag('span', $this->section_title($section, $course));
+        $sectionname = html_writer::tag('span', $this->section_title($section, $course), array('class' => "$display"));
         $o .= $this->output->heading($sectionname, 3, 'sectionname' . $classes);
 
         $o .= $this->section_availability($section);
@@ -915,13 +1052,23 @@ class format_treetopics_renderer extends format_section_renderer_base {
             // Show summary if section is available or has availability restriction information.
             // Do not show summary if section is hidden but we still display it because of course setting
             // "Hidden sections are shown in collapsed form".
-            $o .= $this->format_summary_text($section);
+            if($showsectionsummary){
+                $o .= $this->format_summary_text($section);
+            }
         }
         $o .= html_writer::end_tag('div');
 
         return $o;
     }
 
+    /**
+     * Generate footer html of a stealth section
+     *
+     * @return string HTML to output.
+     */
+    public function section_footer(){
+        return parent::section_footer();
+    }
     /**
      * Generate the section title, wraps it in a link to the section page if page is to be displayed on a separate page
      *

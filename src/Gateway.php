@@ -111,7 +111,7 @@ class WebApi{
     }
 
     /**
-     * Set the section content display
+     * @return void
      */
     protected function set_section_content_display() {
         try {
@@ -128,7 +128,7 @@ class WebApi{
     }
 
     /**
-     * Get the section content
+     * @return void
      */
     protected function get_section_content() {
         global $PAGE;
@@ -152,4 +152,30 @@ class WebApi{
             $this->reply(false, null, $ex->GetMessage());
         }
     }
+
+    /**
+     * @return void
+     */
+    /*protected function get_section_content_editingmode() {
+        global $PAGE;
+
+        try {
+            $data = $this->request->data;
+
+            $urlparams = array('id' => $data->courseid);
+            $params = array('id' => $data->courseid);
+            $course = $this->db->get_record('course', $params, '*', MUST_EXIST);
+
+            $PAGE->set_context(context_course::instance($data->courseid, MUST_EXIST));
+            
+            $render = new format_treetopics_renderer($PAGE, $course);
+            $tt = new treetopics();
+            $tt->load($render, course_get_format($course)->get_course());
+            
+            $this->reply(true, $tt->render_editing_mode_section_content($render, $data->sectionid));
+
+        } catch (Exception $ex) {
+            $this->reply(false, null, $ex->GetMessage());
+        }
+    }*/
 }

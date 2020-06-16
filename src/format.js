@@ -41,6 +41,8 @@ M.course.format.swap_sections = function(Y, node1, node2) {
     var sectionlist = Y.Node.all('.' + CSS.COURSECONTENT + ' ' + M.course.format.get_section_selector(Y));
     // Swap menus.
     sectionlist.item(node1).one('.' + CSS.SECTIONADDMENUS).swap(sectionlist.item(node2).one('.' + CSS.SECTIONADDMENUS));
+
+    M.recit.course.format.TreeTopicsEditingMode.instance.init();
 }
 
 /**
@@ -155,6 +157,13 @@ M.recit.course.format.TreeTopicsWebApi = class{
         options.service = "get_section_content";
         this.post(this.gateway, options, onSuccess);
     }
+
+    /*getSectionContentEditingmode(data, onSuccess){
+        let options = {};
+        options.data = data;
+        options.service = "get_section_content_editingmode";
+        this.post(this.gateway, options, onSuccess);
+    }*/
 }
 
 M.recit.course.format.TreeTopicsUtils = class{
@@ -203,8 +212,7 @@ M.recit.course.format.TreeTopicsEditingMode = class{
         this.onChangeLevel = this.onChangeLevel.bind(this);
         this.onChangeContentDisplay = this.onChangeContentDisplay.bind(this);
 
-        this.webApi = new M.recit.course.format.TreeTopicsWebApi();
-
+        this.webApi = webApi;
         this.filter = null;
 
         this.init();
@@ -213,6 +221,7 @@ M.recit.course.format.TreeTopicsEditingMode = class{
     init(){
         this.initRadioSectionLevel();
         this.initRadioSectionContentDisplay();
+
         this.initFilter();
     }
 
@@ -497,5 +506,5 @@ M.recit.course.format.TreeTopics.messages = {
 // Without jQuery (doesn't work in older IEs).
 document.addEventListener('DOMContentLoaded', function() {
     M.recit.course.format.TreeTopics.instance = new M.recit.course.format.TreeTopics();
-    M.recit.course.format.TreeTopicsEditingMode.instance = new M.recit.course.format.TreeTopicsEditingMode();
+    M.recit.course.format.TreeTopicsEditingMode.instance = new M.recit.course.format.TreeTopicsEditingMode(M.recit.course.format.TreeTopics.instance.webApi);
 }, false);
