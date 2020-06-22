@@ -141,8 +141,9 @@ class WebApi{
             $course = $this->db->get_record('course', $params, '*', MUST_EXIST);
 
             $PAGE->set_context(context_course::instance($data->courseid, MUST_EXIST));
-            
-            $render = new format_treetopics_renderer($PAGE, $course);
+            $PAGE->set_course($course);
+            $render = $PAGE->get_renderer('format_treetopics');
+            //$render = new format_treetopics_renderer($PAGE, $course);
             $tt = new treetopics();
             $tt->load($render, course_get_format($course)->get_course());
 

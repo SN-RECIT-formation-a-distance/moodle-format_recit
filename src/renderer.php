@@ -58,7 +58,7 @@ class TreeTopics
      */
     public function __construct() {
         global $COURSE, $OUTPUT;
-        $context = context_course::instance($COURSE->id);
+        //$context = context_course::instance($COURSE->id);
         $this->output = $OUTPUT;
     }
 
