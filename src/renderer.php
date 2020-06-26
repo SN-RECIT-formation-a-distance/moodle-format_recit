@@ -758,7 +758,7 @@ class TreeTopics
             $result .= $format_treetopics_renderer->section_footer();
         }
         else{            
-            $result .= sprintf("<a class='btn btn-primary pull-right' href='%s/course/editsection.php?id=%ld&sr'>%s</a>", $CFG->wwwroot, 
+            $result .= sprintf("<a class='btn btn-outline-primary pull-right' href='%s/course/editsection.php?id=%ld&sr'><i class='fa fa-fw fa-pencil-alt'></i> %s</a>", $CFG->wwwroot, 
                             $section->id, get_string('editsection', 'format_treetopics'));
             $result .= "<br/><br/>";
             $result .= $format_treetopics_renderer->section_header($section, $this->course, false, 0, true, false);
