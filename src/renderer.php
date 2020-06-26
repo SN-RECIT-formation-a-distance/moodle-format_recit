@@ -707,7 +707,7 @@ class TreeTopics
     public function render_editing_mode($format_treetopics_renderer){
         $result = '<div class="row">';
         $result .= '<div class="col-12">';
-        $result .= '<div class="nav nav-justified nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical" style="background-color: #efefef;">';
+        $result .= '<div class="nav nav-justified nav-pills bg-light" id="v-pills-tab" role="tablist" aria-orientation="vertical">';
 
         $result .= sprintf('<a class="nav-item nav-link active" id="v-pills-%s-tab" data-toggle="pill" href="#v-pills-%s" role="tab"
                              aria-controls="v-pills-%s" aria-selected="true">%s</a>', "menu", "menu", "menu", "Menu");
@@ -743,6 +743,8 @@ class TreeTopics
     }
 
     protected function render_editing_mode_section_content($format_treetopics_renderer, $section, $showMenu = false){
+        global $CFG;
+
         // Title with completion help icon.
         $completioninfo = new completion_info($this->course);
         $sectionid = $this->get_section_id($section);
@@ -755,8 +757,10 @@ class TreeTopics
             $result .= sprintf("<div class='section_add_menus' id='add_menus-%s'></div>", $sectionid);
             $result .= $format_treetopics_renderer->section_footer();
         }
-        else{
-            //$result .= sprintf("<div class='summary'>%s</div>", $this->format_summary_text($section));
+        else{            
+            $result .= sprintf("<a class='btn btn-primary pull-right' href='%s/course/editsection.php?id=%ld&sr'>%s</a>", $CFG->wwwroot, 
+                            $section->id, get_string('editsection', 'format_treetopics'));
+            $result .= "<br/><br/>";
             $result .= $format_treetopics_renderer->section_header($section, $this->course, false, 0, true, false);
             $result .= $format_treetopics_renderer->get_course_section_cm_list($this->course, $section);
             $result .= $format_treetopics_renderer->get_course_section_add_cm_control($this->course, $section->section);
