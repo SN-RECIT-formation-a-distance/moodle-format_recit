@@ -705,6 +705,8 @@ class TreeTopics
     }
 
     public function render_editing_mode($format_treetopics_renderer){
+        global $CFG, $COURSE;
+
         $result = '<div class="row">';
         $result .= '<div class="col-12">';
         $result .= '<div class="nav nav-justified nav-pills bg-light" id="v-pills-tab" role="tablist" aria-orientation="vertical">';
@@ -724,9 +726,14 @@ class TreeTopics
         $result .= '<div class="tab-content" id="v-pills-tabContent" style="padding: 2rem;">';
 
         $html = "";
+        $html .= sprintf("<a href='%s/course/changenumsections.php?courseid=%ld&insertsection=0&sesskey=%s&sectionreturn=0' 
+                        class='btn btn-outline-primary pull-right'><i class='fa fa-plus'></i> %s</a>", 
+                        $CFG->wwwroot, $COURSE->id, sesskey(), get_string('addsections', 'format_treetopics'));
+        $html .= "<br/><br/><br/>";
+
         foreach ($this->sectionslist as $section) {
             $html .= $this->render_editing_mode_section_content($format_treetopics_renderer, $section, true);
-        }
+        }       
 
         $result .= sprintf('<div class="tab-pane fade show active editing-mode-menu" id="v-pills-%s" role="tabpanel" aria-labelledby="v-pills-%s-tab">%s</div>', "menu", "menu", $html);
 
