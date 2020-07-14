@@ -905,7 +905,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
         // Now the list of sections..
         echo $this->start_section_list();
 
-        if ($course->ttdisplayshortcuts) {
+        //if ($course->ttdisplayshortcuts) {
             $filtervalues = (isset($_COOKIE['ttModeEditionFilter'])
                     ? explode(",", $_COOKIE['ttModeEditionFilter']) : array("sum", "act"));
             $ttmodeeditorfilter = '
@@ -923,7 +923,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
                     (in_array("sum", $filtervalues) ? 'checked' : ''),
                     (in_array("act", $filtervalues) ? 'active' : ''),
                     (in_array("act", $filtervalues) ? 'checked' : ''));
-        }
+       // }
 
         $numsections = course_get_format($course)->get_last_section_number();
 
@@ -1093,7 +1093,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
         $level = "";
         $contentdisplay = "";
 
-        if ($course->ttdisplayshortcuts) {
+        //if ($course->ttdisplayshortcuts) {
             $radiosectionlevel = '<label><input name="ttRadioSectionLevel%ld" data-component="ttRadioSectionLevel" type="radio" value="%s"  %s> %s</label>';
 
             $level = "";
@@ -1118,7 +1118,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
                 sprintf($radiosectioncontentdisplay, $section->section, "-2",
                         ($section->ttsectioncontentdisplay == -2 ? "checked" : ""),
                         get_string('displayimages', 'format_treetopics')));
-        }
+       // }
 
         $html = sprintf("<span style='display: flex; align-items: end;'>%s%s%s</span>", $sectionname, $level, $contentdisplay);
 
