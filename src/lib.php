@@ -363,10 +363,10 @@ class format_treetopics extends format_base {
                     'default' => $courseconfig->hiddensections,
                     'type' => PARAM_INT,
                 ),
-                'ttdisplayshortcuts' => array(
+                /*'ttdisplayshortcuts' => array(
                     'default' => false,
                     'type' => PARAM_BOOL,
-                ),
+                ),*/
                 'tttabsmodel' => array(
                     'default' => 5,
                     'type' => PARAM_INT,
@@ -399,12 +399,12 @@ class format_treetopics extends format_base {
                             )
                         )
                 ),
-                'ttdisplayshortcuts' => array(
+                /*'ttdisplayshortcuts' => array(
                     'label' => new lang_string('displayshortcuts', 'format_treetopics'),
                     'help' => 'displayshortcuts',
                     'help_component' => 'format_treetopics',
                     'element_type' => 'checkbox'
-                ),
+                ),*/
                 'tttabsmodel' => array(
                     'label' => new lang_string('tabsmodel', 'format_treetopics'),
                     'help' => 'tabsmodel',
@@ -693,7 +693,7 @@ class format_treetopics extends format_base {
             foreach ($options as $key => $unused) {
                 if (!array_key_exists($key, $data)) {
                     // Make sure to set the boolean value to 0 (this property is not sent by post when check input is unchecked).
-                    if (in_array($key, array('ttdisplayshortcuts', 'tthascontract', 'ttshownavsection'))) {
+                    if (in_array($key, array(/*'ttdisplayshortcuts',*/ 'tthascontract', 'ttshownavsection'))) {
                         $data[$key] = 0;
                     } else if (array_key_exists($key, $oldcourse)) {
                         $data[$key] = $oldcourse[$key];

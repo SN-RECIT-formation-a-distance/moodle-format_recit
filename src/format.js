@@ -387,7 +387,9 @@ M.recit.course.format.TreeTopics = class{
             let branch = menu.querySelector(`[data-parent-section=${id}]`);
             if(branch !== null){
                 el.parentElement.setAttribute("data-selected", "1");
-                el.previousElementSibling.style.display = 'none'; // Remove the arrow on parent element.
+                el.previousElementSibling.style.display = 'none'; // Remove the arrow on parent element. 
+                //el.parentElement.style.borderBottom = 'none';// Make border transparent.
+                //set the plus(+) sign to negative(-) sign.
                 branch.setAttribute("data-selected", "1");
             }
 
@@ -444,9 +446,17 @@ M.recit.course.format.TreeTopics = class{
             sectionId = event.currentTarget.getAttribute('data-section');
         }
 
+        // Open or close menu responsive
+        if(sectionId == 'icon'){
+            this.openCloseMenu();
+            return;
+        }
+
         if(sectionId.length === 0){
             return;
         }
+
+        
 
         this.ctrlMenuM1(sectionId);
 
@@ -495,6 +505,23 @@ M.recit.course.format.TreeTopics = class{
             btnNext.firstChild.setAttribute('data-section', `section-${iSection+1}`);
         }
 
+    }
+
+    //Open and close the menu responsive
+    openCloseMenu(){
+        var nav = document.getElementById("tt-recit-nav");
+        var icon = document.getElementById("faIcon");
+        if (nav.className === "menuM1") {
+            //Open menu
+            nav.className += " responsive";
+            //Change icon (fa-times = X).
+            icon.className = ("fa fa-times");
+        } else {
+            //Close menu
+            nav.className = "menuM1";
+            //Return icon to 3 bars menu.
+            icon.className = ("fa fa-bars");
+        }
     }
 }
 

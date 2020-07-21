@@ -166,7 +166,12 @@ class TreeTopics
      * Function render sections menu m1 of TreeTopics.
      * @return string
      */
-    protected function render_sections_menu_m1() {        
+    protected function render_sections_menu_m1() {  
+        $menuicontemplate =
+                "<li class='menuM1-item'>
+                    <a class='menuM1-item-desc' href='#' data-section='%s'
+                        onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s</a>
+                </li>";      
         $menuitemtemplate =
                 "<li class='menuM1-item'>
                     <div class='arrow'></div>
@@ -185,6 +190,9 @@ class TreeTopics
         $tmp1 = "";
         $tmp2 = "";
 
+        //Ajout de l'icon du menu responsive
+        $tmp1 .= sprintf($menuicontemplate, "icon", "<i class='fa fa-bars' id='faIcon'></i>");
+        
         $tmp1 .= sprintf($menuitemtemplate, "map", "<i class='fa fa-map'></i>");
         $tmp1 .= $menuseparator;
         foreach ($this->sectionstree as $item1) {
@@ -905,7 +913,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
         // Now the list of sections..
         echo $this->start_section_list();
 
-        if ($course->ttdisplayshortcuts) {
+        //if ($course->ttdisplayshortcuts) {
             $filtervalues = (isset($_COOKIE['ttModeEditionFilter'])
                     ? explode(",", $_COOKIE['ttModeEditionFilter']) : array("sum", "act"));
             $ttmodeeditorfilter = '
@@ -923,7 +931,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
                     (in_array("sum", $filtervalues) ? 'checked' : ''),
                     (in_array("act", $filtervalues) ? 'active' : ''),
                     (in_array("act", $filtervalues) ? 'checked' : ''));
-        }
+       // }
 
         $numsections = course_get_format($course)->get_last_section_number();
 
@@ -1093,7 +1101,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
         $level = "";
         $contentdisplay = "";
 
-        if ($course->ttdisplayshortcuts) {
+        //if ($course->ttdisplayshortcuts) {
             $radiosectionlevel = '<label><input name="ttRadioSectionLevel%ld" data-component="ttRadioSectionLevel" type="radio" value="%s"  %s> %s</label>';
 
             $level = "";
@@ -1118,7 +1126,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
                 sprintf($radiosectioncontentdisplay, $section->section, "-2",
                         ($section->ttsectioncontentdisplay == -2 ? "checked" : ""),
                         get_string('displayimages', 'format_treetopics')));
-        }
+       // }
 
         $html = sprintf("<span style='display: flex; align-items: end;'>%s%s%s</span>", $sectionname, $level, $contentdisplay);
 

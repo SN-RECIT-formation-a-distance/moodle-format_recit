@@ -31,6 +31,7 @@ $menu-item-height:30px;
 
         .menuM1-level1{
             @extend .menuM1-level;
+            .menuM1-item:first-child{ display: none;} 
             .menuM1-item{
                 .menuM1-item-desc{color: #666;}
             }
@@ -46,7 +47,7 @@ $menu-item-height:30px;
                 .menuM1-item-desc{font-weight: 400;  color: #fff; }
             }
             .menuM1-item[data-selected="1"]{
-                .menuM1-item-desc{color: #EAC167;}
+                .menuM1-item-desc{ color: #EAC167;}
                 .arrow{display: block;  border-left-color: #EAC167; }
             } 
         }
@@ -58,8 +59,8 @@ $menu-item-height:30px;
 
     #tt-recit-nav{
         //background-color: $primary;
-        
-        
+
+
         .nav-item.dropdown{padding-right: 1rem;}
 
         .dropdown-submenu {
@@ -127,6 +128,115 @@ $menu-item-height:30px;
             .tt-section-title{ margin: 1rem; font-size: 1.2em;}
         }
         .tt-grid-element:hover{ cursor: pointer; filter: grayscale(0%);}        
+    }
+
+//Menu responsive
+    @media screen and (max-width: 767px){
+
+        //Closed responsive menu.
+        .menuM1{ 
+            width: 100%;
+            position: relative;
+            display: block;
+            z-index: 1;
+
+            .menuM1-level{
+                .menuM1-item{
+                    display:none;
+                    align-self: auto;
+                    border-bottom: 0.1px solid white;
+                    place-content: flex-start;
+                    .menuM1-item-desc{display: block; color: #666; margin-left: 8%; margin-top: 10px; margin-bottom: 10px;}
+                }
+                .menuM1-item[data-selected="1"]{
+                    background-color: #dab462;
+                    .menuM1-item-desc{color: #fff;}
+                } 
+            }
+
+            //Menu Level1
+            .menuM1-level1{
+                
+                //CSS for the icon, the first element.
+                .menuM1-item:first-child{
+                    float: left; display: block;
+                    border-bottom: none;
+                }
+                .menuM1-item a:first-child{
+                    display : block;
+                    color: white;
+                    background-color: #dab462;
+                    padding-left: 3%;
+                    padding-right: 3%;
+                    float: left;
+                }
+
+                //CSS for the rest of the items
+                .menuM1-item{
+                    border-bottom: 0.1px solid white;
+                    place-content: flex-start;
+                    .menuM1-item-desc{ display: block; color: #666; margin-left: 8%; margin-top: 10px; margin-bottom: 10px;}
+                }
+
+                //Item selected
+                .menuM1-item[data-selected="1"]{
+                    background-color: #dab462;
+                    .menuM1-item-desc{color: #fff;}
+                    .arrow{display: none;}
+                } 
+            }
+
+            //Menu level 2
+            .menuM1-level2{
+                display:none;
+                background-color: #dab462;
+                .menuM1-item{
+                    border-bottom: 1px solid #fff;
+                    place-content: flex-start;
+                    margin-left: 15%; margin-right: 15%;
+                    .menuM1-item-desc{font-size: small; color: #666; }
+                }
+
+                //Item selected
+                .menuM1-item[data-selected="1"]{
+                    .menuM1-item-desc{ color: #fff;}
+                    .arrow{display: none; }
+                } 
+            }
+        }
+
+        //Opened responsive menu
+        .menuM1.responsive{
+            width: 75%;
+            position: absolute;
+            display: block;
+            z-index: 1;
+
+            .menuM1-level{
+                .menuM1-item{
+                    display: block;
+                }
+                
+            }
+
+            //Close icon on level1
+            .menuM1-level1{
+                .menuM1-item:first-child{
+                    border-bottom: none;
+                }
+                .menuM1-item a:first-child{
+                    display : block;
+                    color: white;
+                    background-color: #dab462;
+                    padding-left: 4%;
+                    padding-right: 4%;
+                    float: right;
+                    margin-right: 5px;
+                    margin-top: 5px;
+                    margin-bottom: 0px;
+                }
+            }
+        }
     }
 
 	@media only screen and (max-width: 600px) {
