@@ -370,6 +370,34 @@ M.recit.course.format.TreeTopics = class{
         this.goToSection(null, sectionId);
 
         this.ctrlPagination();
+        
+        //set menu responsive for item with a branch
+        this.setMenuM1Section();
+    }
+
+    // Set the MenuM1-item with a plus sign where there are level2
+    setMenuM1Section(){
+        let menu = document.getElementById("tt-recit-nav");
+
+        if(menu === null){ return;}
+
+        let parentSection;
+        let parentElems =  menu.querySelectorAll('[data-section]');
+        let elems = menu.querySelectorAll('[data-parent-section]');
+        for(let el of elems){
+            parentSection = el.getAttribute("data-parent-section");
+            for(let elem of parentElems){
+                let section = elem.getAttribute('data-section');
+                if(section ==  parentSection){
+                     //set plus sign
+                    elem.classList.toggle("level-section");
+                   
+                }
+            }
+        }
+
+        
+        
     }
 
     ctrlMenuM1(sectionId){
@@ -381,6 +409,9 @@ M.recit.course.format.TreeTopics = class{
             let el = menu.querySelector(`[data-section=${id}]`);
             if(el !== null){
                 el.parentElement.setAttribute("data-selected", "1");
+                //Make appear the title of the section in the responsive menu
+                let sectionTitle = el.textContent;
+                document.getElementById('section-title').innerHTML = sectionTitle;
             }
 
             // If the menu level1 item has a branch then it also select it.
@@ -388,11 +419,29 @@ M.recit.course.format.TreeTopics = class{
             if(branch !== null){
                 el.parentElement.setAttribute("data-selected", "1");
                 el.previousElementSibling.style.display = 'none'; // Remove the arrow on parent element. 
-                //el.parentElement.style.borderBottom = 'none';// Make border transparent.
-                //set the plus(+) sign to negative(-) sign.
-                branch.setAttribute("data-selected", "1");
-            }
 
+                
+                branch.setAttribute("data-selected", "1");
+
+                //set the plus(+) sign to negative(-) sign.
+                if(el.className != 'menuM1-item-desc level-section active'){
+                    el.classList.toggle("active");
+                }
+
+                //Make appear the title of the sous section in the responsive menu
+                let sections = branch.getElementsByClassName('menuM1-item');
+                for(let sec of sections){
+                    if(sec.getAttribute('data-selected') == "1"){
+                        document.getElementById('sousSection-title').innerHTML = sec.textContent;
+                        document.getElementById('sous-title').style.display = "grid"
+                        return el;
+                    }
+                }
+            }
+            else{
+                document.getElementById('sous-title').style.display = "none"
+            }
+            
             return el;
         }
 
@@ -400,6 +449,14 @@ M.recit.course.format.TreeTopics = class{
         let elems = menu.getElementsByClassName('menuM1-item');
         for(let el of elems){
             el.setAttribute("data-selected", "0");
+
+            //set the negative(-) sign to plus(+) sign.
+            let levelSection = el.getElementsByClassName('menuM1-item-desc level-section active')
+            if(levelSection.length >= 1){
+                for(let item of levelSection){
+                    item.classList.toggle("active");
+                }
+        }
         }
 
         // Reset menu level 2 selection.
@@ -440,7 +497,6 @@ M.recit.course.format.TreeTopics = class{
 
     goToSection(event, sectionId) {
         sectionId = sectionId || '';
-
         if(event !== null){
             event.preventDefault();
             sectionId = event.currentTarget.getAttribute('data-section');
@@ -509,6 +565,7 @@ M.recit.course.format.TreeTopics = class{
 
     //Open and close the menu responsive
     openCloseMenu(){
+        var div = document.getElementById("dark-background-menu");
         var nav = document.getElementById("tt-recit-nav");
         var icon = document.getElementById("faIcon");
         if (nav.className === "menuM1") {
@@ -516,11 +573,15 @@ M.recit.course.format.TreeTopics = class{
             nav.className += " responsive";
             //Change icon (fa-times = X).
             icon.className = ("fa fa-times");
+            //Background with a transparent dark
+            div.style.display = "block";
         } else {
             //Close menu
             nav.className = "menuM1";
             //Return icon to 3 bars menu.
             icon.className = ("fa fa-bars");
+            //Return to normal
+            div.style.display = "none";
         }
     }
 }

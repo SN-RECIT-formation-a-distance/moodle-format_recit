@@ -130,15 +130,25 @@ $menu-item-height:30px;
         .tt-grid-element:hover{ cursor: pointer; filter: grayscale(0%);}        
     }
 
-//Menu responsive
+    //Menu responsive
     @media screen and (max-width: 767px){
-
+        div#dark-background-menu{
+            display:none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+            z-index: 1040;
+        }
         //Closed responsive menu.
         .menuM1{ 
             width: 100%;
             position: relative;
             display: block;
-            z-index: 1;
+            z-index: 1020;
+            transition: 0.5s;
 
             .menuM1-level{
                 .menuM1-item{
@@ -161,7 +171,34 @@ $menu-item-height:30px;
                 .menuM1-item:first-child{
                     float: left; display: block;
                     border-bottom: none;
+                    
                 }
+                .menuM1-item{
+                    //H5
+                    #section-title, h5{
+                        font-variant: all-petite-caps;
+                        padding-top: 3%;
+                        padding-left: 25%
+                    }
+                    #sousSection-title{
+                        padding-left: 0;
+                        text-align-last: center;
+                        font-size: large;
+                    }
+                    //DIV
+                    #sous-title, div{
+                        display: grid;
+                        background-color: #666;
+                        width: 102%;
+                        margin-left: -1%;
+                        border-top: 1px solid white;
+                        padding-bottom: 1%;
+                        color: white;
+                    }
+                }
+                
+                    
+                
                 .menuM1-item a:first-child{
                     display : block;
                     color: white;
@@ -169,6 +206,19 @@ $menu-item-height:30px;
                     padding-left: 3%;
                     padding-right: 3%;
                     float: left;
+                }
+                .menuM1-item{
+                    .menuM1-item-desc.level-section::after{
+                        content: '\02795';
+                        color: #777;
+                        font-weight: bold;
+                        float: right;
+                        margin-left: 5px;
+                        transition: 0.5s;
+                    }
+                    .menuM1-item-desc.level-section.active::after{
+                        content: '\2796';
+                    }
                 }
 
                 //CSS for the rest of the items
@@ -209,12 +259,24 @@ $menu-item-height:30px;
         .menuM1.responsive{
             width: 75%;
             position: absolute;
-            display: block;
-            z-index: 1;
-
+            z-index: 1050;
             .menuM1-level{
                 .menuM1-item{
                     display: block;
+                }
+
+                .menuM1-item{
+                    //H5
+                    #section-title, h5{
+                        display: none;
+                    }
+                    //DIV
+                    #sous-title, div{
+                        display: none;
+                        border-top: none;
+                        background-color: transparent;
+                    }
+                    
                 }
                 
             }

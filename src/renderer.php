@@ -167,10 +167,13 @@ class TreeTopics
      * @return string
      */
     protected function render_sections_menu_m1() {  
+        //Template for the responsive menu icon
         $menuicontemplate =
                 "<li class='menuM1-item'>
                     <a class='menuM1-item-desc' href='#' data-section='%s'
                         onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s</a>
+                        <h5 id='section-title'></h5>
+                        <div id='sous-title'><h5 id='sousSection-title'></h5></div>
                 </li>";      
         $menuitemtemplate =
                 "<li class='menuM1-item'>
@@ -182,6 +185,7 @@ class TreeTopics
         $menuseparator = "<li></li>";
 
         $html = "
+                <div id='dark-background-menu'></div>
                 <nav class='menuM1' id='tt-recit-nav'>
                     <ul class='menuM1-level1 tt-menu-color1'>%s</ul>
                     %s
@@ -192,7 +196,7 @@ class TreeTopics
 
         //Ajout de l'icon du menu responsive
         $tmp1 .= sprintf($menuicontemplate, "icon", "<i class='fa fa-bars' id='faIcon'></i>");
-        
+
         $tmp1 .= sprintf($menuitemtemplate, "map", "<i class='fa fa-map'></i>");
         $tmp1 .= $menuseparator;
         foreach ($this->sectionstree as $item1) {
@@ -1040,6 +1044,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
             'class' => "section main clearfix".$sectionstyle, 'role' => 'region',
             'aria-label' => get_section_name($course, $section), "data-section-level" => $section->ttsectiondisplay,
             "data-section-id" => $section->id, 'style' => 'list-style: none;') );
+
 
         // Create a span that contains the section title to be used to create the keyboard section move menu.
         $o .= html_writer::tag('span', get_section_name($course, $section), array('class' => "hidden sectionname $display"));
