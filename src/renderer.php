@@ -179,7 +179,7 @@ class TreeTopics
                 "<li class='menuM1-item'>
                     <div class='arrow'></div>
                     <a class='menuM1-item-desc' href='#' data-section='%s'
-                        onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s</a>
+                        onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s<i class='fas fa-plus' id='sectionIcon'></i></a>
                 </li>";
 
         $menuseparator = "<li></li>";
@@ -194,7 +194,7 @@ class TreeTopics
         $tmp1 = "";
         $tmp2 = "";
 
-        //Ajout de l'icon du menu responsive
+        //Ajout des l'icons du menu responsive
         $tmp1 .= sprintf($menuicontemplate, "icon", "<i class='fa fa-bars' id='faIcon'></i>");
 
         $tmp1 .= sprintf($menuitemtemplate, "map", "<i class='fa fa-map'></i>");

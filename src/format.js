@@ -391,6 +391,14 @@ M.recit.course.format.TreeTopics = class{
                 if(section ==  parentSection){
                      //set plus sign
                     elem.classList.toggle("level-section");
+                    var icon = elem.getElementsByClassName('fas fa-plus');
+                    if(icon.length == 0){
+                        icon = elem.getElementsByClassName('fas fa-minus');
+                    }
+                    for(let ic of icon){
+                        ic.setAttribute("id", "sectionIcon-active");
+                    }
+                    
                    
                 }
             }
@@ -402,16 +410,23 @@ M.recit.course.format.TreeTopics = class{
 
     ctrlMenuM1(sectionId){
         let menu = document.getElementById("tt-recit-nav");
-
         if(menu === null){ return;}
 
         let selectMenuItem = function(id){
+            var div = document.getElementById("dark-background-menu");
+            var nav = document.getElementById("tt-recit-nav");
+            var icon = document.getElementById("faIcon");
+
             let el = menu.querySelector(`[data-section=${id}]`);
             if(el !== null){
                 el.parentElement.setAttribute("data-selected", "1");
                 //Make appear the title of the section in the responsive menu
                 let sectionTitle = el.textContent;
                 document.getElementById('section-title').innerHTML = sectionTitle;
+                //Close menu
+                nav.className = "menuM1";
+                icon.className = ("fa fa-bars");
+                div.style.display = "none";
             }
 
             // If the menu level1 item has a branch then it also select it.
@@ -426,6 +441,9 @@ M.recit.course.format.TreeTopics = class{
                 //set the plus(+) sign to negative(-) sign.
                 if(el.className != 'menuM1-item-desc level-section active'){
                     el.classList.toggle("active");
+                    let sectionIcon = el.getElementsByClassName('fas fa-plus');
+                    let sec = sectionIcon[0];
+                    sec.className = 'fas fa-minus';
                 }
 
                 //Make appear the title of the sous section in the responsive menu
@@ -433,7 +451,7 @@ M.recit.course.format.TreeTopics = class{
                 for(let sec of sections){
                     if(sec.getAttribute('data-selected') == "1"){
                         document.getElementById('sousSection-title').innerHTML = sec.textContent;
-                        document.getElementById('sous-title').style.display = "grid"
+                        document.getElementById('sous-title').style.display = "grid";
                         return el;
                     }
                 }
@@ -441,7 +459,7 @@ M.recit.course.format.TreeTopics = class{
             else{
                 document.getElementById('sous-title').style.display = "none"
             }
-            
+
             return el;
         }
 
@@ -450,11 +468,14 @@ M.recit.course.format.TreeTopics = class{
         for(let el of elems){
             el.setAttribute("data-selected", "0");
 
-            //set the negative(-) sign to plus(+) sign.
-            let levelSection = el.getElementsByClassName('menuM1-item-desc level-section active')
+            //set the negative(-) sign to plus(+) sign
+            let levelSection = el.getElementsByClassName('menuM1-item-desc level-section active');
             if(levelSection.length >= 1){
                 for(let item of levelSection){
                     item.classList.toggle("active");
+                    let sectionIcon = el.getElementsByClassName('fas fa-minus');
+                    let sec = sectionIcon[0];
+                    sec.className = 'fas fa-plus'
                 }
         }
         }
@@ -467,6 +488,7 @@ M.recit.course.format.TreeTopics = class{
 
         // Select menu level1 item.
         let selectedElem = selectMenuItem(sectionId);
+
 
         // Select menu level2 item.
         if(selectedElem){
