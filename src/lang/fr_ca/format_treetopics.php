@@ -47,6 +47,7 @@ $string['displayimages'] = 'Images';
 $string['tabsmodel'] = 'Modèle de menu';
 $string['tabmodel1'] = 'Horizontal 2 niveaux';
 $string['tabmodel2'] = 'Vertical';
+$string['tabmodel3'] = 'Mega menu';
 $string['tabmodel5'] = 'Horizontal 1 niveau';
 $string['horizontal'] = 'Horizontal';
 $string['vertical'] = 'Vertical';

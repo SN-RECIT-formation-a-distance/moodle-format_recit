@@ -345,6 +345,8 @@ M.recit.course.format.TreeTopicsEditingMode = class{
     }
 }
 
+// MenuM1
+// Mega MenuM2
 M.recit.course.format.TreeTopics = class{
     constructor(){
         this.getSectionContentResult = this.getSectionContentResult.bind(this);
@@ -353,9 +355,11 @@ M.recit.course.format.TreeTopics = class{
 
         this.sectionContent = null;
         this.pagination = null;
+        this.menuName = null;
 
         this.init();
     } 
+    
 
     init(){
         let params = M.recit.course.format.TreeTopicsUtils.getUrlVars();
@@ -366,6 +370,8 @@ M.recit.course.format.TreeTopics = class{
         this.pagination = document.getElementById('sectionPagination');
 
         this.sectionContent = document.getElementById("sectioncontent_placeholder");
+
+        this.menuName = document.getElementById("tt-recit-nav").className;
 
         this.goToSection(null, sectionId);
 
@@ -378,28 +384,30 @@ M.recit.course.format.TreeTopics = class{
     // Set the MenuM1-item with a plus sign where there are level2
     setMenuM1Section(){
         let menu = document.getElementById("tt-recit-nav");
-
         if(menu === null){ return;}
+        if(this.menuName == 'menuM1'|| this.menuName == 'menuM3'){
+            let parentSection;
+            let parentElems =  menu.querySelectorAll('[data-section]');
+            let elems = menu.querySelectorAll('[data-parent-section]');
 
-        let parentSection;
-        let parentElems =  menu.querySelectorAll('[data-section]');
-        let elems = menu.querySelectorAll('[data-parent-section]');
-        for(let el of elems){
-            parentSection = el.getAttribute("data-parent-section");
-            for(let elem of parentElems){
-                let section = elem.getAttribute('data-section');
-                if(section ==  parentSection){
-                     //set plus sign
-                    elem.classList.toggle("level-section");
-                    var icon = elem.getElementsByClassName('fas fa-plus');
-                    if(icon.length == 0){
-                        icon = elem.getElementsByClassName('fas fa-minus');
+            for(let el of elems){
+                parentSection = el.getAttribute("data-parent-section");
+
+                for(let elem of parentElems){
+                    let section = elem.getAttribute('data-section');
+
+                    if(section ==  parentSection){
+                        //set plus sign
+                        elem.classList.toggle("level-section");
+                        var icon = elem.getElementsByClassName('fas fa-plus');
+
+                        if(icon.length == 0){
+                            icon = elem.getElementsByClassName('fas fa-minus');
+                        }
+                        for(let ic of icon){
+                            ic.setAttribute("id", "sectionIcon-active");
+                        }
                     }
-                    for(let ic of icon){
-                        ic.setAttribute("id", "sectionIcon-active");
-                    }
-                    
-                   
                 }
             }
         }
@@ -409,8 +417,11 @@ M.recit.course.format.TreeTopics = class{
     }
 
     ctrlMenuM1(sectionId){
-        let menu = document.getElementById("tt-recit-nav");
+        var currentMenuName = this.menuName;
+        var menu = document.getElementById("tt-recit-nav");
+
         if(menu === null){ return;}
+        
 
         let selectMenuItem = function(id){
             var div = document.getElementById("dark-background-menu");
@@ -418,15 +429,22 @@ M.recit.course.format.TreeTopics = class{
             var icon = document.getElementById("faIcon");
 
             let el = menu.querySelector(`[data-section=${id}]`);
+
             if(el !== null){
                 el.parentElement.setAttribute("data-selected", "1");
-                //Make appear the title of the section in the responsive menu
-                let sectionTitle = el.textContent;
-                document.getElementById('section-title').innerHTML = sectionTitle;
-                //Close menu
-                nav.className = "menuM1";
-                icon.className = ("fa fa-bars");
-                div.style.display = "none";
+                console.log(currentMenuName);
+                if(currentMenuName == 'menuM1'|| currentMenuName == 'menuM3'){
+                    
+                    console.log('Euh pourquoi?');
+                    //Make appear the title of the section in the responsive menu
+                    let sectionTitle = el.textContent;
+                    document.getElementById('section-title').innerHTML = sectionTitle;
+
+                    //Close menu
+                    nav.className = currentMenuName;
+                    icon.className = ("fa fa-bars");
+                    div.style.display = "none";
+                }
             }
 
             // If the menu level1 item has a branch then it also select it.
@@ -435,29 +453,44 @@ M.recit.course.format.TreeTopics = class{
                 el.parentElement.setAttribute("data-selected", "1");
                 el.previousElementSibling.style.display = 'none'; // Remove the arrow on parent element. 
 
-                
                 branch.setAttribute("data-selected", "1");
 
-                //set the plus(+) sign to negative(-) sign.
-                if(el.className != 'menuM1-item-desc level-section active'){
-                    el.classList.toggle("active");
-                    let sectionIcon = el.getElementsByClassName('fas fa-plus');
-                    let sec = sectionIcon[0];
-                    sec.className = 'fas fa-minus';
-                }
+                if(currentMenuName == 'menuM1'|| currentMenuName == 'menuM3'){
+                    //set the plus(+) sign to negative(-) sign.
+                    if(el.className != 'menuM1-item-desc level-section active'){
+                        el.classList.toggle("active");
+                        let sectionIcon = el.getElementsByClassName('fas fa-plus');
+                        let sec = sectionIcon[0];
+                        sec.className = 'fas fa-minus';
+                    }
 
-                //Make appear the title of the sous section in the responsive menu
-                let sections = branch.getElementsByClassName('menuM1-item');
-                for(let sec of sections){
-                    if(sec.getAttribute('data-selected') == "1"){
-                        document.getElementById('sousSection-title').innerHTML = sec.textContent;
-                        document.getElementById('sous-title').style.display = "grid";
-                        return el;
+                    
+                    //Make appear the title of the sous section in the responsive menu
+                    let sections = branch.getElementsByClassName('menuM1-item');
+                    for(let sec of sections){
+                        if(sec.getAttribute('data-selected') == "1"){
+                            document.getElementById('sousSection-title').innerHTML = sec.textContent;
+                            document.getElementById('sous-title').style.display = "grid";
+                        }
+                    }
+
+                    //Close mega menu level2 when you select something in
+                    if( currentMenuName == 'menuM3' && window.innerWidth > 767){
+                        let menuLevel2 = document.getElementById('level2');
+                        let level2Display = getComputedStyle(menuLevel2, null).display;
+                        console.log('avant',branch.style.display);
+                        if(level2Display == 'flex'){
+                            branch.style.display = 'none';
+                        }else{
+                            branch.style.display = 'flex';
+                        }
                     }
                 }
             }
             else{
-                document.getElementById('sous-title').style.display = "none"
+                if(currentMenuName == 'menuM1'|| currentMenuName == 'menuM3'){
+                    document.getElementById('sous-title').style.display = "none";
+                }
             }
 
             return el;
@@ -475,16 +508,20 @@ M.recit.course.format.TreeTopics = class{
                     item.classList.toggle("active");
                     let sectionIcon = el.getElementsByClassName('fas fa-minus');
                     let sec = sectionIcon[0];
-                    sec.className = 'fas fa-plus'
+                    sec.className = 'fas fa-plus';
                 }
+            }
         }
-        }
+            
 
         // Reset menu level 2 selection.
         elems = menu.querySelectorAll('[data-parent-section]');
         for(let el of elems){
             el.setAttribute("data-selected", "0");
         }
+
+        
+        
 
         // Select menu level1 item.
         let selectedElem = selectMenuItem(sectionId);
@@ -494,6 +531,31 @@ M.recit.course.format.TreeTopics = class{
         if(selectedElem){
             let parentSectionId = selectedElem.parentElement.parentElement.getAttribute("data-parent-section");
             selectMenuItem(parentSectionId);
+        }
+
+        if(currentMenuName == 'menuM1'|| currentMenuName == 'menuM3'){
+            //Close Mega Menu when you select outside or in the level2 menu
+            var branch = menu.querySelector(`[data-parent-section=${sectionId}]`);
+            var menuLevel1 = document.getElementById('level1');
+            var elemsLevel1 = menuLevel1.getElementsByClassName('menuM1-item');
+            var menuLevel2 = document.getElementById('level2');
+            var elemsLevel2 = menuLevel2.getElementsByClassName('menuM1-item');
+            for(let el1 of elemsLevel1){
+                var level1dataSelect = el1.getAttribute("data-selected");
+                if(level1dataSelect == 1){
+                    for(let el2 of elemsLevel2){
+                        var level2dataSelect = el2.getAttribute("data-selected");
+                        if(level2dataSelect == 0 && branch == null && currentMenuName == 'menuM3' && window.innerWidth > 767){
+                            console.log('jy suis');
+                            document.getElementById('level2').style.display = 'none';
+                        }
+                        if(level2dataSelect == 1 && currentMenuName == 'menuM3' && window.innerWidth > 767){ 
+                            console.log('je passe là');
+                            document.getElementById('level2').style.display = 'none';
+                        }
+                    } 
+                }
+            }
         }
     }
 
@@ -590,7 +652,7 @@ M.recit.course.format.TreeTopics = class{
         var div = document.getElementById("dark-background-menu");
         var nav = document.getElementById("tt-recit-nav");
         var icon = document.getElementById("faIcon");
-        if (nav.className === "menuM1") {
+        if (nav.className === this.menuName) {
             //Open menu
             nav.className += " responsive";
             //Change icon (fa-times = X).
@@ -599,14 +661,20 @@ M.recit.course.format.TreeTopics = class{
             div.style.display = "block";
         } else {
             //Close menu
-            nav.className = "menuM1";
+            nav.className = this.menuName;
             //Return icon to 3 bars menu.
             icon.className = ("fa fa-bars");
             //Return to normal
             div.style.display = "none";
         }
+
+        //Turn back display of menu level2 for the menu responsive
+            document.getElementById('level2').style.display = '';
+        
     }
 }
+
+
 
 // Definition static attributes and methods to work with Firefox.
 M.recit.course.format.TreeTopics.messages = {

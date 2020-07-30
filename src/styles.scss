@@ -4,6 +4,8 @@ $menu-item-height:30px;
 .treetopics{
     display: grid; margin: -1rem; // the tree topics navbar has no padding
 
+    
+
     .menuM1{
         position: relative;        
 
@@ -57,6 +59,81 @@ $menu-item-height:30px;
         .menuM1-level2[data-selected="1"]{
             display: flex;
         }
+    }
+
+    //Mega Menu
+    .menuM3{
+        position: relative;        
+
+        .menuM1-level{
+            width: 100%; list-style: none; margin: auto; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-evenly; padding: 0;
+            .menuM1-item{
+                padding: .3rem; margin: .1rem;  min-width: 120px; align-self: center; display: flex; justify-content: center; align-items: center; border-right: 1px solid white; 
+                .menuM1-item-desc{padding: .3rem;    font-size: 16px;      font-weight: 600;    
+                    white-space: nowrap;    -webkit-hyphens: none;    -ms-hyphens: none;    hyphens: none; white-space: normal;
+                    i.fas.fa-plus{display: none;}
+                    i.fas.fa-minus{display: none;}
+                }
+            }
+
+            .menuM1-item[data-selected="1"]{
+                .arrow{display: block;}
+            }  
+            
+            .arrow{
+                border-width: 10px; border-style: solid; border-color: transparent; width: 0; height: 0; margin: 0px; display: none; 
+                border-left-color: #666; border-right-width: 0px;
+            }
+        }
+
+        .menuM1-level1{
+            @extend .menuM1-level;
+            .menuM1-item:first-child{ display: none;} 
+            //.menuM1-item:last-child{ border-right: none;} 
+            .menuM1-item{
+                flex-grow: 1;
+                margin: 0;
+                border-bottom: 1px solid white;
+                .menuM1-item-desc{
+                    color: #666;
+                    .fa.fa-map{margin-right: 0.5rem;}
+                }
+            }
+            .menuM1-item[data-selected="1"]{
+                background-color: #DCDCDC;
+                padding-top: 6px;
+                border-bottom: none;
+                .menuM1-item-desc{color: #666;}
+                .arrow{display: block;  border-left-color: #666; }
+            } 
+        }
+
+        .menuM1-level2{
+            @extend .menuM1-level; 
+            position: absolute;
+            display: none;
+            border-bottom: 3px solid #ecc369;
+            background-color: #DCDCDC;
+            background-image: linear-gradient( #DCDCDC, #F8F8F8);
+            .menuM1-item{
+                border-right: none;;
+                margin-top: 1.5rem;
+                .menuM1-item-desc{
+                    font-weight: 400;  
+                    color: rgb(0, 0, 0);
+                    border-bottom: 1px solid #d8d7d7; 
+                    padding-bottom: 0;
+                    padding-right: 7rem;
+                }
+            }
+            .menuM1-item[data-selected="1"]{
+                .arrow{display: block;  border-left-color: #000000; }
+            } 
+        }
+        .menuM1-level2[data-selected="1"]{
+            display: flex;
+        }
+
     }
 
     #tt-recit-nav{
@@ -144,7 +221,7 @@ $menu-item-height:30px;
             background-color: rgba(0,0,0,0.4);
             z-index: 1040;
         } 
-        //Closed responsive menu.
+        //Closed responsive menuM1.
         .menuM1{ 
             width: 100%;
             position: relative;
@@ -168,6 +245,7 @@ $menu-item-height:30px;
                             justify-content: flex-end;
                         }
                     }
+                    li:empty{ display: none;}
                 }
                 .menuM1-item[data-selected="1"]{
                     background-color: #dab462;
@@ -262,7 +340,7 @@ $menu-item-height:30px;
             }
         }
 
-        //Opened responsive menu
+        //Opened responsive menuM1
         .menuM1.responsive{
             width: 75%;
             position: absolute;
@@ -292,6 +370,179 @@ $menu-item-height:30px;
             .menuM1-level1{
                 .menuM1-item:first-child{
                     border-bottom: none;
+                }
+                .menuM1-item a:first-child{
+                    display: flex;
+                    flex-direction: row-reverse;
+                    color: white;
+                    background-color: #dab462;
+                    padding-left: 0.7rem;
+                    padding-right: 0.7rem;
+                    margin-left: 15rem;
+                    margin-right: 5px;
+                    margin-top: 5px;
+                    margin-bottom: 0px;
+                }
+            }
+        }
+
+        //Mega Menu responsive
+         //Closed responsive menuM3.
+         .menuM3{ 
+            width: 100%;
+            position: relative;
+            display: block;
+            z-index: 1020;
+            transition: 0.5s;
+
+            .menuM1-level{
+                flex-direction: column;
+                .menuM1-item{
+                    display:none;
+                    align-self: auto;
+                    place-content: flex-start;
+                    .menuM1-item-desc{display: block; color: #666; margin-left: 8%; margin-top: 10px; margin-bottom: 10px;
+                        //plus and minus icon
+                        i#sectionIcon-active{
+                            display: flex;
+                            flex-grow: 2;
+                            color: #666;
+                            align-items: center;
+                            justify-content: flex-end;
+                        }
+                    }
+                }
+                .menuM1-item[data-selected="1"]{
+                    border-bottom: 0.1px solid white;
+                    background-color: #dab462;
+                    .menuM1-item-desc{color: #fff; text-decoration: none;}
+                } 
+            }
+
+            //Menu Level1
+            .menuM1-level1{
+                
+                //CSS for the icon, the first element.
+                .menuM1-item:first-child{
+                    border-bottom: none;
+                    padding-bottom: 0px;
+                }
+                .menuM1-item{
+                    //H5
+                    #section-title, h5{
+                        font-variant: all-petite-caps;
+                        padding-top: 0.7rem;
+                        margin-left: 1rem;
+                        margin-right: 3rem;
+                        max-width: 22rem;
+                        text-align: center;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        overflow: hidden;
+                    }
+                    #sousSection-title{
+                        font-size: large;
+                        margin-right: 1rem;
+                    }
+                    //DIV
+                    #sous-title, div{
+                        display: grid;
+                        background-color: #666;
+                        width: 103%;
+                        margin-left: -0.3rem;
+                        border-top: 1px solid white;
+                        padding-bottom: 0.2rem;
+                        color: white;
+                    }
+                }
+                
+                    
+                
+                .menuM1-item a:first-child{
+                    display : flex;
+                    color: white;
+                    background-color: #dab462;
+                    margin: 0.7rem;
+                    padding-left: 0.7rem;
+                    padding-right: 0.7rem;
+                    float: left;
+                    text-decoration: none;
+                }
+
+                //CSS for the rest of the items
+                .menuM1-item{
+                    border-right: none;
+                    border-bottom: 0.1px solid white;
+                    place-content: flex-start;
+                    padding-right: 0px;
+                    padding-left: 0;
+                    .menuM1-item-desc{ display: flex; flex-grow: 1; color: #666; margin-left: 8%; margin-top: 10px; margin-bottom: 10px;}
+                }
+
+                //Item selected
+                .menuM1-item[data-selected="1"]{
+                    background-color: #dab462;
+                    .menuM1-item-desc{color: #fff;}
+                    .arrow{display: none;}
+                } 
+                .menuM1-item:first-child{
+                    float: left; display: block;
+                    border-bottom: none;
+                }
+            }
+
+            //Menu level 2
+            .menuM1-level2{
+                display:none;
+                background-color: #dab462;
+                background-image: none;
+                border-bottom: none;
+                .menuM1-item{
+                    border-bottom: 1px solid #fff;
+                    place-content: flex-start;
+                    margin-left: 3rem; margin-right: 2rem;
+                    .menuM1-item-desc{font-size: small; color: #666; border-bottom: none; padding-right: 0; }
+                }
+
+                //Item selected
+                .menuM1-item[data-selected="1"]{
+                    .menuM1-item-desc{ color: #fff;}
+                    .arrow{display: none; }
+                } 
+            }
+        }
+
+        //Opened responsive menuM3
+        .menuM3.responsive{
+            width: 75%;
+            position: absolute;
+            z-index: 1050;
+            .menuM1-level{
+                .menuM1-item{
+                    display: flex;
+                    .menuM1-item-desc a{display:flex;}
+                }
+                .menuM1-item{
+                    //H5
+                    #section-title, h5{
+                        display: none;
+                    }
+                    //DIV
+                    #sous-title, div{
+                        display: none;
+                        border-top: none;
+                        background-color: transparent;
+                    }
+                    
+                }
+                
+            }
+
+            //fa-close icon on level1
+            .menuM1-level1{
+                .menuM1-item:first-child{
+                    border-bottom: none;
+                    padding-bottom: 6px;
                 }
                 .menuM1-item a:first-child{
                     display: flex;

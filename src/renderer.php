@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/course/format/renderer.php');
 
-// js_reset_all_caches();
+js_reset_all_caches();
 /**
  * TreeTopics specifics functions.
  *
@@ -147,6 +147,8 @@ class TreeTopics
                     break;
                 case 2: $menu = $this->render_sections_menu_m5();
                     break;
+                case 3: $menu = $this->render_sections_menu_m3();
+                    break;
                 case 5: $menu = $this->render_sections_menu_m5();
                     break;
                 default: 
@@ -159,7 +161,7 @@ class TreeTopics
         
         $content = "<div id='sectioncontent_placeholder'></div>";
 
-        return ($this->is_menu_horizontal() == 1 ? $menu.$content : $content.$menu);
+        return ($this->is_menu_horizontal() == 1 || 3 ? $menu.$content : $content.$menu);
     }
 
     /**
@@ -187,7 +189,7 @@ class TreeTopics
         $html = "
                 <div id='dark-background-menu'></div>
                 <nav class='menuM1' id='tt-recit-nav'>
-                    <ul class='menuM1-level1 tt-menu-color1'>%s</ul>
+                    <ul class='menuM1-level1 tt-menu-color1'id='level1'>%s</ul>
                     %s
                 </nav>";
 
@@ -223,7 +225,79 @@ class TreeTopics
                 $tmp3 .= $menuseparator;
             }
             if (strlen($tmp3) > 0) {
-                $tmp2 .= sprintf("<ul class='menuM1-level2 tt-menu-color2' data-parent-section='%s'>%s</ul>",
+                $tmp2 .= sprintf("<ul class='menuM1-level2 tt-menu-color2' id='level2' data-parent-section='%s'>%s</ul>",
+                        $this->get_section_id($item1->section), $tmp3);
+            }
+
+            $tmp1 .= sprintf($menuitemtemplate, $this->get_section_id($item1->section), $this->get_section_name($item1->section));
+            $tmp1 .= $menuseparator;
+        }
+
+        return sprintf($html, $tmp1, $tmp2);
+    }
+
+    /**
+     * Function render sections menu m2 of TreeTopics. Mega menu !!!
+     * @return string
+     */
+    protected function render_sections_menu_m3() {  
+        //Template for the responsive menu icon
+        $menuicontemplate =
+                "<li class='menuM1-item'>
+                    <a class='menuM1-item-desc' href='#' data-section='%s'
+                        onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s</a>
+                        <h5 id='section-title'></h5>
+                        <div id='sous-title'><h5 id='sousSection-title'></h5></div>
+                </li>";      
+        $menuitemtemplate =
+                "<li class='menuM1-item'>
+                    <div class='arrow'></div>
+                    <a class='menuM1-item-desc' href='#' data-section='%s'
+                        onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s<i class='fas fa-plus' id='sectionIcon'></i></a>
+                </li>";
+
+        $menuseparator = "<li></li>";
+
+        $html = "
+                <div id='dark-background-menu'></div>
+                <nav class='menuM3' id='tt-recit-nav'>
+                    <ul class='menuM1-level1 tt-menu-color1'id='level1'>%s</ul>
+                    %s
+                </nav>";
+
+        $tmp1 = "";
+        $tmp2 = "";
+
+        //Ajout des l'icons du menu responsive
+        $tmp1 .= sprintf($menuicontemplate, "icon", "<i class='fa fa-bars' id='faIcon'></i>");
+
+        $tmp1 .= sprintf($menuitemtemplate, "map", "<i class='fa fa-map'></i> Mon cours");
+        $tmp1 .= $menuseparator;
+        foreach ($this->sectionstree as $item1) {
+            if ($item1->section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES) {
+                continue;
+            }
+            
+            if( !$item1->section->visible ){
+                continue; 
+            }
+
+            $tmp3 = "";
+            foreach ($item1->child as $item2) {
+                if ($item2->section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES) {
+                    continue;
+                }
+
+                if( !$item2->section->visible ){
+                    continue; 
+                }
+
+                $tmp3 .= sprintf($menuitemtemplate, $this->get_section_id($item2->section),
+                        $this->get_section_name($item2->section));
+                $tmp3 .= $menuseparator;
+            }
+            if (strlen($tmp3) > 0) {
+                $tmp2 .= sprintf("<ul class='menuM1-level2 tt-menu-color2' id='level2' data-parent-section='%s'>%s</ul>",
                         $this->get_section_id($item1->section), $tmp3);
             }
 
@@ -581,7 +655,7 @@ class TreeTopics
      * @return bool
      */
     protected function is_menu_horizontal() {
-        $options = array(1, 5);
+        $options = array(1, 3, 5);
         return (in_array($this->course->tttabsmodel, $options));
     }
 
