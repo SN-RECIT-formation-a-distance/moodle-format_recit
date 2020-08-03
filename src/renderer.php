@@ -240,7 +240,7 @@ class TreeTopics
      * Function render sections menu m2 of TreeTopics. Mega menu !!!
      * @return string
      */
-    protected function render_sections_menu_m3() {  
+    protected function render_sections_menu_m3() { 
         //Template for the responsive menu icon
         $menuicontemplate =
                 "<li class='menuM1-item'>
@@ -248,7 +248,15 @@ class TreeTopics
                         onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s</a>
                         <h5 id='section-title'></h5>
                         <div id='sous-title'><h5 id='sousSection-title'></h5></div>
-                </li>";      
+                </li>";  
+        $menuactivitiestemplate =
+                "<li class='menuM1-item'>
+                    <a class='menuM1-item-desc' href='#' data-section='%s'
+                        onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s</a>
+                        <h5 id='section-title'></h5>
+                        <div id='sous-title'><h5 id='sousSection-title'></h5></div>
+                        <ul class='menuM3-level3' id='level3'>%s</ul>
+                </li>";  
         $menuitemtemplate =
                 "<li class='menuM1-item'>
                     <div class='arrow'></div>
@@ -267,13 +275,16 @@ class TreeTopics
 
         $tmp1 = "";
         $tmp2 = "";
-
         //Ajout des l'icons du menu responsive
         $tmp1 .= sprintf($menuicontemplate, "icon", "<i class='fa fa-bars' id='faIcon'></i>");
 
         $tmp1 .= sprintf($menuitemtemplate, "map", "<i class='fa fa-map'></i> Mon cours");
         $tmp1 .= $menuseparator;
+
+        $context = context_course::instance($this->course->id);
+
         foreach ($this->sectionstree as $item1) {
+            
             if ($item1->section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES) {
                 continue;
             }
@@ -284,6 +295,7 @@ class TreeTopics
 
             $tmp3 = "";
             foreach ($item1->child as $item2) {
+                
                 if ($item2->section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES) {
                     continue;
                 }
@@ -292,10 +304,29 @@ class TreeTopics
                     continue; 
                 }
 
-                $tmp3 .= sprintf($menuitemtemplate, $this->get_section_id($item2->section),
-                        $this->get_section_name($item2->section));
-                $tmp3 .= $menuseparator;
+                $tmp4 = "";
+                $modinfo = get_fast_modinfo($this->course->id);
+                foreach ($modinfo->cms as $cm) {
+                    // Use normal access control and visibility, but exclude labels and hidden activities.
+                    if (!$cm->has_view()) {
+                        continue;
+                    }
+
+                    if($cm->section == $item2->section->id){
+                        $tmp4 .= sprintf($this->get_activity_name($cm));
+                        $tmp4 = format_text($tmp4, array('filter' => true));
+                    }
+                }
+                if (strlen($tmp4) > 0) {
+                    $tmp3 .= sprintf($menuactivitiestemplate, $this->get_section_id($item2->section),
+                    $this->get_section_name($item2->section), $tmp4);
+                }else{
+                    $tmp3 .= sprintf($menuitemtemplate, $this->get_section_id($item2->section),
+                            $this->get_section_name($item2->section));
+                    $tmp3 .= $menuseparator;
+                }
             }
+            
             if (strlen($tmp3) > 0) {
                 $tmp2 .= sprintf("<ul class='menuM1-level2 tt-menu-color2' id='level2' data-parent-section='%s'>%s</ul>",
                         $this->get_section_id($item1->section), $tmp3);
@@ -304,7 +335,7 @@ class TreeTopics
             $tmp1 .= sprintf($menuitemtemplate, $this->get_section_id($item1->section), $this->get_section_name($item1->section));
             $tmp1 .= $menuseparator;
         }
-
+        
         return sprintf($html, $tmp1, $tmp2);
     }
 
@@ -705,6 +736,15 @@ class TreeTopics
      */
     protected function get_section_name($section) {
         return (empty($section->name) ? get_string('section') . '' . $section->section : $section->name);
+    }
+
+    /**
+     * Function to get section name of TreeTopics.
+     * @param string $section
+     * @return string
+     */
+    protected function get_activity_name($activity) {
+        return sprintf('[[' . $activity->name . ']]');
     }
 
     /**

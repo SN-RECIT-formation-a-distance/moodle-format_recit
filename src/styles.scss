@@ -63,7 +63,8 @@ $menu-item-height:30px;
 
     //Mega Menu
     .menuM3{
-        position: relative;        
+        position: relative; 
+        z-index: 1020;       
 
         .menuM1-level{
             width: 100%; list-style: none; margin: auto; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-evenly; padding: 0;
@@ -115,9 +116,12 @@ $menu-item-height:30px;
             border-bottom: 3px solid #ecc369;
             background-color: #DCDCDC;
             background-image: linear-gradient( #DCDCDC, #F8F8F8);
+            z-index: 1010;
             .menuM1-item{
                 border-right: none;;
                 margin-top: 1.5rem;
+                align-self: end;
+                display: block;
                 .menuM1-item-desc{
                     font-weight: 400;  
                     color: rgb(0, 0, 0);
@@ -133,6 +137,23 @@ $menu-item-height:30px;
         .menuM1-level2[data-selected="1"]{
             display: flex;
         }
+        .menuM1-level2{
+            .menuM1-item{
+                .menuM3-level3{
+                    list-style: none;
+                    .text_to_html{
+                        width: 10rem;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            overflow: hidden;
+                        .autolink{
+                            color: black;
+                        }
+                    }
+                }
+            }
+        }
+        
 
     }
 

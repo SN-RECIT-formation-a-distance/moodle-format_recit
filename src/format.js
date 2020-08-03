@@ -250,6 +250,7 @@ M.recit.course.format.TreeTopicsEditingMode = class{
 
     onChangeLevel(radio, section){
         let callback = function(result){
+            console.log()
             if(result.success){
                 section.setAttribute("data-section-level", radio.value);
             }
@@ -346,7 +347,7 @@ M.recit.course.format.TreeTopicsEditingMode = class{
 }
 
 // MenuM1
-// Mega MenuM2
+// Mega MenuM3
 M.recit.course.format.TreeTopics = class{
     constructor(){
         this.getSectionContentResult = this.getSectionContentResult.bind(this);
@@ -432,10 +433,7 @@ M.recit.course.format.TreeTopics = class{
 
             if(el !== null){
                 el.parentElement.setAttribute("data-selected", "1");
-                console.log(currentMenuName);
                 if(currentMenuName == 'menuM1'|| currentMenuName == 'menuM3'){
-                    
-                    console.log('Euh pourquoi?');
                     //Make appear the title of the section in the responsive menu
                     let sectionTitle = el.textContent;
                     document.getElementById('section-title').innerHTML = sectionTitle;
@@ -478,7 +476,6 @@ M.recit.course.format.TreeTopics = class{
                     if( currentMenuName == 'menuM3' && window.innerWidth > 767){
                         let menuLevel2 = document.getElementById('level2');
                         let level2Display = getComputedStyle(menuLevel2, null).display;
-                        console.log('avant',branch.style.display);
                         if(level2Display == 'flex'){
                             branch.style.display = 'none';
                         }else{
@@ -533,7 +530,7 @@ M.recit.course.format.TreeTopics = class{
             selectMenuItem(parentSectionId);
         }
 
-        if(currentMenuName == 'menuM1'|| currentMenuName == 'menuM3'){
+        if(currentMenuName == 'menuM3' && window.innerWidth > 767){
             //Close Mega Menu when you select outside or in the level2 menu
             var branch = menu.querySelector(`[data-parent-section=${sectionId}]`);
             var menuLevel1 = document.getElementById('level1');
@@ -545,12 +542,10 @@ M.recit.course.format.TreeTopics = class{
                 if(level1dataSelect == 1){
                     for(let el2 of elemsLevel2){
                         var level2dataSelect = el2.getAttribute("data-selected");
-                        if(level2dataSelect == 0 && branch == null && currentMenuName == 'menuM3' && window.innerWidth > 767){
-                            console.log('jy suis');
+                        if(level2dataSelect == 0 && branch == null){
                             document.getElementById('level2').style.display = 'none';
                         }
-                        if(level2dataSelect == 1 && currentMenuName == 'menuM3' && window.innerWidth > 767){ 
-                            console.log('je passe là');
+                        if(level2dataSelect == 1 ){ 
                             document.getElementById('level2').style.display = 'none';
                         }
                     } 
@@ -562,10 +557,8 @@ M.recit.course.format.TreeTopics = class{
     getSectionContentResult(result){
         if(!result.success){
             alert(M.recit.course.format.TreeTopics.messages.error);
-            console.log(result);
             return;
         }
-
         if(result.data === null){
             return;
         }
@@ -671,6 +664,16 @@ M.recit.course.format.TreeTopics = class{
         //Turn back display of menu level2 for the menu responsive
             document.getElementById('level2').style.display = '';
         
+    }
+
+    getQueryVariable(name){
+        let query = window.location.search.substring(1);
+        let vars = query.split("&");
+        for (let i = 0; i < vars.length; i++) {
+            let pair = vars[i].split("=");
+            if(pair[0] == name){return pair[1];}
+        }
+        return(false);
     }
 }
 
