@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/course/format/renderer.php');
 
-js_reset_all_caches();
+//js_reset_all_caches();
 /**
  * TreeTopics specifics functions.
  *
@@ -171,17 +171,24 @@ class TreeTopics
     protected function render_sections_menu_m1() {  
         //Template for the responsive menu icon
         $menuicontemplate =
-                "<li class='menuM1-item'>
-                    <a class='menuM1-item-desc' href='#' data-section='%s'
+                "<li class='menu-item'>
+                    <a class='menu-item-desc' href='#' data-section='%s'
                         onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s</a>
                         <h5 id='section-title'></h5>
                         <div id='sous-title'><h5 id='sousSection-title'></h5></div>
                 </li>";      
         $menuitemtemplate =
-                "<li class='menuM1-item'>
+                "<li class='menu-item'>
                     <div class='arrow'></div>
-                    <a class='menuM1-item-desc' href='#' data-section='%s'
+                    <a class='menu-item-desc' href='#' data-section='%s'
                         onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s<i class='fas fa-plus' id='sectionIcon'></i></a>
+                </li>";
+        $menuitemleveltemplate =
+                "<li class='menu-item'>
+                    <div class='arrow'></div>
+                    <a class='menu-item-desc' href='#' data-section='%s'
+                        onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s<i class='fas fa-plus' id='sectionIcon'></i></a>
+                        %s
                 </li>";
 
         $menuseparator = "<li></li>";
@@ -189,7 +196,7 @@ class TreeTopics
         $html = "
                 <div id='dark-background-menu'></div>
                 <nav class='menuM1' id='tt-recit-nav'>
-                    <ul class='menuM1-level1 tt-menu-color1'id='level1'>%s</ul>
+                    <ul class='menu-level1 tt-menu-color1'id='level1'>%s</ul>
                     %s
                 </nav>";
 
@@ -225,15 +232,23 @@ class TreeTopics
                 $tmp3 .= $menuseparator;
             }
             if (strlen($tmp3) > 0) {
-                $tmp2 .= sprintf("<ul class='menuM1-level2 tt-menu-color2' id='level2' data-parent-section='%s'>%s</ul>",
+                $tmp2 .= sprintf("<ul class='menu-level2 tt-menu-color2' id='level2' data-parent-section='%s'>%s</ul>",
                         $this->get_section_id($item1->section), $tmp3);
+                $tmp1 .= sprintf($menuitemleveltemplate, $this->get_section_id($item1->section), $this->get_section_name($item1->section), $tmp2);
+                $tmp1 .= $menuseparator;
+                /*var_dump($tmp1);
+                exit();*/
+            }else{
+                $tmp1 .= sprintf($menuitemtemplate, $this->get_section_id($item1->section), $this->get_section_name($item1->section));
+                $tmp1 .= $menuseparator;
             }
 
-            $tmp1 .= sprintf($menuitemtemplate, $this->get_section_id($item1->section), $this->get_section_name($item1->section));
-            $tmp1 .= $menuseparator;
+            
         }
-
-        return sprintf($html, $tmp1, $tmp2);
+    /* var_dump($tmp1);
+    var_dump($html);
+    exit(); */
+    return sprintf($html, $tmp1, "");
     }
 
     /**
@@ -243,24 +258,24 @@ class TreeTopics
     protected function render_sections_menu_m3() { 
         //Template for the responsive menu icon
         $menuicontemplate =
-                "<li class='menuM1-item'>
-                    <a class='menuM1-item-desc' href='#' data-section='%s'
+                "<li class='menu-item'>
+                    <a class='menu-item-desc' href='#' data-section='%s'
                         onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s</a>
                         <h5 id='section-title'></h5>
                         <div id='sous-title'><h5 id='sousSection-title'></h5></div>
                 </li>";  
         $menuactivitiestemplate =
-                "<li class='menuM1-item'>
-                    <a class='menuM1-item-desc' href='#' data-section='%s'
+                "<li class='menu-item'>
+                    <a class='menu-item-desc' href='#' data-section='%s'
                         onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s</a>
                         <h5 id='section-title'></h5>
                         <div id='sous-title'><h5 id='sousSection-title'></h5></div>
-                        <ul class='menuM3-level3' id='level3'>%s</ul>
+                        <ul class='menu-level3' id='level3'>%s</ul>
                 </li>";  
         $menuitemtemplate =
-                "<li class='menuM1-item'>
+                "<li class='menu-item'>
                     <div class='arrow'></div>
-                    <a class='menuM1-item-desc' href='#' data-section='%s'
+                    <a class='menu-item-desc' href='#' data-section='%s'
                         onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s<i class='fas fa-plus' id='sectionIcon'></i></a>
                 </li>";
 
@@ -269,7 +284,7 @@ class TreeTopics
         $html = "
                 <div id='dark-background-menu'></div>
                 <nav class='menuM3' id='tt-recit-nav'>
-                    <ul class='menuM1-level1 tt-menu-color1'id='level1'>%s</ul>
+                    <ul class='menu-level1 tt-menu-color1'id='level1'>%s</ul>
                     %s
                 </nav>";
 
@@ -328,7 +343,7 @@ class TreeTopics
             }
             
             if (strlen($tmp3) > 0) {
-                $tmp2 .= sprintf("<ul class='menuM1-level2 tt-menu-color2' id='level2' data-parent-section='%s'>%s</ul>",
+                $tmp2 .= sprintf("<ul class='menu-level2 tt-menu-color2' id='level2' data-parent-section='%s'>%s</ul>",
                         $this->get_section_id($item1->section), $tmp3);
             }
 

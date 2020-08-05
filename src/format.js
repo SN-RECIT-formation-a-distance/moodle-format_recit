@@ -379,11 +379,11 @@ M.recit.course.format.TreeTopics = class{
         this.ctrlPagination();
         
         //set menu responsive for item with a branch
-        this.setMenuM1Section();
+        this.setMenuSection();
     }
 
-    // Set the MenuM1-item with a plus sign where there are level2
-    setMenuM1Section(){
+    // Set the Menu-item with a plus sign where there are level2
+    setMenuSection(){
         let menu = document.getElementById("tt-recit-nav");
         if(menu === null){ return;}
         if(this.menuName == 'menuM1'|| this.menuName == 'menuM3'){
@@ -417,7 +417,7 @@ M.recit.course.format.TreeTopics = class{
         
     }
 
-    ctrlMenuM1(sectionId){
+    ctrlMenu(sectionId){
         var currentMenuName = this.menuName;
         var menu = document.getElementById("tt-recit-nav");
 
@@ -430,6 +430,7 @@ M.recit.course.format.TreeTopics = class{
             var icon = document.getElementById("faIcon");
 
             let el = menu.querySelector(`[data-section=${id}]`);
+
 
             if(el !== null){
                 el.parentElement.setAttribute("data-selected", "1");
@@ -455,7 +456,7 @@ M.recit.course.format.TreeTopics = class{
 
                 if(currentMenuName == 'menuM1'|| currentMenuName == 'menuM3'){
                     //set the plus(+) sign to negative(-) sign.
-                    if(el.className != 'menuM1-item-desc level-section active'){
+                    if(el.className != 'menu-item-desc level-section active'){
                         el.classList.toggle("active");
                         let sectionIcon = el.getElementsByClassName('fas fa-plus');
                         let sec = sectionIcon[0];
@@ -464,7 +465,7 @@ M.recit.course.format.TreeTopics = class{
 
                     
                     //Make appear the title of the sous section in the responsive menu
-                    let sections = branch.getElementsByClassName('menuM1-item');
+                    let sections = branch.getElementsByClassName('menu-item');
                     for(let sec of sections){
                         if(sec.getAttribute('data-selected') == "1"){
                             document.getElementById('sousSection-title').innerHTML = sec.textContent;
@@ -494,12 +495,12 @@ M.recit.course.format.TreeTopics = class{
         }
 
         // Reset menu level 1 selection.
-        let elems = menu.getElementsByClassName('menuM1-item');
+        let elems = menu.getElementsByClassName('menu-item');
         for(let el of elems){
             el.setAttribute("data-selected", "0");
 
             //set the negative(-) sign to plus(+) sign
-            let levelSection = el.getElementsByClassName('menuM1-item-desc level-section active');
+            let levelSection = el.getElementsByClassName('menu-item-desc level-section active');
             if(levelSection.length >= 1){
                 for(let item of levelSection){
                     item.classList.toggle("active");
@@ -534,9 +535,9 @@ M.recit.course.format.TreeTopics = class{
             //Close Mega Menu when you select outside or in the level2 menu
             var branch = menu.querySelector(`[data-parent-section=${sectionId}]`);
             var menuLevel1 = document.getElementById('level1');
-            var elemsLevel1 = menuLevel1.getElementsByClassName('menuM1-item');
+            var elemsLevel1 = menuLevel1.getElementsByClassName('menu-item');
             var menuLevel2 = document.getElementById('level2');
-            var elemsLevel2 = menuLevel2.getElementsByClassName('menuM1-item');
+            var elemsLevel2 = menuLevel2.getElementsByClassName('menu-item');
             for(let el1 of elemsLevel1){
                 var level1dataSelect = el1.getAttribute("data-selected");
                 if(level1dataSelect == 1){
@@ -591,7 +592,7 @@ M.recit.course.format.TreeTopics = class{
 
         
 
-        this.ctrlMenuM1(sectionId);
+        this.ctrlMenu(sectionId);
 
         document.cookie = 'section=' + sectionId;
 

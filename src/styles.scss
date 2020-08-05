@@ -9,12 +9,12 @@ $menu-item-height:30px;
     .menuM1{
         position: relative;        
 
-        .menuM1-level{
-            width: 100%; list-style: none; margin: auto; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; padding: 0;
+        .menu-level{
+            width: 100%; list-style: none; margin: auto; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; padding: 0; margin-bottom: 35px;
 
-            .menuM1-item{
+            .menu-item{
                 padding: .3rem; margin: .1rem;  min-width: 120px; align-self: center; display: flex; justify-content: center; align-items: center;
-                .menuM1-item-desc{padding: .3rem;    font-size: 16px;      font-weight: 600;    
+                .menu-item-desc{padding: .3rem;    font-size: 16px;      font-weight: 600;    
                     white-space: nowrap;    -webkit-hyphens: none;    -ms-hyphens: none;    hyphens: none; white-space: normal;
                     i.fas.fa-plus{display: none;}
                     i.fas.fa-minus{display: none;}
@@ -23,7 +23,7 @@ $menu-item-height:30px;
             li:empty{ height: 30px; align-self: center; width: 2px; border-right: 1px solid #FFF;}
             li:empty:last-child{ display: none;}
 
-            .menuM1-item[data-selected="1"]{
+            .menu-item[data-selected="1"]{
                 .arrow{display: block;}
             }       
         }
@@ -33,51 +33,55 @@ $menu-item-height:30px;
             border-left-color: #666; border-right-width: 0px;
         }
 
-        .menuM1-level1{
-            @extend .menuM1-level;
-            .menuM1-item:first-child{ display: none;} 
-            .menuM1-item{
-                .menuM1-item-desc{color: #666;}
+        .menu-level1{
+            @extend .menu-level;
+            .menu-item:first-child{ display: none;} 
+            .menu-item{
+                .menu-item-desc{color: #666;}
             }
-            .menuM1-item[data-selected="1"]{
-                .menuM1-item-desc{color: #fff;}
+            .menu-item[data-selected="1"]{
+                .menu-item-desc{color: #fff;}
                 .arrow{display: block;  border-left-color: #fff; }
             } 
         }
         
-        .menuM1-level2{
-            @extend .menuM1-level; display: none; 
-            .menuM1-item{
-                .menuM1-item-desc{font-weight: 400;  color: #fff; }
+        .menu-level2{
+            @extend .menu-level; 
+            display: none;
+            position: absolute; 
+            top: 46px;
+            left: 0px;
+            .menu-item:first-child{ display: flex;} 
+            .menu-item{
+                .menu-item-desc{font-weight: 400;  color: #fff; }
             }
-            .menuM1-item[data-selected="1"]{
-                .menuM1-item-desc{ color: #EAC167;}
+            .menu-item[data-selected="1"]{
+                .menu-item-desc{ color: #EAC167;}
                 .arrow{display: block;  border-left-color: #EAC167; }
             } 
         }
 
-        .menuM1-level2[data-selected="1"]{
+        .menu-level2[data-selected="1"]{
             display: flex;
         }
     }
-
     //Mega Menu
     .menuM3{
         position: relative; 
         z-index: 1020;       
 
-        .menuM1-level{
+        .menu-level{
             width: 100%; list-style: none; margin: auto; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-evenly; padding: 0;
-            .menuM1-item{
+            .menu-item{
                 padding: .3rem; margin: .1rem;  min-width: 120px; align-self: center; display: flex; justify-content: center; align-items: center; border-right: 1px solid white; 
-                .menuM1-item-desc{padding: .3rem;    font-size: 16px;      font-weight: 600;    
+                .menu-item-desc{padding: .3rem;    font-size: 16px;      font-weight: 600;    
                     white-space: nowrap;    -webkit-hyphens: none;    -ms-hyphens: none;    hyphens: none; white-space: normal;
                     i.fas.fa-plus{display: none;}
                     i.fas.fa-minus{display: none;}
                 }
             }
 
-            .menuM1-item[data-selected="1"]{
+            .menu-item[data-selected="1"]{
                 .arrow{display: block;}
             }  
             
@@ -87,42 +91,42 @@ $menu-item-height:30px;
             }
         }
 
-        .menuM1-level1{
-            @extend .menuM1-level;
-            .menuM1-item:first-child{ display: none;} 
-            //.menuM1-item:last-child{ border-right: none;} 
-            .menuM1-item{
+        .menu-level1{
+            @extend .menu-level;
+            .menu-item:first-child{ display: none;} 
+            //.menu-item:last-child{ border-right: none;} 
+            .menu-item{
                 flex-grow: 1;
                 margin: 0;
                 border-bottom: 1px solid white;
-                .menuM1-item-desc{
+                .menu-item-desc{
                     color: #666;
                     .fa.fa-map{margin-right: 0.5rem;}
                 }
             }
-            .menuM1-item[data-selected="1"]{
+            .menu-item[data-selected="1"]{
                 background-color: #DCDCDC;
                 padding-top: 6px;
                 border-bottom: none;
-                .menuM1-item-desc{color: #666;}
+                .menu-item-desc{color: #666;}
                 .arrow{display: block;  border-left-color: #666; }
             } 
         }
 
-        .menuM1-level2{
-            @extend .menuM1-level; 
+        .menu-level2{
+            @extend .menu-level; 
             position: absolute;
             display: none;
             border-bottom: 3px solid #ecc369;
             background-color: #DCDCDC;
             background-image: linear-gradient( #DCDCDC, #F8F8F8);
             z-index: 1010;
-            .menuM1-item{
+            .menu-item{
                 border-right: none;;
                 margin-top: 1.5rem;
                 align-self: end;
                 display: block;
-                .menuM1-item-desc{
+                .menu-item-desc{
                     font-weight: 400;  
                     color: rgb(0, 0, 0);
                     border-bottom: 1px solid #d8d7d7; 
@@ -130,16 +134,16 @@ $menu-item-height:30px;
                     padding-right: 7rem;
                 }
             }
-            .menuM1-item[data-selected="1"]{
+            .menu-item[data-selected="1"]{
                 .arrow{display: block;  border-left-color: #000000; }
             } 
         }
-        .menuM1-level2[data-selected="1"]{
+        .menu-level2[data-selected="1"]{
             display: flex;
         }
-        .menuM1-level2{
-            .menuM1-item{
-                .menuM3-level3{
+        .menu-level2{
+            .menu-item{
+                .menu-level3{
                     list-style: none;
                     .text_to_html{
                         width: 10rem;
@@ -230,7 +234,7 @@ $menu-item-height:30px;
         .tt-grid-element:hover{ cursor: pointer; filter: grayscale(0%);}        
     }
 
-    //Menu responsive
+    //------------------ Menu responsive ----------------/
     @media screen and (max-width: 767px){
         div#dark-background-menu{
             display:none;
@@ -250,13 +254,16 @@ $menu-item-height:30px;
             z-index: 1020;
             transition: 0.5s;
 
-            .menuM1-level{
-                .menuM1-item{
+            .menu-level{
+                .menu-item{
+                    width: 100%;
+                    padding: 0;
+                    margin: 0;
                     display:none;
                     align-self: auto;
                     border-bottom: 0.1px solid white;
                     place-content: flex-start;
-                    .menuM1-item-desc{display: block; color: #666; margin-left: 8%; margin-top: 10px; margin-bottom: 10px;
+                    .menu-item-desc{display: block; color: #666; margin-left: 8%; margin-top: 10px; margin-bottom: 10px;
                         //plus and minus icon
                         i#sectionIcon-active{
                             display: flex;
@@ -266,22 +273,14 @@ $menu-item-height:30px;
                             justify-content: flex-end;
                         }
                     }
-                    li:empty{ display: none;}
                 }
-                .menuM1-item[data-selected="1"]{
-                    background-color: #dab462;
-                    .menuM1-item-desc{color: #fff; text-decoration: none;}
-                } 
             }
 
             //Menu Level1
-            .menuM1-level1{
-                
+            .menu-level1{
+                li:empty{ display: none;}
                 //CSS for the icon, the first element.
-                .menuM1-item:first-child{
-                    border-bottom: none;
-                }
-                .menuM1-item{
+                .menu-item{
                     //H5
                     #section-title, h5{
                         font-variant: all-petite-caps;
@@ -302,8 +301,7 @@ $menu-item-height:30px;
                     #sous-title, div{
                         display: grid;
                         background-color: #666;
-                        width: 102%;
-                        margin-left: -0.1rem;
+                        width: 100%;
                         border-top: 1px solid white;
                         padding-bottom: 0.2rem;
                         color: white;
@@ -312,7 +310,7 @@ $menu-item-height:30px;
                 
                     
                 
-                .menuM1-item a:first-child{
+                .menu-item a:first-child{
                     display : flex;
                     color: white;
                     background-color: #dab462;
@@ -324,39 +322,44 @@ $menu-item-height:30px;
                 }
 
                 //CSS for the rest of the items
-                .menuM1-item{
+                .menu-item{
                     border-bottom: 0.1px solid white;
                     place-content: flex-start;
-                    .menuM1-item-desc{ display: flex; flex-grow: 1; color: #666; margin-left: 8%; margin-top: 10px; margin-bottom: 10px;}
+                    .menu-item-desc{ display: flex; flex-grow: 1; color: #666; margin-left: 8%; margin-top: 10px; margin-bottom: 10px;}
                 }
 
                 //Item selected
-                .menuM1-item[data-selected="1"]{
+                .menu-item[data-selected="1"]{
                     background-color: #dab462;
-                    .menuM1-item-desc{color: #fff;}
+                    .menu-item-desc.level-section{color: #fff; text-decoration: none;}
                     .arrow{display: none;}
                 } 
-                .menuM1-item:first-child{
-                    float: left; display: block;
+                .menu-item:first-child{
+                    float: left; 
+                    display: block;
                     border-bottom: none;
                 }
             }
 
             //Menu level 2
-            .menuM1-level2{
+            .menu-level2{
+                li:empty{ display: none;}
+                position: relative; 
+                top: 0;
                 display:none;
                 background-color: #dab462;
-                .menuM1-item{
+                color: #666;
+                .menu-item{
                     border-bottom: 1px solid #fff;
                     place-content: flex-start;
                     margin-left: 3rem; margin-right: 2rem;
-                    .menuM1-item-desc{font-size: small; color: #666; }
+                    .menu-item-desc{font-size: small; color: #666; }
                 }
 
                 //Item selected
-                .menuM1-item[data-selected="1"]{
-                    .menuM1-item-desc{ color: #fff;}
-                    .arrow{display: none; }
+                .menu-item[data-selected="1"]{
+                    .menu-item-desc{color: #fff; border-right-style: dashed; }
+                    
                 } 
             }
         }
@@ -366,12 +369,14 @@ $menu-item-height:30px;
             width: 75%;
             position: absolute;
             z-index: 1050;
-            .menuM1-level{
-                .menuM1-item{
-                    display: flex;
-                    .menuM1-item-desc a{display:flex;}
+            .menu-level{
+                .menu-item{
+                    display: block;
+                    .menu-item-desc a{
+                        display:flex;
+                    }
                 }
-                .menuM1-item{
+                .menu-item{
                     //H5
                     #section-title, h5{
                         display: none;
@@ -388,11 +393,11 @@ $menu-item-height:30px;
             }
 
             //fa-close icon on level1
-            .menuM1-level1{
-                .menuM1-item:first-child{
+            .menu-level1{
+                .menu-item:first-child{
                     border-bottom: none;
                 }
-                .menuM1-item a:first-child{
+                .menu-item a:first-child{
                     display: flex;
                     flex-direction: row-reverse;
                     color: white;
@@ -405,9 +410,15 @@ $menu-item-height:30px;
                     margin-bottom: 0px;
                 }
             }
+            
+            .menu-level2{
+                .menu-item:first-child{
+                    border-bottom: 1px solid white;
+                }
+            }
         }
 
-        //Mega Menu responsive
+        //-------------------- Mega Menu responsive ---------------------------/
          //Closed responsive menuM3.
          .menuM3{ 
             width: 100%;
@@ -416,13 +427,13 @@ $menu-item-height:30px;
             z-index: 1020;
             transition: 0.5s;
 
-            .menuM1-level{
+            .menu-level{
                 flex-direction: column;
-                .menuM1-item{
+                .menu-item{
                     display:none;
                     align-self: auto;
                     place-content: flex-start;
-                    .menuM1-item-desc{display: block; color: #666; margin-left: 8%; margin-top: 10px; margin-bottom: 10px;
+                    .menu-item-desc{display: block; color: #666; margin-left: 8%; margin-top: 10px; margin-bottom: 10px;
                         //plus and minus icon
                         i#sectionIcon-active{
                             display: flex;
@@ -433,22 +444,22 @@ $menu-item-height:30px;
                         }
                     }
                 }
-                .menuM1-item[data-selected="1"]{
+                .menu-item[data-selected="1"]{
                     border-bottom: 0.1px solid white;
                     background-color: #dab462;
-                    .menuM1-item-desc{color: #fff; text-decoration: none;}
+                    .menu-item-desc{color: #fff; text-decoration: none;}
                 } 
             }
 
             //Menu Level1
-            .menuM1-level1{
+            .menu-level1{
                 
                 //CSS for the icon, the first element.
-                .menuM1-item:first-child{
+                .menu-item:first-child{
                     border-bottom: none;
                     padding-bottom: 0px;
                 }
-                .menuM1-item{
+                .menu-item{
                     //H5
                     #section-title, h5{
                         font-variant: all-petite-caps;
@@ -479,7 +490,7 @@ $menu-item-height:30px;
                 
                     
                 
-                .menuM1-item a:first-child{
+                .menu-item a:first-child{
                     display : flex;
                     color: white;
                     background-color: #dab462;
@@ -491,43 +502,43 @@ $menu-item-height:30px;
                 }
 
                 //CSS for the rest of the items
-                .menuM1-item{
+                .menu-item{
                     border-right: none;
                     border-bottom: 0.1px solid white;
                     place-content: flex-start;
                     padding-right: 0px;
                     padding-left: 0;
-                    .menuM1-item-desc{ display: flex; flex-grow: 1; color: #666; margin-left: 8%; margin-top: 10px; margin-bottom: 10px;}
+                    .menu-item-desc{ display: flex; flex-grow: 1; color: #666; margin-left: 8%; margin-top: 10px; margin-bottom: 10px;}
                 }
 
                 //Item selected
-                .menuM1-item[data-selected="1"]{
+                .menu-item[data-selected="1"]{
                     background-color: #dab462;
-                    .menuM1-item-desc{color: #fff;}
+                    .menu-item-desc{color: #fff;}
                     .arrow{display: none;}
                 } 
-                .menuM1-item:first-child{
+                .menu-item:first-child{
                     float: left; display: block;
                     border-bottom: none;
                 }
             }
 
             //Menu level 2
-            .menuM1-level2{
+            .menu-level2{
                 display:none;
                 background-color: #dab462;
                 background-image: none;
                 border-bottom: none;
-                .menuM1-item{
+                .menu-item{
                     border-bottom: 1px solid #fff;
                     place-content: flex-start;
                     margin-left: 3rem; margin-right: 2rem;
-                    .menuM1-item-desc{font-size: small; color: #666; border-bottom: none; padding-right: 0; }
+                    .menu-item-desc{font-size: small; color: #666; border-bottom: none; padding-right: 0; }
                 }
 
                 //Item selected
-                .menuM1-item[data-selected="1"]{
-                    .menuM1-item-desc{ color: #fff;}
+                .menu-item[data-selected="1"]{
+                    .menu-item-desc{ color: #fff;}
                     .arrow{display: none; }
                 } 
             }
@@ -538,12 +549,12 @@ $menu-item-height:30px;
             width: 75%;
             position: absolute;
             z-index: 1050;
-            .menuM1-level{
-                .menuM1-item{
+            .menu-level{
+                .menu-item{
                     display: flex;
-                    .menuM1-item-desc a{display:flex;}
+                    .menu-item-desc a{display:flex;}
                 }
-                .menuM1-item{
+                .menu-item{
                     //H5
                     #section-title, h5{
                         display: none;
@@ -560,12 +571,12 @@ $menu-item-height:30px;
             }
 
             //fa-close icon on level1
-            .menuM1-level1{
-                .menuM1-item:first-child{
+            .menu-level1{
+                .menu-item:first-child{
                     border-bottom: none;
                     padding-bottom: 6px;
                 }
-                .menuM1-item a:first-child{
+                .menu-item a:first-child{
                     display: flex;
                     flex-direction: row-reverse;
                     color: white;
@@ -723,10 +734,10 @@ $menu-item-height:30px;
 }
 
 @media screen and (max-width: 767px){
-    .menuM1{
-        .menuM1-level{
+    .menu{
+        .menu-level{
             flex-direction: column;
-            .menuM1-item{
+            .menu-item{
                 padding: 0px;
             }
             li:empty{ display: none;}
