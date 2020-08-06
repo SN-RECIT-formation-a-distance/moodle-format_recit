@@ -468,7 +468,8 @@ M.recit.course.format.TreeTopics = class{
                     let sections = branch.getElementsByClassName('menu-item');
                     for(let sec of sections){
                         if(sec.getAttribute('data-selected') == "1"){
-                            document.getElementById('sousSection-title').innerHTML = sec.textContent;
+                            let section = sec.getElementsByClassName('menu-item-desc');
+                            document.getElementById('sousSection-title').innerHTML = section[0].textContent;
                             document.getElementById('sous-title').style.display = "grid";
                         }
                     }

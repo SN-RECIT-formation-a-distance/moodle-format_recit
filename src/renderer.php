@@ -245,9 +245,6 @@ class TreeTopics
 
             
         }
-    /* var_dump($tmp1);
-    var_dump($html);
-    exit(); */
     return sprintf($html, $tmp1, "");
     }
 
@@ -264,6 +261,13 @@ class TreeTopics
                         <h5 id='section-title'></h5>
                         <div id='sous-title'><h5 id='sousSection-title'></h5></div>
                 </li>";  
+        $menuitemleveltemplate =
+                "<li class='menu-item'>
+                    <div class='arrow'></div>
+                    <a class='menu-item-desc' href='#' data-section='%s'
+                        onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s<i class='fas fa-plus' id='sectionIcon'></i></a>
+                        %s
+                </li>";
         $menuactivitiestemplate =
                 "<li class='menu-item'>
                     <a class='menu-item-desc' href='#' data-section='%s'
@@ -345,13 +349,15 @@ class TreeTopics
             if (strlen($tmp3) > 0) {
                 $tmp2 .= sprintf("<ul class='menu-level2 tt-menu-color2' id='level2' data-parent-section='%s'>%s</ul>",
                         $this->get_section_id($item1->section), $tmp3);
+                $tmp1 .= sprintf($menuitemleveltemplate, $this->get_section_id($item1->section), $this->get_section_name($item1->section), $tmp2);
+                $tmp1 .= $menuseparator;
+            }else{
+                $tmp1 .= sprintf($menuitemtemplate, $this->get_section_id($item1->section), $this->get_section_name($item1->section));
+                $tmp1 .= $menuseparator;
             }
-
-            $tmp1 .= sprintf($menuitemtemplate, $this->get_section_id($item1->section), $this->get_section_name($item1->section));
-            $tmp1 .= $menuseparator;
         }
         
-        return sprintf($html, $tmp1, $tmp2);
+        return sprintf($html, $tmp1, "");
     }
 
     /**

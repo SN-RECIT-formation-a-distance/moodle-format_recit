@@ -54,10 +54,11 @@ $menu-item-height:30px;
             .menu-item:first-child{ display: flex;} 
             .menu-item{
                 .menu-item-desc{font-weight: 400;  color: #fff; }
+                .arrow{display: none !important;}
             }
             .menu-item[data-selected="1"]{
                 .menu-item-desc{ color: #EAC167;}
-                .arrow{display: block;  border-left-color: #EAC167; }
+                .arrow{display: block !important;  border-left-color: #EAC167; }
             } 
         }
 
@@ -116,19 +117,23 @@ $menu-item-height:30px;
         .menu-level2{
             @extend .menu-level; 
             position: absolute;
+            top: 44px;
+            left: 0px;
             display: none;
             border-bottom: 3px solid #ecc369;
             background-color: #DCDCDC;
             background-image: linear-gradient( #DCDCDC, #F8F8F8);
             z-index: 1010;
+            .menu-item:first-child{ display: block;} 
             .menu-item{
                 border-right: none;;
                 margin-top: 1.5rem;
                 align-self: end;
                 display: block;
+                border-bottom: none;
                 .menu-item-desc{
                     font-weight: 400;  
-                    color: rgb(0, 0, 0);
+                    color: rgb(0, 0, 0) !important;
                     border-bottom: 1px solid #d8d7d7; 
                     padding-bottom: 0;
                     padding-right: 7rem;
@@ -359,6 +364,7 @@ $menu-item-height:30px;
                 //Item selected
                 .menu-item[data-selected="1"]{
                     .menu-item-desc{color: #fff; border-right-style: dashed; }
+                    .arrow{display: none !important;}
                     
                 } 
             }
@@ -456,6 +462,7 @@ $menu-item-height:30px;
                 
                 //CSS for the icon, the first element.
                 .menu-item:first-child{
+                    display: flex;
                     border-bottom: none;
                     padding-bottom: 0px;
                 }
@@ -525,6 +532,7 @@ $menu-item-height:30px;
 
             //Menu level 2
             .menu-level2{
+                position: relative;
                 display:none;
                 background-color: #dab462;
                 background-image: none;
@@ -537,10 +545,7 @@ $menu-item-height:30px;
                 }
 
                 //Item selected
-                .menu-item[data-selected="1"]{
-                    .menu-item-desc{ color: #fff;}
-                    .arrow{display: none; }
-                } 
+                .menu-item[data-selected="1"]{color: #fff; border-right-style: dashed; } 
             }
         }
 
@@ -551,7 +556,7 @@ $menu-item-height:30px;
             z-index: 1050;
             .menu-level{
                 .menu-item{
-                    display: flex;
+                    display: block;
                     .menu-item-desc a{display:flex;}
                 }
                 .menu-item{
@@ -575,6 +580,8 @@ $menu-item-height:30px;
                 .menu-item:first-child{
                     border-bottom: none;
                     padding-bottom: 6px;
+                    padding-left: 64px;
+                    margin-left: 161px;
                 }
                 .menu-item a:first-child{
                     display: flex;
@@ -583,10 +590,28 @@ $menu-item-height:30px;
                     background-color: #dab462;
                     padding-left: 0.7rem;
                     padding-right: 0.7rem;
-                    margin-left: 15rem;
-                    margin-right: 5px;
                     margin-top: 5px;
                     margin-bottom: 0px;
+                }
+            }
+
+            .menu-level2{
+                position: relative;
+                top: 0;
+                left: 0;
+                padding-bottom: 30px;
+                .menu-item:first-child{
+                    border-bottom: 0.1px solid white;
+                    padding-bottom: 0;
+                    padding-left: 0px;
+                    margin-left: 3rem;
+                }
+                .menu-item a:first-child{
+                    display: flex;
+                    flex-direction: row;
+                    color: white;
+                    background-color: #dab462;
+
                 }
             }
         }
