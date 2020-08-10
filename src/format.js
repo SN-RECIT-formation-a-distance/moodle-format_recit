@@ -538,22 +538,24 @@ M.recit.course.format.TreeTopics = class{
             var menuLevel1 = document.getElementById('level1');
             var elemsLevel1 = menuLevel1.getElementsByClassName('menu-item');
             var menuLevel2 = document.getElementById('level2');
-            var elemsLevel2 = menuLevel2.getElementsByClassName('menu-item');
-            for(let el1 of elemsLevel1){
-                var level1dataSelect = el1.getAttribute("data-selected");
-                if(level1dataSelect == 1){
-                    for(let el2 of elemsLevel2){
-                        var level2dataSelect = el2.getAttribute("data-selected");
-                        if(level2dataSelect == 0 && branch == null){
-                            document.getElementById('level2').style.display = 'none';
-                        }
-                        if(level2dataSelect == 1 ){ 
-                            document.getElementById('level2').style.display = 'none';
-                        }
-                    } 
+            if(menuLevel2 != null){
+                var elemsLevel2 = menuLevel2.getElementsByClassName('menu-item');
+                for(let el1 of elemsLevel1){
+                    var level1dataSelect = el1.getAttribute("data-selected");
+                    if(level1dataSelect == 1){
+                        for(let el2 of elemsLevel2){
+                            var level2dataSelect = el2.getAttribute("data-selected");
+                            if(level2dataSelect == 0 && branch == null){
+                                document.getElementById('level2').style.display = 'none';
+                            }
+                            if(level2dataSelect == 1 ){ 
+                                document.getElementById('level2').style.display = 'none';
+                            }
+                        } 
+                    }
                 }
             }
-        }
+    }
     }
 
     getSectionContentResult(result){
