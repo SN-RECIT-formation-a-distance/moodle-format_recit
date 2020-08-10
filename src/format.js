@@ -372,7 +372,7 @@ M.recit.course.format.TreeTopics = class{
 
         this.sectionContent = document.getElementById("sectioncontent_placeholder");
 
-        this.menuName = document.getElementById("tt-recit-nav").className;
+        this.menuName;
 
         this.goToSection(null, sectionId);
 
@@ -385,6 +385,9 @@ M.recit.course.format.TreeTopics = class{
     // Set the Menu-item with a plus sign where there are level2
     setMenuSection(){
         let menu = document.getElementById("tt-recit-nav");
+        if(menu != null){
+            this.menuName = menu.className
+        }
         if(menu === null){ return;}
         if(this.menuName == 'menuM1'|| this.menuName == 'menuM3'){
             let parentSection;
@@ -664,9 +667,13 @@ M.recit.course.format.TreeTopics = class{
             //Return to normal
             div.style.display = "none";
         }
-
-        //Turn back display of menu level2 for the menu responsive
+        
+        let menuLevel2  = document.getElementById('level2');
+        if(menuLevel2 != null){
+            //Turn back display of menu level2 for the menu responsive
             document.getElementById('level2').style.display = '';
+        }
+       
         
     }
 
