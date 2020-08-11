@@ -117,6 +117,7 @@ $menu-item-height:30px;
         .menu-level2{
             @extend .menu-level; 
             position: absolute;
+            padding-left: 50px;
             top: 44px;
             left: 0px;
             display: none;
