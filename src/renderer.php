@@ -209,6 +209,7 @@ class TreeTopics
         $tmp1 .= sprintf($menuitemtemplate, "map", "<i class='fa fa-map'></i>");
         $tmp1 .= $menuseparator;
         foreach ($this->sectionstree as $item1) {
+            $tmp2 = "";
             if ($item1->section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES) {
                 continue;
             }
@@ -303,7 +304,7 @@ class TreeTopics
         $context = context_course::instance($this->course->id);
 
         foreach ($this->sectionstree as $item1) {
-            
+            $tmp2 = "";
             if ($item1->section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES) {
                 continue;
             }

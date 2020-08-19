@@ -387,8 +387,8 @@ M.recit.course.format.TreeTopics = class{
         let menu = document.getElementById("tt-recit-nav");
         if(menu != null){
             this.menuName = menu.className
-        }
-        if(menu === null){ return;}
+        }else{return;}
+        
         if(this.menuName == 'menuM1'|| this.menuName == 'menuM3'){
             let parentSection;
             let parentElems =  menu.querySelectorAll('[data-section]');
@@ -433,7 +433,7 @@ M.recit.course.format.TreeTopics = class{
             var icon = document.getElementById("faIcon");
 
             let el = menu.querySelector(`[data-section=${id}]`);
-
+            //console.log(el);
 
             if(el !== null){
                 el.parentElement.setAttribute("data-selected", "1");
@@ -459,11 +459,15 @@ M.recit.course.format.TreeTopics = class{
 
                 if(currentMenuName == 'menuM1'|| currentMenuName == 'menuM3'){
                     //set the plus(+) sign to negative(-) sign.
+                    //console.log(el.className);
                     if(el.className != 'menu-item-desc level-section active'){
-                        el.classList.toggle("active");
                         let sectionIcon = el.getElementsByClassName('fas fa-plus');
-                        let sec = sectionIcon[0];
-                        sec.className = 'fas fa-minus';
+                        //console.log(sectionIcon);
+                        for(let sec of sectionIcon){
+                            el.classList.toggle("active");
+                            sec.className = 'fas fa-minus';
+                        }
+                        
                     }
 
                     
@@ -479,12 +483,20 @@ M.recit.course.format.TreeTopics = class{
 
                     //Close mega menu level2 when you select something in
                     if( currentMenuName == 'menuM3' && window.innerWidth > 767){
-                        let menuLevel2 = document.getElementById('level2');
-                        let level2Display = getComputedStyle(menuLevel2, null).display;
+                        let level2Display = branch.style.display;
                         if(level2Display == 'flex'){
                             branch.style.display = 'none';
                         }else{
                             branch.style.display = 'flex';
+                        }
+
+                        let menuLevel2 = document.getElementsByClassName('menu-level2');
+                        for(let lvl2 of menuLevel2){
+                            let isSelected = lvl2.getAttribute('data-selected');
+                            if(isSelected != 1 && lvl2.style.display == 'flex'){
+                                lvl2.style.display = 'none';
+                            }
+
                         }
                     }
                 }
@@ -505,12 +517,14 @@ M.recit.course.format.TreeTopics = class{
 
             //set the negative(-) sign to plus(+) sign
             let levelSection = el.getElementsByClassName('menu-item-desc level-section active');
+            //console.log(levelSection);
             if(levelSection.length >= 1){
                 for(let item of levelSection){
-                    item.classList.toggle("active");
                     let sectionIcon = el.getElementsByClassName('fas fa-minus');
-                    let sec = sectionIcon[0];
-                    sec.className = 'fas fa-plus';
+                    for(let sec of sectionIcon){
+                        item.classList.toggle("active");
+                        sec.className = 'fas fa-plus';
+                    }
                 }
             }
         }
@@ -540,21 +554,23 @@ M.recit.course.format.TreeTopics = class{
             var branch = menu.querySelector(`[data-parent-section=${sectionId}]`);
             var menuLevel1 = document.getElementById('level1');
             var elemsLevel1 = menuLevel1.getElementsByClassName('menu-item');
-            var menuLevel2 = document.getElementById('level2');
-            if(menuLevel2 != null){
-                var elemsLevel2 = menuLevel2.getElementsByClassName('menu-item');
-                for(let el1 of elemsLevel1){
-                    var level1dataSelect = el1.getAttribute("data-selected");
-                    if(level1dataSelect == 1){
-                        for(let el2 of elemsLevel2){
-                            var level2dataSelect = el2.getAttribute("data-selected");
-                            if(level2dataSelect == 0 && branch == null){
-                                document.getElementById('level2').style.display = 'none';
-                            }
-                            if(level2dataSelect == 1 ){ 
-                                document.getElementById('level2').style.display = 'none';
-                            }
-                        } 
+            var menuLevel2 = menu.getElementsByClassName('menu-level2');
+            if(menuLevel2.length >= 1){
+                for(let lvl2 of menuLevel2){
+                    var elemsLevel2 = lvl2.getElementsByClassName('menu-item');
+                    for(let el1 of elemsLevel1){
+                        var level1dataSelect = el1.getAttribute("data-selected");
+                        if(level1dataSelect == 1){
+                            for(let el2 of elemsLevel2){
+                                var level2dataSelect = el2.getAttribute("data-selected");
+                                if(level2dataSelect == 0 && branch == null){
+                                    lvl2.style.display = 'none';
+                                }
+                                if(level2dataSelect == 1 ){
+                                    lvl2.style.display = 'none';
+                                }
+                            } 
+                        }
                     }
                 }
             }
@@ -649,6 +665,7 @@ M.recit.course.format.TreeTopics = class{
 
     //Open and close the menu responsive
     openCloseMenu(){
+        let menuLevel2  = document.getElementsByClassName('menu-level2');
         var div = document.getElementById("dark-background-menu");
         var nav = document.getElementById("tt-recit-nav");
         var icon = document.getElementById("faIcon");
@@ -667,11 +684,13 @@ M.recit.course.format.TreeTopics = class{
             //Return to normal
             div.style.display = "none";
         }
-        
-        let menuLevel2  = document.getElementById('level2');
-        if(menuLevel2 != null){
-            //Turn back display of menu level2 for the menu responsive
-            document.getElementById('level2').style.display = '';
+
+        //Turn back display of menu level2 for the menu responsive
+        if(menuLevel2.length >= 1){
+            for(let lvl2 of menuLevel2){
+                lvl2.style.display = '';
+            }
+            
         }
        
         
