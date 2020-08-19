@@ -344,6 +344,10 @@ M.recit.course.format.TreeTopicsEditingMode = class{
             }
         }
     }
+
+    goToSection(event, sectionId){
+        M.recit.course.format.TreeTopicsUtils.setCookie('section', sectionId);
+    }
 }
 
 // MenuM1
@@ -612,11 +616,9 @@ M.recit.course.format.TreeTopics = class{
             return;
         }
 
-        
-
         this.ctrlMenu(sectionId);
 
-        document.cookie = 'section=' + sectionId;
+        M.recit.course.format.TreeTopicsUtils.setCookie('section', sectionId);
 
         let params = M.recit.course.format.TreeTopicsUtils.getUrlVars();
         

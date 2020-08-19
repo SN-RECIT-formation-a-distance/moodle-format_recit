@@ -855,17 +855,22 @@ class TreeTopics
     public function render_editing_mode($format_treetopics_renderer){
         global $CFG, $COURSE;
 
+        $selectedSection = (isset($_COOKIE['section']) ? $_COOKIE['section'] : 'menu');
+
         $result = '<div class="row">';
         $result .= '<div class="col-12">';
         $result .= '<div class="nav nav-justified nav-pills bg-light" id="v-pills-tab" role="tablist" aria-orientation="vertical">';
 
-        $result .= sprintf('<a class="nav-item nav-link active" id="v-pills-%s-tab" data-toggle="pill" href="#v-pills-%s" role="tab"
-                             aria-controls="v-pills-%s" aria-selected="true">%s</a>', "menu", "menu", "menu", "Menu");
+        $sectionid = 'menu';
+        $templateNavItem = "<a class='nav-item nav-link %s' id='v-pills-%s-tab' data-toggle='pill' href='#v-pills-%s' role='tab' 
+                            onclick='M.recit.course.format.TreeTopicsEditingMode.instance.goToSection(event, \"%s\")'
+                            aria-controls='v-pills-%s' aria-selected='true'>%s</a>";
+
+        $result .= sprintf($templateNavItem, ($selectedSection === $sectionid ? 'active' : ''), $sectionid, $sectionid, $sectionid, $sectionid, "Menu");
 
         foreach ($this->sectionslist as $section) {
             $sectionid = $this->get_section_id($section);
-            $result .= sprintf('<a class="nav-item nav-link" id="v-pills-%s-tab" data-toggle="pill" href="#v-pills-%s" role="tab"
-                             aria-controls="v-pills-%s" aria-selected="true">%s</a>', $sectionid, $sectionid, $sectionid, $this->get_section_name($section));
+            $result .= sprintf($templateNavItem, ($selectedSection === $sectionid ? 'active' : ''), $sectionid, $sectionid, $sectionid, $sectionid, $this->get_section_name($section));
         }
         
         $result .= '</div>';
@@ -883,11 +888,13 @@ class TreeTopics
             $html .= $this->render_editing_mode_section_content($format_treetopics_renderer, $section, true);
         }       
 
-        $result .= sprintf('<div class="tab-pane fade show active editing-mode-menu" id="v-pills-%s" role="tabpanel" aria-labelledby="v-pills-%s-tab">%s</div>', "menu", "menu", $html);
+        $sectionid = 'menu';
+        $templateTabContent = '<div class="tab-pane fade show %s" id="v-pills-%s" role="tabpanel" aria-labelledby="v-pills-%s-tab">%s</div>';
+        $result .= sprintf($templateTabContent, ($selectedSection === $sectionid ? 'active editing-mode-menu' : 'editing-mode-menu'), $sectionid, $sectionid, $html);
 
         foreach ($this->sectionslist as $section) {
             $sectionid = $this->get_section_id($section);
-            $result .= sprintf('<div class="tab-pane fade show" id="v-pills-%s" role="tabpanel" aria-labelledby="v-pills-%s-tab">%s</div>', $sectionid, $sectionid, 
+            $result .= sprintf($templateTabContent, ($selectedSection === $sectionid ? 'active' : ''), $sectionid, $sectionid, 
                         $this->render_editing_mode_section_content($format_treetopics_renderer, $section));
         }
         
