@@ -73,7 +73,7 @@ $string['sectionimageurl_help'] = 'Nous suggerons de déposer vos images dans le
 $string['btnSeeDepFiles'] = "Sélectionnez un fichier";
 $string['btnUploadDepFiles'] = "Téléversez un fichier";
 
-$string['showsectiontitle'] = 'Afficher le titre de la section sous l\'image';
+$string['showsectiontitle'] = 'Afficher le nom de la section';
 $string['hascontract'] = 'Utiliser le contrat d\'engagement';
 $string['contract'] = 'Contrat d\'engagement';
 $string['navsection'] = 'Afficher la navigation par section';
@@ -98,7 +98,7 @@ $string['sectionimagesummary_help'] = "Le résumé de section en mode image est 
 
 $string['tabsmodel_help'] = 'Le menu peut avoir un visuel différent. Vous pouvez choisir le modèle qui vous convient';
 $string['imagewidth_help'] = "Width of the images in the grid in pixel. The height will be adjusted with the image's ratio";
-$string['showsectiontitle_help'] = 'Ce réglage permet d\'afficher le titre de la section.';
+$string['showsectiontitle_help'] = 'Ce réglage permet d\'afficher le nom de la section.';
 $string['hascontract_help'] = 'Lorsque la case "Utiliser le contract d\'engagement est cochée, le contrat d\'engagement s\'affiche à l\'élève. Ce dernier doit alors le lire le et le signer pour avoir accès à son cours.';
 $string['contract_help'] = 'Le contract d\'engagement est un texte expliquant à l\'élève ce qui est attendu de lui au point de vue comportement et méthode de travail. Ce texte s\'affiche à l\'élève au début du cours et bloque l\'accès aux activités tant que le contract n\'est pas signé.';
 $string['prev_section'] = 'Section précédente';

@@ -567,7 +567,7 @@ class TreeTopics
         $imgsource = (isset($formatoptions['ttsectionimageurl'])
                 ? format_treetopics::rewrite_file_url($formatoptions['ttsectionimageurl']) : "");
 
-        $sectiontitle = ($formatoptions['ttsectiontitle'] ? "<div class='tt-section-title'>$sectionname</div>" : "");
+        $sectiontitle = ($formatoptions['ttsectiontitle'] == 1 ? "<div class='tt-section-title'>$sectionname</div>" : "");
         $sectionsummary = format_text($section->ttsectionimagesummary_editor, FORMAT_MOODLE,
                 array('noclean' => true, 'filter' => true));
         $content = "";
@@ -629,7 +629,11 @@ class TreeTopics
 
         $html = "<div class='section main clearfix tt-section $sectionstyle' role='region' aria-label='$sectionname'";
         $html .= " data-section='$sectionid'>";
-        $html .= "<h2>$sectionname</h2>";
+
+        if($section->ttsectiontitle == 1){
+            $html .= "<h2>$sectionname</h2>";
+        }
+
         $html .= "<div class='content'>";
         $html .= "$sectionavail";
         $html .= "<div class='summary'>$sectionsummary</div>";
