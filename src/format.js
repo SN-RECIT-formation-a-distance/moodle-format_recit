@@ -532,7 +532,6 @@ M.recit.course.format.TreeTopics = class{
                 }
             }
         }
-            
 
         // Reset menu level 2 selection.
         elems = menu.querySelectorAll('[data-parent-section]');
@@ -540,12 +539,8 @@ M.recit.course.format.TreeTopics = class{
             el.setAttribute("data-selected", "0");
         }
 
-        
-        
-
         // Select menu level1 item.
         let selectedElem = selectMenuItem(sectionId);
-
 
         // Select menu level2 item.
         if(selectedElem){
@@ -578,7 +573,7 @@ M.recit.course.format.TreeTopics = class{
                     }
                 }
             }
-    }
+        }
     }
 
     getSectionContentResult(result){

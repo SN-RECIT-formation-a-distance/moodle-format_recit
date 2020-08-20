@@ -161,7 +161,7 @@ class TreeTopics
         
         $content = "<div id='sectioncontent_placeholder'></div>";
 
-        return ($this->is_menu_horizontal() == 1 || 3 ? $menu.$content : $content.$menu);
+        return ($this->is_menu_horizontal() ? $menu.$content : $content.$menu);
     }
 
     /**
@@ -377,7 +377,7 @@ class TreeTopics
                     </div>";
 
         $menuitems = "<ul class='navbar-nav mr-auto mt-2 mt-lg-0'>
-                        <li class='nav-item'>
+                        <li class='nav-item menu-item'>
                             <a class='nav-link' href='#' data-section='map'
                                 onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>
                                 <i class='fa fa-map'></i></a>
@@ -435,14 +435,14 @@ class TreeTopics
         if ($section->ttsectioncontentdisplay == TT_DISPLAY_TABS) {
             if ($section->ttsectiondisplay == 1) {
                 if (empty($subsection)) {
-                    $html = "<li class='nav-item'>
+                    $html = "<li class='nav-item menu-item'>
                         <a class='nav-link' href='#' data-section='$sectionid'
                             onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>".
                             $this->get_section_name($section) ."</a>
                     </li>";
                 } else {
                     $dropdownid = $sectionid.'DropdownMenuLink';
-                    $html = "<li class='nav-item dropdown'>
+                    $html = "<li class='nav-item dropdown menu-item'>
                                 <a class='nav-link dropdown-toggle' data-section='$sectionid' href='#' id='$dropdownid'
                                     data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>".
                                     $this->get_section_name($section) ."</a>
@@ -808,16 +808,6 @@ class TreeTopics
                     array('courseid' => $this->course->id, 'userid' => $USER->id, 'timemodified' => time()));
         }
     }
-
-    /**
-     * protected function contract_unsign() {
-        global $DB, $USER;
-
-        if ($this->contract_is_signed()) {
-            $DB->delete_records('format_treetopics_contract', ['courseid' => $this->course->id, 'userid' => $USER->id]);
-        }
-    }
-     */
 
     /**
      * Function render contract of TreeTopics.

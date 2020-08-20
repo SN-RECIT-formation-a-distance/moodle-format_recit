@@ -2,9 +2,7 @@
 $menu-item-height:30px;
 
 .treetopics{
-    display: grid; margin: -1rem; // the tree topics navbar has no padding
-
-    
+    display: grid; margin: -1rem; // the tree topics navbar has no padding  
 
     .menuM1{
         position: relative;        
@@ -677,6 +675,7 @@ $menu-item-height:30px;
                     }
                 }
             }
+            li.nav-item[data-selected="1"]{font-weight: bold; text-decoration:underline;}
         }
     }
 }
@@ -708,6 +707,7 @@ $menu-item-height:30px;
                     }
                 }
             }
+            li.nav-item[data-selected="1"]{font-weight: bold; font-size: large; text-decoration:underline;}            
         }
     }
 }
