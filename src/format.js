@@ -355,17 +355,17 @@ M.recit.course.format.TreeTopicsEditingMode = class{
 M.recit.course.format.TreeTopics = class{
     constructor(){
         this.getSectionContentResult = this.getSectionContentResult.bind(this);
+        window.onscroll = this.onScroll.bind(this);
 
         this.webApi = new M.recit.course.format.TreeTopicsWebApi();
 
         this.sectionContent = null;
         this.pagination = null;
-        this.menuName = null;
+        this.menu = null;
 
         this.init();
     } 
     
-
     init(){
         let params = M.recit.course.format.TreeTopicsUtils.getUrlVars();
 
@@ -373,10 +373,9 @@ M.recit.course.format.TreeTopics = class{
         let sectionId = params.sectionId || M.recit.course.format.TreeTopicsUtils.getCookie('section') || 'section-0';
         
         this.pagination = document.getElementById('sectionPagination');
+        this.menu = document.getElementById("tt-recit-nav");
 
         this.sectionContent = document.getElementById("sectioncontent_placeholder");
-
-        this.menuName;
 
         this.goToSection(null, sectionId);
 
@@ -386,17 +385,23 @@ M.recit.course.format.TreeTopics = class{
         this.setMenuSection();
     }
 
+    onScroll(event){
+        if(this.menu === null){ return; }
+
+        let verticalMenu = this.menu.querySelector("[id='navbarTogglerCourse']");
+        if((verticalMenu) && (window.scrollY > 0)){
+            verticalMenu.style.marginTop = `${window.scrollY}px`;
+        }
+    }
+
     // Set the Menu-item with a plus sign where there are level2
     setMenuSection(){
-        let menu = document.getElementById("tt-recit-nav");
-        if(menu != null){
-            this.menuName = menu.className
-        }else{return;}
+        if(this.menu === null){ return; }
         
-        if(this.menuName == 'menuM1'|| this.menuName == 'menuM3'){
+        if(this.menu.className == 'menuM1'|| this.menu.className == 'menuM3'){
             let parentSection;
-            let parentElems =  menu.querySelectorAll('[data-section]');
-            let elems = menu.querySelectorAll('[data-parent-section]');
+            let parentElems =  this.menu.querySelectorAll('[data-section]');
+            let elems = this.menu.querySelectorAll('[data-parent-section]');
 
             for(let el of elems){
                 parentSection = el.getAttribute("data-parent-section");
@@ -425,15 +430,14 @@ M.recit.course.format.TreeTopics = class{
     }
 
     ctrlMenu(sectionId){
-        var currentMenuName = this.menuName;
-        var menu = document.getElementById("tt-recit-nav");
+        let menu = this.menu;
 
         if(menu === null){ return;}
         
+        var currentMenuName = menu.className;       
 
         let selectMenuItem = function(id){
             var div = document.getElementById("dark-background-menu");
-            var nav = document.getElementById("tt-recit-nav");
             var icon = document.getElementById("faIcon");
 
             let el = menu.querySelector(`[data-section=${id}]`);
@@ -447,7 +451,7 @@ M.recit.course.format.TreeTopics = class{
                     document.getElementById('section-title').innerHTML = sectionTitle;
 
                     //Close menu
-                    nav.className = currentMenuName;
+                    menu.className = currentMenuName;
                     icon.className = ("fa fa-bars");
                     div.style.display = "none";
                 }
@@ -632,8 +636,9 @@ M.recit.course.format.TreeTopics = class{
 
     ctrlPagination(){
         if(this.pagination === null){ return; }
+        if(this.menu === null){ return; }
 
-        let navbar = document.getElementById('tt-recit-nav');
+        let navbar = this.menu;
         let sections = navbar.querySelectorAll('[data-section');
 
         let currentSection = M.recit.course.format.TreeTopicsUtils.getCookie('section');
@@ -666,7 +671,7 @@ M.recit.course.format.TreeTopics = class{
         var div = document.getElementById("dark-background-menu");
         var nav = document.getElementById("tt-recit-nav");
         var icon = document.getElementById("faIcon");
-        if (nav.className === this.menuName) {
+        if (nav.className === this.menu.className) {
             //Open menu
             nav.className += " responsive";
             //Change icon (fa-times = X).
@@ -675,7 +680,7 @@ M.recit.course.format.TreeTopics = class{
             div.style.display = "block";
         } else {
             //Close menu
-            nav.className = this.menuName;
+            nav.className = this.menu.className;
             //Return icon to 3 bars menu.
             icon.className = ("fa fa-bars");
             //Return to normal
