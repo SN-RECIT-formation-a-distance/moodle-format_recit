@@ -853,7 +853,7 @@ class TreeTopics
 
         $result = '<div class="row">';
         $result .= '<div class="col-12">';
-        $result .= '<div class="nav nav-justified nav-pills bg-light" id="v-pills-tab" role="tablist" aria-orientation="vertical">';
+        $result .= '<div class="nav nav-pills bg-light" id="v-pills-tab" role="tablist" aria-orientation="vertical">';
 
         $sectionid = 'menu';
         $templateNavItem = "<a class='nav-item nav-link %s' id='v-pills-%s-tab' data-toggle='pill' href='#v-pills-%s' role='tab' 
