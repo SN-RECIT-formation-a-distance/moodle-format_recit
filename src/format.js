@@ -389,7 +389,8 @@ M.recit.course.format.TreeTopics = class{
         if(this.menu === null){ return; }
 
         let verticalMenu = this.menu.querySelector("[id='navbarTogglerCourse']");
-        if((verticalMenu) && (window.scrollY > 0)){
+        
+        if((verticalMenu) && (this.menu.parentElement.classList.contains("vertical")) && (window.scrollY > 0)){
             verticalMenu.style.marginTop = `${window.scrollY}px`;
         }
     }
