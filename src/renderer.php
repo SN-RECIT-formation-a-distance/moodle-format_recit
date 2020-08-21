@@ -161,7 +161,7 @@ class TreeTopics
         
         $content = "<div id='sectioncontent_placeholder'></div>";
 
-        return ($this->is_menu_horizontal() == 1 || 3 ? $menu.$content : $content.$menu);
+        return ($this->is_menu_horizontal() ? $menu.$content : $content.$menu);
     }
 
     /**
@@ -377,7 +377,7 @@ class TreeTopics
                     </div>";
 
         $menuitems = "<ul class='navbar-nav mr-auto mt-2 mt-lg-0'>
-                        <li class='nav-item'>
+                        <li class='nav-item menu-item'>
                             <a class='nav-link' href='#' data-section='map'
                                 onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>
                                 <i class='fa fa-map'></i></a>
@@ -435,14 +435,14 @@ class TreeTopics
         if ($section->ttsectioncontentdisplay == TT_DISPLAY_TABS) {
             if ($section->ttsectiondisplay == 1) {
                 if (empty($subsection)) {
-                    $html = "<li class='nav-item'>
+                    $html = "<li class='nav-item menu-item'>
                         <a class='nav-link' href='#' data-section='$sectionid'
                             onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>".
                             $this->get_section_name($section) ."</a>
                     </li>";
                 } else {
                     $dropdownid = $sectionid.'DropdownMenuLink';
-                    $html = "<li class='nav-item dropdown'>
+                    $html = "<li class='nav-item dropdown menu-item'>
                                 <a class='nav-link dropdown-toggle' data-section='$sectionid' href='#' id='$dropdownid'
                                     data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>".
                                     $this->get_section_name($section) ."</a>
@@ -567,7 +567,7 @@ class TreeTopics
         $imgsource = (isset($formatoptions['ttsectionimageurl'])
                 ? format_treetopics::rewrite_file_url($formatoptions['ttsectionimageurl']) : "");
 
-        $sectiontitle = ($formatoptions['ttsectiontitle'] ? "<div class='tt-section-title'>$sectionname</div>" : "");
+        $sectiontitle = ($formatoptions['ttsectiontitle'] == 1 ? "<div class='tt-section-title'>$sectionname</div>" : "");
         $sectionsummary = format_text($section->ttsectionimagesummary_editor, FORMAT_MOODLE,
                 array('noclean' => true, 'filter' => true));
         $content = "";
@@ -629,7 +629,11 @@ class TreeTopics
 
         $html = "<div class='section main clearfix tt-section $sectionstyle' role='region' aria-label='$sectionname'";
         $html .= " data-section='$sectionid'>";
-        $html .= "<h2>$sectionname</h2>";
+
+        if($section->ttsectiontitle == 1){
+            $html .= "<h2>$sectionname</h2>";
+        }
+
         $html .= "<div class='content'>";
         $html .= "$sectionavail";
         $html .= "<div class='summary'>$sectionsummary</div>";
@@ -810,16 +814,6 @@ class TreeTopics
     }
 
     /**
-     * protected function contract_unsign() {
-        global $DB, $USER;
-
-        if ($this->contract_is_signed()) {
-            $DB->delete_records('format_treetopics_contract', ['courseid' => $this->course->id, 'userid' => $USER->id]);
-        }
-    }
-     */
-
-    /**
      * Function render contract of TreeTopics.
      * @return string
      */
@@ -855,17 +849,22 @@ class TreeTopics
     public function render_editing_mode($format_treetopics_renderer){
         global $CFG, $COURSE;
 
+        $selectedSection = (isset($_COOKIE['section']) ? $_COOKIE['section'] : 'menu');
+
         $result = '<div class="row">';
         $result .= '<div class="col-12">';
-        $result .= '<div class="nav nav-justified nav-pills bg-light" id="v-pills-tab" role="tablist" aria-orientation="vertical">';
+        $result .= '<div class="nav nav-pills bg-light" id="v-pills-tab" role="tablist" aria-orientation="vertical">';
 
-        $result .= sprintf('<a class="nav-item nav-link active" id="v-pills-%s-tab" data-toggle="pill" href="#v-pills-%s" role="tab"
-                             aria-controls="v-pills-%s" aria-selected="true">%s</a>', "menu", "menu", "menu", "Menu");
+        $sectionid = 'menu';
+        $templateNavItem = "<a class='nav-item nav-link %s' id='v-pills-%s-tab' data-toggle='pill' href='#v-pills-%s' role='tab' 
+                            onclick='M.recit.course.format.TreeTopicsEditingMode.instance.goToSection(event, \"%s\")'
+                            aria-controls='v-pills-%s' aria-selected='true'>%s</a>";
+
+        $result .= sprintf($templateNavItem, ($selectedSection === $sectionid ? 'active' : ''), $sectionid, $sectionid, $sectionid, $sectionid, "Menu");
 
         foreach ($this->sectionslist as $section) {
             $sectionid = $this->get_section_id($section);
-            $result .= sprintf('<a class="nav-item nav-link" id="v-pills-%s-tab" data-toggle="pill" href="#v-pills-%s" role="tab"
-                             aria-controls="v-pills-%s" aria-selected="true">%s</a>', $sectionid, $sectionid, $sectionid, $this->get_section_name($section));
+            $result .= sprintf($templateNavItem, ($selectedSection === $sectionid ? 'active' : ''), $sectionid, $sectionid, $sectionid, $sectionid, $this->get_section_name($section));
         }
         
         $result .= '</div>';
@@ -883,11 +882,13 @@ class TreeTopics
             $html .= $this->render_editing_mode_section_content($format_treetopics_renderer, $section, true);
         }       
 
-        $result .= sprintf('<div class="tab-pane fade show active editing-mode-menu" id="v-pills-%s" role="tabpanel" aria-labelledby="v-pills-%s-tab">%s</div>', "menu", "menu", $html);
+        $sectionid = 'menu';
+        $templateTabContent = '<div class="tab-pane fade show %s" id="v-pills-%s" role="tabpanel" aria-labelledby="v-pills-%s-tab">%s</div>';
+        $result .= sprintf($templateTabContent, ($selectedSection === $sectionid ? 'active editing-mode-menu' : 'editing-mode-menu'), $sectionid, $sectionid, $html);
 
         foreach ($this->sectionslist as $section) {
             $sectionid = $this->get_section_id($section);
-            $result .= sprintf('<div class="tab-pane fade show" id="v-pills-%s" role="tabpanel" aria-labelledby="v-pills-%s-tab">%s</div>', $sectionid, $sectionid, 
+            $result .= sprintf($templateTabContent, ($selectedSection === $sectionid ? 'active' : ''), $sectionid, $sectionid, 
                         $this->render_editing_mode_section_content($format_treetopics_renderer, $section));
         }
         

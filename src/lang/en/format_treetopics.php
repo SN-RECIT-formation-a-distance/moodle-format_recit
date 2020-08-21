@@ -70,7 +70,7 @@ $string['sectionimagefilepath'] = 'Image Filepath';
 $string['sectionimagefilename'] = 'Image Filename';
 $string['sectionimageurl'] = 'Image URL';
 
-$string['showsectiontitle'] = 'Show section title';
+$string['showsectiontitle'] = 'Show section name';
 $string['hascontract'] = 'Use a contract';
 $string['contract'] = 'Contract content';
 $string['navsection'] = 'Show navigation by section';
@@ -98,7 +98,7 @@ $string['btnUploadDepFiles'] = "Upload file";
 
 $string['tabsmodel_help'] = 'The menu may have a different visual. You can choose the model that suits you';
 $string['imagewidth_help'] = "Width of the images in the grid in pixel. The height will be adjusted with the image's ratio";
-$string['showsectiontitle_help'] = 'Help Section Title';
+$string['showsectiontitle_help'] = 'Help Section name';
 $string['hascontract_help'] = 'Help Use a contract';
 $string['contract_help'] = 'Help Contract content';
 $string['prev_section'] = 'Previous section';
