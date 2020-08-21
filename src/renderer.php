@@ -444,6 +444,7 @@ class TreeTopics
                     $dropdownid = $sectionid.'DropdownMenuLink';
                     $html = "<li class='nav-item dropdown menu-item'>
                                 <a class='nav-link dropdown-toggle' data-section='$sectionid' href='#' id='$dropdownid'
+                                    onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'
                                     data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>".
                                     $this->get_section_name($section) ."</a>
                                 <ul class='dropdown-menu theme-bg-color' aria-labelledby='$dropdownid'>$subsection</ul>
