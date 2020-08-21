@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/course/format/renderer.php');
 
-//js_reset_all_caches();
+js_reset_all_caches();
 /**
  * TreeTopics specifics functions.
  *

@@ -393,6 +393,30 @@ M.recit.course.format.TreeTopics = class{
             let parentSection;
             let parentElems =  menu.querySelectorAll('[data-section]');
             let elems = menu.querySelectorAll('[data-parent-section]');
+            let el = menu.querySelector(`[data-selected="1"]`);
+            if(el != null){
+                let sectionEls = el.getElementsByClassName('menu-item-desc');
+                //Make appear the title of the section in the responsive menu
+                let sectionTitle = sectionEls[0].textContent;
+                document.getElementById('section-title').innerHTML = sectionTitle;
+
+                let itemEls = el.getElementsByClassName('menu-item');
+                let nbrOfNotSelected = 0;
+                if(itemEls.length >= 1){
+                    for(let elem of itemEls){
+                        let isSelected = elem.getAttribute('data-selected');
+                        if(isSelected == 1){
+                            let section = elem.getElementsByClassName('menu-item-desc');
+                            document.getElementById('sousSection-title').innerHTML = section[0].textContent;
+                            document.getElementById('sous-title').style.display = "grid";
+                        }else{nbrOfNotSelected++}
+                        if(nbrOfNotSelected == itemEls.length){
+                            document.getElementById('sous-title').style.display = "none";
+                        }
+                    }
+                }else{document.getElementById('sous-title').style.display = "none";}
+            }
+            
 
             for(let el of elems){
                 parentSection = el.getAttribute("data-parent-section");
@@ -433,7 +457,6 @@ M.recit.course.format.TreeTopics = class{
             var icon = document.getElementById("faIcon");
 
             let el = menu.querySelector(`[data-section=${id}]`);
-            //console.log(el);
 
             if(el !== null){
                 el.parentElement.setAttribute("data-selected", "1");
@@ -453,16 +476,15 @@ M.recit.course.format.TreeTopics = class{
             let branch = menu.querySelector(`[data-parent-section=${id}]`);
             if(branch !== null){
                 el.parentElement.setAttribute("data-selected", "1");
-                el.previousElementSibling.style.display = 'none'; // Remove the arrow on parent element. 
-
+                if(currentMenuName == 'menuM1'){
+                    el.previousElementSibling.style.display = 'none'; // Remove the arrow on parent element. 
+                }   
                 branch.setAttribute("data-selected", "1");
 
                 if(currentMenuName == 'menuM1'|| currentMenuName == 'menuM3'){
                     //set the plus(+) sign to negative(-) sign.
-                    //console.log(el.className);
                     if(el.className != 'menu-item-desc level-section active'){
                         let sectionIcon = el.getElementsByClassName('fas fa-plus');
-                        //console.log(sectionIcon);
                         for(let sec of sectionIcon){
                             el.classList.toggle("active");
                             sec.className = 'fas fa-minus';
@@ -478,25 +500,6 @@ M.recit.course.format.TreeTopics = class{
                             let section = sec.getElementsByClassName('menu-item-desc');
                             document.getElementById('sousSection-title').innerHTML = section[0].textContent;
                             document.getElementById('sous-title').style.display = "grid";
-                        }
-                    }
-
-                    //Close mega menu level2 when you select something in
-                    if( currentMenuName == 'menuM3' && window.innerWidth > 767){
-                        let level2Display = branch.style.display;
-                        if(level2Display == 'flex'){
-                            branch.style.display = 'none';
-                        }else{
-                            branch.style.display = 'flex';
-                        }
-
-                        let menuLevel2 = document.getElementsByClassName('menu-level2');
-                        for(let lvl2 of menuLevel2){
-                            let isSelected = lvl2.getAttribute('data-selected');
-                            if(isSelected != 1 && lvl2.style.display == 'flex'){
-                                lvl2.style.display = 'none';
-                            }
-
                         }
                     }
                 }
@@ -548,33 +551,6 @@ M.recit.course.format.TreeTopics = class{
             let parentSectionId = selectedElem.parentElement.parentElement.getAttribute("data-parent-section");
             selectMenuItem(parentSectionId);
         }
-
-        if(currentMenuName == 'menuM3' && window.innerWidth > 767){
-            //Close Mega Menu when you select outside or in the level2 menu
-            var branch = menu.querySelector(`[data-parent-section=${sectionId}]`);
-            var menuLevel1 = document.getElementById('level1');
-            var elemsLevel1 = menuLevel1.getElementsByClassName('menu-item');
-            var menuLevel2 = menu.getElementsByClassName('menu-level2');
-            if(menuLevel2.length >= 1){
-                for(let lvl2 of menuLevel2){
-                    var elemsLevel2 = lvl2.getElementsByClassName('menu-item');
-                    for(let el1 of elemsLevel1){
-                        var level1dataSelect = el1.getAttribute("data-selected");
-                        if(level1dataSelect == 1){
-                            for(let el2 of elemsLevel2){
-                                var level2dataSelect = el2.getAttribute("data-selected");
-                                if(level2dataSelect == 0 && branch == null){
-                                    lvl2.style.display = 'none';
-                                }
-                                if(level2dataSelect == 1 ){
-                                    lvl2.style.display = 'none';
-                                }
-                            } 
-                        }
-                    }
-                }
-            }
-    }
     }
 
     getSectionContentResult(result){
