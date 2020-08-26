@@ -397,9 +397,10 @@ M.recit.course.format.TreeTopics = class{
 
     // Set the Menu-item with a plus sign where there are level2
     setMenuSection(){
-        if(this.menu === null){ return; }
+        let menu = this.menu;
+        if(menu === null){ return; }
         
-        if(this.menu.className == 'menuM1'|| this.menu.className == 'menuM3'){
+        if(menu.className == 'menuM1'|| menu.className == 'menuM3'){
             let parentSection;
             let parentElems =  menu.querySelectorAll('[data-section]');
             let elems = menu.querySelectorAll('[data-parent-section]');
