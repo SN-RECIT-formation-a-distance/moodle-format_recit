@@ -462,8 +462,7 @@ M.recit.course.format.TreeTopics = class{
         var currentMenu= this.menu;       
 
         let selectMenuItem = function(id){
-            //let div = currentMenu.querySelector('[id="dark-background-menu"]');
-            //console.log(div);
+            let div = document.querySelector('[id="dark-background-menu"]');
             let icon = currentMenu.querySelector('[id="faIcon"]');
 
             let el = currentMenu.querySelector(`[data-section=${id}]`);
@@ -478,7 +477,7 @@ M.recit.course.format.TreeTopics = class{
                     //Close menu
                     menu.classList.remove('responsive');
                     icon.className = ("fa fa-bars");
-                    //div.style.display = "none";
+                    div.style.display = "none";
                 }
             }
 
@@ -644,9 +643,7 @@ M.recit.course.format.TreeTopics = class{
 
     //Open and close the menu responsive
     openCloseMenu(){
-        //let menuLevel2  = document.getElementsByClassName('menu-level2');
-        //let div = this.menu.querySelector('[id="dark-background-menu"]');
-        //console.log(div);
+        let div = document.querySelector('[id="dark-background-menu"]');
         var icon = this.menu.querySelector('[id="faIcon"]');
         if(this.menu.classList.contains('responsive')){
             //Open menu
@@ -654,42 +651,15 @@ M.recit.course.format.TreeTopics = class{
             //Change icon (fa-times = X).
             icon.className = ("fa fa-bars");
             //Background with a transparent dark
-            //div.style.display = "block";
+            div.style.display = "none";
         } else{
             //Open menu
             this.menu.classList.add('responsive');
             //Return icon to 3 bars menu.
             icon.className = ("fa fa-times");
             //Return to normal
-            //div.style.display = "none";
-        }
-       /* //console.log(this.menu.className);
-        //if (nav.className == this.menu.className) {
-            //Open menu
-            console.log('Avant: ',this.menu.className);
-            nav.className += " responsive";
-            console.log('Après: ',this.menu.className);
-            //Change icon (fa-times = X).
-            icon.className = ("fa fa-times");
-            //Background with a transparent dark
             div.style.display = "block";
-            
-        //} else {
-            //Close menu
-            nav.className = this.menu.className;
-            //Return icon to 3 bars menu.
-            icon.className = ("fa fa-bars");
-            //Return to normal
-            div.style.display = "none";
-        //}*/
-        
-       /* //Turn back display of menu level2 for the menu responsive
-        if(menuLevel2.length >= 1){
-            for(let lvl2 of menuLevel2){
-                lvl2.style.display = '';
-            }
-            
-        }*/
+        }
         
         
     }
