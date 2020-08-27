@@ -658,6 +658,7 @@ $menu-item-height:30px;
 
     #tt-recit-nav{
         ul.navbar-nav{
+            flex-wrap: wrap; 
             li.nav-item{text-align: center;}
 
             ul.dropdown-menu{
@@ -684,8 +685,10 @@ $menu-item-height:30px;
         .navbar-expand-lg{
             .navbar-nav{
                 flex-direction: column;
-                .dropdown-menu{position: relative;}
+                .dropdown-menu{position: relative;
+                }
             }
+            
         }  
     }
         
@@ -740,6 +743,7 @@ $menu-item-height:30px;
 
     #tt-recit-nav{
         ul.navbar-nav{
+            
             li.nav-item{text-align: left !important;}
             ul.dropdown-menu{
                 box-shadow: none !important;
