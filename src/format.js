@@ -373,8 +373,9 @@ M.recit.course.format.TreeTopics = class{
         let sectionId = params.sectionId || M.recit.course.format.TreeTopicsUtils.getCookie('section') || 'section-0';
         
         this.pagination = document.getElementById('sectionPagination');
+        
         this.menu = document.getElementById("tt-recit-nav");
-
+        console.log(this.menu.className);
         this.sectionContent = document.getElementById("sectioncontent_placeholder");
 
         this.goToSection(null, sectionId);
@@ -397,14 +398,12 @@ M.recit.course.format.TreeTopics = class{
 
     // Set the Menu-item with a plus sign where there are level2
     setMenuSection(){
-        let menu = this.menu;
-        if(menu === null){ return; }
-        
-        if(menu.className == 'menuM1'|| menu.className == 'menuM3'){
+        if(this.menu === null){ return; }
+        if(this.menu.classList.contains('menuM1') || this.menu.classList.contains('menuM3')){
             let parentSection;
-            let parentElems =  menu.querySelectorAll('[data-section]');
-            let elems = menu.querySelectorAll('[data-parent-section]');
-            let el = menu.querySelector(`[data-selected="1"]`);
+            let parentElems =  this.menu.querySelectorAll('[data-section]');
+            let elems = this.menu.querySelectorAll('[data-parent-section]');
+            let el = this.menu.querySelector(`[data-selected="1"]`);
             if(el != null){
                 let sectionEls = el.getElementsByClassName('menu-item-desc');
                 //Make appear the title of the section in the responsive menu
@@ -460,26 +459,26 @@ M.recit.course.format.TreeTopics = class{
         let menu = this.menu;
 
         if(menu === null){ return;}
-        
-        var currentMenuName = menu.className;       
+        var currentMenu= this.menu;       
 
         let selectMenuItem = function(id){
-            var div = document.getElementById("dark-background-menu");
-            var icon = document.getElementById("faIcon");
+            //let div = currentMenu.querySelector('[id="dark-background-menu"]');
+            //console.log(div);
+            let icon = currentMenu.querySelector('[id="faIcon"]');
 
-            let el = menu.querySelector(`[data-section=${id}]`);
+            let el = currentMenu.querySelector(`[data-section=${id}]`);
 
             if(el !== null){
                 el.parentElement.setAttribute("data-selected", "1");
-                if(currentMenuName == 'menuM1'|| currentMenuName == 'menuM3'){
+                if(currentMenu.classList.contains('menuM1') || currentMenu.classList.contains('menuM3')){
                     //Make appear the title of the section in the responsive menu
                     let sectionTitle = el.textContent;
                     document.getElementById('section-title').innerHTML = sectionTitle;
 
                     //Close menu
-                    menu.className = currentMenuName;
+                    menu.classList.remove('responsive');
                     icon.className = ("fa fa-bars");
-                    div.style.display = "none";
+                    //div.style.display = "none";
                 }
             }
 
@@ -487,12 +486,12 @@ M.recit.course.format.TreeTopics = class{
             let branch = menu.querySelector(`[data-parent-section=${id}]`);
             if(branch !== null){
                 el.parentElement.setAttribute("data-selected", "1");
-                if(currentMenuName == 'menuM1'){
+                if(currentMenu.classList.contains('menuM1')){
                     el.previousElementSibling.style.display = 'none'; // Remove the arrow on parent element. 
                 }   
                 branch.setAttribute("data-selected", "1");
 
-                if(currentMenuName == 'menuM1'|| currentMenuName == 'menuM3'){
+                if(currentMenu.classList.contains('menuM1') || currentMenu.classList.contains('menuM3')){
                     //set the plus(+) sign to negative(-) sign.
                     if(el.className != 'menu-item-desc level-section active'){
                         let sectionIcon = el.getElementsByClassName('fas fa-plus');
@@ -516,7 +515,7 @@ M.recit.course.format.TreeTopics = class{
                 }
             }
             else{
-                if(currentMenuName == 'menuM1'|| currentMenuName == 'menuM3'){
+                if(currentMenu.classList.contains('menuM1') || currentMenu.classList.contains('menuM3')){
                     document.getElementById('sous-title').style.display = "none";
                 }
             }
@@ -531,7 +530,6 @@ M.recit.course.format.TreeTopics = class{
 
             //set the negative(-) sign to plus(+) sign
             let levelSection = el.getElementsByClassName('menu-item-desc level-section active');
-            //console.log(levelSection);
             if(levelSection.length >= 1){
                 for(let item of levelSection){
                     let sectionIcon = el.getElementsByClassName('fas fa-minus');
@@ -646,45 +644,54 @@ M.recit.course.format.TreeTopics = class{
 
     //Open and close the menu responsive
     openCloseMenu(){
-        let menuLevel2  = document.getElementsByClassName('menu-level2');
-        var div = document.getElementById("dark-background-menu");
-        var nav = document.getElementById("tt-recit-nav");
-        var icon = document.getElementById("faIcon");
-        if (nav.className === this.menu.className) {
+        //let menuLevel2  = document.getElementsByClassName('menu-level2');
+        //let div = this.menu.querySelector('[id="dark-background-menu"]');
+        //console.log(div);
+        var icon = this.menu.querySelector('[id="faIcon"]');
+        if(this.menu.classList.contains('responsive')){
             //Open menu
+            this.menu.classList.remove('responsive');
+            //Change icon (fa-times = X).
+            icon.className = ("fa fa-bars");
+            //Background with a transparent dark
+            //div.style.display = "block";
+        } else{
+            //Open menu
+            this.menu.classList.add('responsive');
+            //Return icon to 3 bars menu.
+            icon.className = ("fa fa-times");
+            //Return to normal
+            //div.style.display = "none";
+        }
+       /* //console.log(this.menu.className);
+        //if (nav.className == this.menu.className) {
+            //Open menu
+            console.log('Avant: ',this.menu.className);
             nav.className += " responsive";
+            console.log('Après: ',this.menu.className);
             //Change icon (fa-times = X).
             icon.className = ("fa fa-times");
             //Background with a transparent dark
             div.style.display = "block";
-        } else {
+            
+        //} else {
             //Close menu
             nav.className = this.menu.className;
             //Return icon to 3 bars menu.
             icon.className = ("fa fa-bars");
             //Return to normal
             div.style.display = "none";
-        }
-
-        //Turn back display of menu level2 for the menu responsive
+        //}*/
+        
+       /* //Turn back display of menu level2 for the menu responsive
         if(menuLevel2.length >= 1){
             for(let lvl2 of menuLevel2){
                 lvl2.style.display = '';
             }
             
-        }
-       
+        }*/
         
-    }
-
-    getQueryVariable(name){
-        let query = window.location.search.substring(1);
-        let vars = query.split("&");
-        for (let i = 0; i < vars.length; i++) {
-            let pair = vars[i].split("=");
-            if(pair[0] == name){return pair[1];}
-        }
-        return(false);
+        
     }
 }
 
