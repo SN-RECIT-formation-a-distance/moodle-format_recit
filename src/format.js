@@ -375,7 +375,7 @@ M.recit.course.format.TreeTopics = class{
         this.pagination = document.getElementById('sectionPagination');
         
         this.menu = document.getElementById("tt-recit-nav");
-        console.log(this.menu.className);
+        
         this.sectionContent = document.getElementById("sectioncontent_placeholder");
 
         this.goToSection(null, sectionId);
