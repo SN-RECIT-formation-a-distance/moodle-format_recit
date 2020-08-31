@@ -380,7 +380,7 @@ class format_treetopics extends format_base {
                     'type' => PARAM_BOOL,
                 ),
                 'ttshownavsection' => array(
-                    'default' => true,
+                    'default' => false,
                     'type' => PARAM_BOOL,
                 )
             );

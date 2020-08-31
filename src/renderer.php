@@ -604,7 +604,7 @@ class TreeTopics
 
         $sectionstyle = '';
 
-        if (!$section->visible ||!$section->available) {
+        if (!$section->visible ) {
             $sectionstyle = ' hidden';
         }
         if (course_get_format($this->course)->is_section_current($section)) {
@@ -625,6 +625,9 @@ class TreeTopics
 
         $context = context_course::instance($this->course->id);
         $sectionsummary ='';
+        if (!$section->available)
+        {}
+         else{
             
                 // Show summary if section is available or has
             $sectionsummary = file_rewrite_pluginfile_urls($section->summary, 'pluginfile.php', $context->id, 'course', 'section',
@@ -632,7 +635,7 @@ class TreeTopics
 
             $sectionsummary = format_text($sectionsummary,  $section->summaryformat, array('noclean' => true, 'overflowdiv' => true,
                     'filter' => true));
-            
+         }
         $html = "<div class='section main clearfix tt-section $sectionstyle' role='region' aria-label='$sectionname'";
         $html .= " data-section='$sectionid'>";
 
