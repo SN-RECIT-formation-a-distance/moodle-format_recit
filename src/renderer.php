@@ -596,13 +596,15 @@ class TreeTopics
      * @return string
      */
     protected function get_section_display_tab($section, $subcontent) {
+        //$sections = $modinfo->get_section_info_all();
+     //   $thissection = $infosections[$this];
         $sectionid = $this->get_section_id($section);
         $sectionname = $this->get_section_name($section);
         $sectionavail = $this->moodlerenderer->section_availability($section);
 
         $sectionstyle = '';
 
-        if (!$section->visible) {
+        if (!$section->visible ||!$section->available) {
             $sectionstyle = ' hidden';
         }
         if (course_get_format($this->course)->is_section_current($section)) {
@@ -622,12 +624,15 @@ class TreeTopics
         }
 
         $context = context_course::instance($this->course->id);
-        $sectionsummary = file_rewrite_pluginfile_urls($section->summary, 'pluginfile.php', $context->id, 'course', 'section',
-                $section->id);
+        $sectionsummary ='';
+            
+                // Show summary if section is available or has
+            $sectionsummary = file_rewrite_pluginfile_urls($section->summary, 'pluginfile.php', $context->id, 'course', 'section',
+                    $section->id);
 
-        $sectionsummary = format_text($sectionsummary,  $section->summaryformat, array('noclean' => true, 'overflowdiv' => true,
-                'filter' => true));
-
+            $sectionsummary = format_text($sectionsummary,  $section->summaryformat, array('noclean' => true, 'overflowdiv' => true,
+                    'filter' => true));
+            
         $html = "<div class='section main clearfix tt-section $sectionstyle' role='region' aria-label='$sectionname'";
         $html .= " data-section='$sectionid'>";
 
@@ -1168,7 +1173,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
 
         if ($section->section != 0) {
             // Only in the non-general sections.
-            if (!$section->visible) {
+            if (!$section->visible ||!$section->available) {
                 $sectionstyle = ' hidden';
             }
             if (course_get_format($course)->is_section_current($section)) {
