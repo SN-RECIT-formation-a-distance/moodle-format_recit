@@ -615,8 +615,10 @@ M.recit.course.format.TreeTopics = class{
         if(this.menu === null){ return; }
 
         let navbar = this.menu;
-        let sections = navbar.querySelectorAll('[data-section');
-
+    
+        let sections = navbar.querySelectorAll('[data-section]');
+        if(sections === null){ return;}
+        
         let currentSection = M.recit.course.format.TreeTopicsUtils.getCookie('section');
         let btnPrevious = this.pagination.firstChild.firstChild;
         let btnNext = this.pagination.firstChild.lastChild;
