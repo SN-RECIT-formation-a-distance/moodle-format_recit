@@ -1,11 +1,13 @@
 //$primary:#0069bf;
 $menu-item-height:30px;
 
+.inline-form-editing-mode{margin-right:1rem; margin-left: 1rem; font-size: 14px; display: grid; min-width: 100px;}
+
 .treetopics{
     display: grid; margin: -1rem; // the tree topics navbar has no padding  
 
     .menuM1{
-        position: relative;        
+        position: relative; height: 100px;
 
         .menu-level{
             width: 100%; list-style: none; margin: auto; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; padding: 0; margin-bottom: 35px;
@@ -49,6 +51,8 @@ $menu-item-height:30px;
             position: absolute; 
             top: 46px;
             left: 0px;
+            height: 50px;
+            overflow-y: auto;
             .menu-item:first-child{ display: flex;} 
             .menu-item{
                 .menu-item-desc{font-weight: 400;  color: #fff; }

@@ -246,7 +246,7 @@ class TreeTopics
 
             
         }
-    return sprintf($html, $tmp1, "");
+        return sprintf($html, $tmp1, "");
     }
 
     /**
@@ -861,8 +861,8 @@ class TreeTopics
         $selectedSection = (isset($_COOKIE['section']) ? $_COOKIE['section'] : 'menu');
 
         $result = '<div class="row">';
-        $result .= '<div class="col-12">';
-        $result .= '<div class="nav nav-pills bg-light" id="v-pills-tab" role="tablist" aria-orientation="vertical">';
+        $result .= '<div class="col-2">';
+        $result .= '<div class="nav nav-pills bg-light  flex-column" id="v-pills-tab" role="tablist" aria-orientation="vertical">';
 
         $sectionid = 'menu';
         $templateNavItem = "<a class='nav-item nav-link %s' id='v-pills-%s-tab' data-toggle='pill' href='#v-pills-%s' role='tab' 
@@ -878,8 +878,8 @@ class TreeTopics
         
         $result .= '</div>';
         $result .= '</div>';
-        $result .= '<div class="col-12">';
-        $result .= '<div class="tab-content" id="v-pills-tabContent" style="padding: 2rem;">';
+        $result .= '<div class="col-10">';
+        $result .= '<div class="tab-content" id="v-pills-tabContent">';
 
         $html = "";
         $html .= sprintf("<a href='%s/course/changenumsections.php?courseid=%ld&insertsection=0&sesskey=%s&sectionreturn=0' 
@@ -922,7 +922,8 @@ class TreeTopics
             $result .= sprintf("<div class='section_add_menus' id='add_menus-%s'></div>", $sectionid);
             $result .= $format_treetopics_renderer->section_footer();
         }
-        else{            
+        else{   
+            $result .= sprintf("<h2>%s</h2>",  $this->get_section_name($section));
             $result .= sprintf("<a class='btn btn-outline-primary pull-right' href='%s/course/editsection.php?id=%ld&sr'><i class='fa fa-fw fa-pencil-alt'></i> %s</a>", $CFG->wwwroot, 
                             $section->id, get_string('editsection', 'format_treetopics'));
             $result .= "<br/><br/>";
@@ -1257,8 +1258,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
 
             $level = "";
             if ($section->section > 0) {
-                $level = sprintf('<form 
-                    style="margin-right:1rem; font-size: 14px; display: grid;">%s%s%s</form>',
+                $level = sprintf('<form class="inline-form-editing-mode">%s%s%s</form>',
                 sprintf($radiosectionlevel, $section->section, "1",
                         ($section->ttsectiondisplay == 1 ? "checked" : ""), get_string('displaytabslev1', 'format_treetopics')),
                 sprintf($radiosectionlevel, $section->section, "2",
@@ -1270,7 +1270,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
 
             $radiosectioncontentdisplay ='<label  ><input name="ttRadioSectionContentDisplay%ld" data-component="ttRadioSectionContentDisplay" type="radio" value="%s"  %s> %s</label>';
 
-            $contentdisplay = sprintf('<form style="font-size: 14px; display: grid;">%s%s</form>',
+            $contentdisplay = sprintf('<form class="inline-form-editing-mode">%s%s</form>',
                 sprintf($radiosectioncontentdisplay, $section->section, "-1",
                         ($section->ttsectioncontentdisplay == -1 ? "checked" : ""),
                         get_string('displaytabs', 'format_treetopics')),
@@ -1279,7 +1279,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
                         get_string('displayimages', 'format_treetopics')));
        // }
 
-        $html = sprintf("<span style='display: flex; align-items: end;'>%s%s%s</span>", $sectionname, $level, $contentdisplay);
+        $html = sprintf("<span style='display: flex; align-items: end; line-height: 40px;'>%s%s%s</span>", $sectionname, $level, $contentdisplay);
 
         return $html;
     }
