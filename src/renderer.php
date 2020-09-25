@@ -366,13 +366,13 @@ class TreeTopics
      * @return string
      */
     protected function render_sections_menu_m5() {
-        $navbar = "<nav class='navbar navbar-dark %s theme-bg-color' id='tt-recit-nav'>%s</nav>";
+        $navbar = "<nav class='navbar navbar-dark %s theme-bg-color menuM5' id='tt-recit-nav'>%s</nav>";
 
-        $collapse = "<button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarTogglerCourse'
-                            aria-controls='navbarTogglerCourse' aria-expanded='false' aria-label='Toggle navigation'>
+        $collapse = "<button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#menuM5-collapse'
+                            aria-controls='menuM5-collapse' aria-expanded='false' aria-label='Toggle navigation'>
                         <span class='navbar-toggler-icon'></span>
                     </button>
-                    <div class='collapse navbar-collapse' id='navbarTogglerCourse'>
+                    <div class='collapse navbar-collapse' id='menuM5-collapse'>
                         %s
                     </div>";
 
@@ -431,47 +431,36 @@ class TreeTopics
         $html = "";
 
         $sectionid = $this->get_section_id($section);
+        $sectionname = $this->get_section_name($section);
+
+        // collapse action is taken on JS by goToSection function
+        $templateMenuItem = "
+            <li class='%s'>
+                <a class='%s' href='#' data-section='$sectionid' data-toggle='%s' data-target='%s' %s 
+                    onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>
+                    $sectionname
+                </a>
+                %s
+            </li>";
 
         if ($section->ttsectioncontentdisplay == TT_DISPLAY_TABS) {
             if ($section->ttsectiondisplay == 1) {
                 if (empty($subsection)) {
-                    $html = "<li class='nav-item menu-item'>
-                        <a class='nav-link' href='#' data-section='$sectionid'
-                            onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>".
-                            $this->get_section_name($section) ."</a>
-                    </li>";
+                    $html = sprintf($templateMenuItem, "nav-item menu-item", "nav-link", "", "#menuM5-collapse", "", "");
                 } else {
                     $dropdownid = $sectionid.'DropdownMenuLink';
-                    $html = "<li class='nav-item dropdown menu-item'>
-                                <a class='nav-link dropdown-toggle' data-section='$sectionid' href='#' id='$dropdownid'
-                                    onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'
-                                    data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>".
-                                    $this->get_section_name($section) ."</a>
-                                <ul class='dropdown-menu theme-bg-color' aria-labelledby='$dropdownid'>$subsection</ul>
-                            </li>";
+                    $html = sprintf($templateMenuItem, "nav-item dropdown menu-item", "nav-link dropdown-toggle", "dropdown", "$sectionid.dropdownmenu", "aria-haspopup='true' aria-expanded='false' id='$dropdownid'",
+                                "<ul class='dropdown-menu theme-bg-color' aria-labelledby='$dropdownid' id='$sectionid.dropdownmenu'>$subsection</ul>");
                 }
             } else if ($section->ttsectiondisplay == 2) {
                 if (empty($subsection)) {
-                    $html = "<li>
-                        <a class='dropdown-item' href='#' data-section='$sectionid'
-                            onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>".
-                            $this->get_section_name($section) ."</a>
-                    </li>";
+                    $html = sprintf($templateMenuItem, "", "dropdown-item", "", "#menuM5-collapse", "", "");
                 } else {
                     $dropdownid = $sectionid.'DropdownMenuLink';
-                    $html = "<li class='dropdown-submenu'>
-                                <a class='dropdown-item dropdown-toggle' data-section='$sectionid' href='#' id='$dropdownid'
-                                    onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>".
-                                    $this->get_section_name($section) ."</a>
-                                <ul class='dropdown-menu theme-bg-color'>$subsection</ul>
-                            </li>";
+                    $html = sprintf($templateMenuItem, "dropdown-submenu", "dropdown-item dropdown-toggle", "", "#menuM5-collapse", "id='$dropdownid'", "<ul class='dropdown-menu theme-bg-color'>$subsection</ul>");
                 }
             } else if ($section->ttsectiondisplay == 3) {
-                $html = "<li class=''>
-                        <a class='dropdown-item' href='#' data-section='$sectionid'
-                            onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>".
-                            $this->get_section_name($section) ."</a>
-                    </li>";
+                $html = sprintf($templateMenuItem, "", "dropdown-item", "", "#menuM5-collapse", "", "");
             }
         }
 

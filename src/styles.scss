@@ -7,7 +7,7 @@ $menu-item-height:30px;
     display: grid; margin: -1rem; // the tree topics navbar has no padding  
 
     .menuM1{
-        position: relative; height: 100px;
+        position: relative; 
 
         .menu-level{
             width: 100%; list-style: none; margin: auto; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; padding: 0; margin-bottom: 35px;
@@ -51,8 +51,6 @@ $menu-item-height:30px;
             position: absolute; 
             top: 46px;
             left: 0px;
-            height: 50px;
-            overflow-y: auto;
             .menu-item:first-child{ display: flex;} 
             .menu-item{
                 .menu-item-desc{font-weight: 400;  color: #fff; }
@@ -168,10 +166,9 @@ $menu-item-height:30px;
 
     }
 
-    #tt-recit-nav{
+    .menuM5{
         //background-color: $primary;
-
-
+  
         .nav-item.dropdown{padding-right: 1rem;}
 
         .dropdown-submenu {
@@ -241,8 +238,9 @@ $menu-item-height:30px;
         .tt-grid-element:hover{ cursor: pointer; filter: grayscale(0%);}        
     }
 
+    
     //------------------ Menu responsive ----------------/
-    @media screen and (max-width: 767px){
+    @media screen and (max-width: 992px){
         div#dark-background-menu{
             display:none;
             position: fixed;
@@ -612,6 +610,32 @@ $menu-item-height:30px;
                 }
             }
         }
+
+        .treetopics.vertical{
+            grid-template-columns: none;
+            grid-template-rows: none;
+            display: block;
+            margin-top: $menu-item-height;
+    
+            .menuM5{
+                position: absolute; top: 0; right: 0; width: 100%; justify-content: flex-end; z-index: 100;
+            }
+        }
+        
+        .menuM5{
+            ul.navbar-nav{
+                
+                li.nav-item{text-align: left !important;}
+                ul.dropdown-menu{
+                    box-shadow: none !important;
+                    li.dropdown-submenu{
+                        ul.dropdown-menu{
+                            margin-left: 1rem!important;
+                        }
+                    }
+                }
+            }
+        }
     }
 
 	@media only screen and (max-width: 600px) {
@@ -660,7 +684,7 @@ $menu-item-height:30px;
     grid-template-columns: auto;
     grid-template-rows: auto auto;
 
-    #tt-recit-nav{
+    .menuM5{
         ul.navbar-nav{
             flex-wrap: wrap; 
             li.nav-item{text-align: center;}
@@ -696,7 +720,7 @@ $menu-item-height:30px;
         }  
     }
         
-    #tt-recit-nav{
+    .menuM5{
         //min-width: 10vw;
         .dropdown-submenu>.dropdown-menu{left: 0; top: 100%;}
 
@@ -733,35 +757,7 @@ $menu-item-height:30px;
     }
 }
 
-@media screen and (max-width: 992px){
-    .treetopics.vertical{
-        grid-template-columns: none;
-        grid-template-rows: none;
-        display: block;
-        margin-top: $menu-item-height;
-
-        #tt-recit-nav{
-            position: absolute; top: 0; right: 0; width: 100%; justify-content: flex-end; z-index: 100;
-        }
-    }
-
-    #tt-recit-nav{
-        ul.navbar-nav{
-            
-            li.nav-item{text-align: left !important;}
-            ul.dropdown-menu{
-                box-shadow: none !important;
-                li.dropdown-submenu{
-                    ul.dropdown-menu{
-                        margin-left: 1rem!important;
-                    }
-                }
-            }
-        }
-    }
-}
-
-@media screen and (max-width: 767px){
+/*@media screen and (max-width: 767px){
     .menu{
         .menu-level{
             flex-direction: column;
@@ -771,4 +767,4 @@ $menu-item-height:30px;
             li:empty{ display: none;}
         }
     }
-}
+}*/

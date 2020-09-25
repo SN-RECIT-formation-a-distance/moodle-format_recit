@@ -579,6 +579,11 @@ M.recit.course.format.TreeTopics = class{
         if(event !== null){
             event.preventDefault();
             sectionId = event.currentTarget.getAttribute('data-section');
+
+            // collapse the menu5 if it is the case
+            if($){
+                $(event.target.getAttribute("data-target")).collapse("hide");
+            }
         }
 
         // Open or close menu responsive
@@ -599,13 +604,7 @@ M.recit.course.format.TreeTopics = class{
         
         if(this.sectionContent !== null){
             this.webApi.getSectionContent({sectionid: sectionId, courseid: params.id}, this.getSectionContentResult);
-        }
-
-        // Simulate the menu button click to hide the menu (mode mobile).
-        let btn = document.querySelector("[data-target='#navbarTogglerCourse']");
-        if((btn !== null) && (btn.getAttribute('aria-expanded') === 'true')){
-            btn.click();
-        }
+        }        
 
         this.ctrlPagination();
     }
