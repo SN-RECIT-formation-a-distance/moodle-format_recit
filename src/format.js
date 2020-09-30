@@ -350,8 +350,6 @@ M.recit.course.format.TreeTopicsEditingMode = class{
     }
 }
 
-// MenuM1
-// Mega MenuM3
 M.recit.course.format.TreeTopics = class{
     constructor(){
         this.getSectionContentResult = this.getSectionContentResult.bind(this);
@@ -381,9 +379,6 @@ M.recit.course.format.TreeTopics = class{
         this.goToSection(null, sectionId);
 
         this.ctrlPagination();
-        
-        //set menu responsive for item with a branch
-        this.setMenuSection();
     }
 
     onScroll(event){
@@ -396,131 +391,98 @@ M.recit.course.format.TreeTopics = class{
         }
     }
 
-    // Set the Menu-item with a plus sign where there are level2
-    setMenuSection(){
-        if(this.menu === null){ return; }
-        if(this.menu.classList.contains('menuM1') || this.menu.classList.contains('menuM3')){
-            let parentSection;
-            let parentElems =  this.menu.querySelectorAll('[data-section]');
-            let elems = this.menu.querySelectorAll('[data-parent-section]');
-            let el = this.menu.querySelector(`[data-selected="1"]`);
-            if(el != null){
-                let sectionEls = el.getElementsByClassName('menu-item-desc');
-                //Make appear the title of the section in the responsive menu
-                let sectionTitle = sectionEls[0].textContent;
-                document.getElementById('section-title').innerHTML = sectionTitle;
+    ctrlMenu(event, sectionId){
+        let menu, menuItem, menuItemDesc;
 
-                let itemEls = el.getElementsByClassName('menu-item');
-                let nbrOfNotSelected = 0;
-                if(itemEls.length >= 1){
-                    for(let elem of itemEls){
-                        let isSelected = elem.getAttribute('data-selected');
-                        if(isSelected == 1){
-                            let section = elem.getElementsByClassName('menu-item-desc');
-                            document.getElementById('sousSection-title').innerHTML = section[0].textContent;
-                            document.getElementById('sous-title').style.display = "grid";
-                        }else{nbrOfNotSelected++}
-                        if(nbrOfNotSelected == itemEls.length){
-                            document.getElementById('sous-title').style.display = "none";
-                        }
-                    }
-                }else{document.getElementById('sous-title').style.display = "none";}
-            }
-            
+        if(this.menu === null){ return;}
+        
+        menu = this.menu;
 
+        if(!menu.classList.contains('menuM1') && !menu.classList.contains('menuM3')){ return;}
 
-            for(let el of elems){
-                parentSection = el.getAttribute("data-parent-section");
-
-                for(let elem of parentElems){
-                    let section = elem.getAttribute('data-section');
-
-                    if(section ==  parentSection){
-                        //set plus sign
-                        elem.classList.toggle("level-section");
-                        var icon = elem.getElementsByClassName('fas fa-plus');
-
-                        if(icon.length == 0){
-                            icon = elem.getElementsByClassName('fas fa-minus');
-                        }
-                        for(let ic of icon){
-                            ic.setAttribute("id", "sectionIcon-active");
-                        }
-                    }
-                }
-            }
+        if(event === null){ 
+            menuItemDesc = menu.querySelector(`[data-section=${sectionId}]`);
+            menuItem = (menuItemDesc !== null ? menuItemDesc.parentElement.parentElement : null);
+        }
+        else{
+            menuItem = event.currentTarget.parentElement.parentElement;
+            menuItemDesc = event.currentTarget;
         }
 
-        
-        
+        if(menuItem === null){ return; }
+
+        // Reset menu level 1 selection.
+        this.resetMenuSelection();
+
+        menuItem.setAttribute("data-selected", "1");
+
+        // If the menu level1 item has a branch then it also select it.
+        let branch = menu.querySelector(`[data-parent-section=${sectionId}]`);
+        if(branch !== null){
+            branch.setAttribute("data-selected", "1");
+        }
+         
+        // Select menu level2 item.
+        if((menuItem.parentElement.getAttribute("id") === "level2")){
+            menuItem.parentElement.setAttribute("data-selected", "1");
+        }
+
+        this.ctrlMenuResponsive(menu, menuItem, menuItemDesc, branch);
     }
 
-    ctrlMenu(sectionId){
-        let menu = this.menu;
+    ctrlMenuResponsive(menu, menuItem, menuItemDesc, branch){
+        let itemMenuResponsive = menu.querySelector('.btn-menu-responsive');
+        let icon = itemMenuResponsive.children[0].firstChild;
+        let sectionTitle = itemMenuResponsive.children[1];
+        let sectionSubtitle = itemMenuResponsive.children[2];
 
-        if(menu === null){ return;}
-        var currentMenu= this.menu;       
+        //Make appear the title of the section in the responsive menu
+        sectionTitle.innerHTML = menuItemDesc.textContent;
 
-        let selectMenuItem = function(id){
-            let div = document.querySelector('[id="dark-background-menu"]');
-            let icon = currentMenu.querySelector('[id="faIcon"]');
-
-            let el = currentMenu.querySelector(`[data-section=${id}]`);
-
-            if(el !== null){
-                el.parentElement.setAttribute("data-selected", "1");
-                if(currentMenu.classList.contains('menuM1') || currentMenu.classList.contains('menuM3')){
-                    //Make appear the title of the section in the responsive menu
-                    let sectionTitle = el.textContent;
-                    document.getElementById('section-title').innerHTML = sectionTitle;
-
-                    //Close menu
-                    menu.classList.remove('responsive');
-                    icon.className = ("fa fa-bars");
-                    div.style.display = "none";
+        if(branch !== null){
+            //Make appear the title of the sous section in the responsive menu
+            let sections = branch.getElementsByClassName('menu-item');
+            for(let sec of sections){
+                if(sec.getAttribute('data-selected') === "1"){
+                    let subsection = sec.getElementsByClassName('menu-item-desc');
+                    sectionSubtitle.innerHTML = subsection.textContent;
+                    break;
                 }
             }
+        }
 
-            // If the menu level1 item has a branch then it also select it.
-            let branch = menu.querySelector(`[data-parent-section=${id}]`);
-            if(branch !== null){
-                el.parentElement.setAttribute("data-selected", "1");
-                if(currentMenu.classList.contains('menuM1')){
-                    el.previousElementSibling.style.display = 'none'; // Remove the arrow on parent element. 
-                }   
-                branch.setAttribute("data-selected", "1");
+        this.ctrlOpeningMenuResponsive('closed');
+    }
 
-                if(currentMenu.classList.contains('menuM1') || currentMenu.classList.contains('menuM3')){
-                    //set the plus(+) sign to negative(-) sign.
-                    if(el.className != 'menu-item-desc level-section active'){
-                        let sectionIcon = el.getElementsByClassName('fas fa-plus');
-                        for(let sec of sectionIcon){
-                            el.classList.toggle("active");
-                            sec.className = 'fas fa-minus';
-                        }
-                        
-                    }
+    //Open and close the menu responsive
+    ctrlOpeningMenuResponsive(status){
+        if(this.menu === null){ return; }
+        this.menu.setAttribute('data-status', status);
+    }
 
-                    
-                    //Make appear the title of the sous section in the responsive menu
-                    let sections = branch.getElementsByClassName('menu-item');
-                    for(let sec of sections){
-                        if(sec.getAttribute('data-selected') == "1"){
-                            let section = sec.getElementsByClassName('menu-item-desc');
-                            document.getElementById('sousSection-title').innerHTML = section[0].textContent;
-                            document.getElementById('sous-title').style.display = "grid";
-                        }
-                    }
-                }
+    //Open and close the submenu responsive
+    ctrlOpeningSubMenuResponsive(event, sectionId){
+        if(this.menu === null){ return; }
+
+        let branch = this.menu.querySelector(`[data-parent-section=${sectionId}]`);
+        if(branch !== null){
+            if(branch.getAttribute("data-status") === "open"){
+                branch.setAttribute("data-status", "closed");
+                event.currentTarget.firstChild.classList.add("fa-plus");
+                event.currentTarget.firstChild.classList.remove("fa-minus");
             }
             else{
-                if(currentMenu.classList.contains('menuM1') || currentMenu.classList.contains('menuM3')){
-                    document.getElementById('sous-title').style.display = "none";
-                }
+                branch.setAttribute("data-status", "open");
+                event.currentTarget.firstChild.classList.add("fa-minus");
+                event.currentTarget.firstChild.classList.remove("fa-plus");
             }
-
-            return el;
         }
+    }
+
+    resetMenuSelection(){
+        if(this.menu === null){ return;}
+
+        let menu = this.menu;
 
         // Reset menu level 1 selection.
         let elems = menu.getElementsByClassName('menu-item');
@@ -544,15 +506,6 @@ M.recit.course.format.TreeTopics = class{
         elems = menu.querySelectorAll('[data-parent-section]');
         for(let el of elems){
             el.setAttribute("data-selected", "0");
-        }
-
-        // Select menu level1 item.
-        let selectedElem = selectMenuItem(sectionId);
-
-        // Select menu level2 item.
-        if(selectedElem){
-            let parentSectionId = selectedElem.parentElement.parentElement.getAttribute("data-parent-section");
-            selectMenuItem(parentSectionId);
         }
     }
 
@@ -586,17 +539,11 @@ M.recit.course.format.TreeTopics = class{
             }
         }
 
-        // Open or close menu responsive
-        if(sectionId == 'icon'){
-            this.openCloseMenu();
-            return;
-        }
-
         if(sectionId.length === 0){
             return;
         }
 
-        this.ctrlMenu(sectionId);
+        this.ctrlMenu(event, sectionId);
 
         M.recit.course.format.TreeTopicsUtils.setCookie('section', sectionId);
 
@@ -641,32 +588,7 @@ M.recit.course.format.TreeTopics = class{
         }
 
     }
-
-    //Open and close the menu responsive
-    openCloseMenu(){
-        let div = document.querySelector('[id="dark-background-menu"]');
-        var icon = this.menu.querySelector('[id="faIcon"]');
-        if(this.menu.classList.contains('responsive')){
-            //Open menu
-            this.menu.classList.remove('responsive');
-            //Change icon (fa-times = X).
-            icon.className = ("fa fa-bars");
-            //Background with a transparent dark
-            div.style.display = "none";
-        } else{
-            //Open menu
-            this.menu.classList.add('responsive');
-            //Return icon to 3 bars menu.
-            icon.className = ("fa fa-times");
-            //Return to normal
-            div.style.display = "block";
-        }
-        
-        
-    }
 }
-
-
 
 // Definition static attributes and methods to work with Firefox.
 M.recit.course.format.TreeTopics.messages = {

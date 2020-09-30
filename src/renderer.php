@@ -169,44 +169,43 @@ class TreeTopics
      * @return string
      */
     protected function render_sections_menu_m1() {  
-        //Template for the responsive menu icon
-        $menuicontemplate =
-                "<li class='menu-item'>
-                    <a class='menu-item-desc' href='#' data-section='%s'
-                        onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s</a>
-                        <h5 id='section-title'></h5>
-                        <div id='sous-title'><h5 id='sousSection-title'></h5></div>
-                </li>";      
+        $maxNbChars = 25;
+
         $menuitemtemplate =
-                "<li class='menu-item'>
-                    <div class='arrow'></div>
-                    <a class='menu-item-desc' href='#' data-section='%s'
-                        onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s<i class='fas fa-plus' id='sectionIcon'></i></a>
-                </li>";
-        $menuitemleveltemplate =
-                "<li class='menu-item'>
-                    <div class='arrow'></div>
-                    <a class='menu-item-desc' href='#' data-section='%s'
-                        onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s<i class='fas fa-plus' id='sectionIcon'></i></a>
-                        %s
+                "<li class='menu-item' data-submenu='%s'>
+                    <div class='menu-item-title'>
+                        <div class='arrow'></div>
+                        <a class='menu-item-desc' href='#' data-section='%s' onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)' title='%s'>%s</a>
+                        <button class='btn btn-sm btn-outline-light btn-expand-sub-menu' onclick='M.recit.course.format.TreeTopics.instance.ctrlOpeningSubMenuResponsive(event, \"%s\")'><i class='fa fa-plus'></i></button>
+                    </div>
+                    %s
                 </li>";
 
         $menuseparator = "<li></li>";
 
         $html = "
-                <div id='dark-background-menu'></div>
-                <nav class='menuM1' id='tt-recit-nav'>
-                    <ul class='menu-level1 tt-menu-color1'id='level1'>%s</ul>
+                <nav class='menuM1' id='tt-recit-nav' data-status='closed'>                    
+                    <div class='background-menu-mobile'></div>
+                    <ul class='menu-level1 tt-menu-color1'id='level1'>
+                        <li class='btn-menu-responsive'>
+                            <button class='btn btn-outline-light btn-sm' data-btn='open'
+                                onclick='M.recit.course.format.TreeTopics.instance.ctrlOpeningMenuResponsive(\"open\")'><i class='fa fa-bars'></i>
+                            </button>
+                            <div class='section-title'></div>
+                            <div class='sous-section-title'></div>
+                            <button class='btn btn-outline-light btn-sm' data-btn='close'
+                                onclick='M.recit.course.format.TreeTopics.instance.ctrlOpeningMenuResponsive(\"closed\")'><i class='fa fa-times'></i>
+                            </button>
+                        </li>
+                        %s
+                    </ul>
                     %s
                 </nav>";
 
         $tmp1 = "";
         $tmp2 = "";
 
-        //Ajout des l'icons du menu responsive
-        $tmp1 .= sprintf($menuicontemplate, "icon", "<i class='fa fa-bars' id='faIcon'></i>");
-
-        $tmp1 .= sprintf($menuitemtemplate, "map", "<i class='fa fa-map'></i>");
+        $tmp1 .= sprintf($menuitemtemplate, "0", "map", "Menu", "<i class='fa fa-map'></i>", "", "");
         $tmp1 .= $menuseparator;
         foreach ($this->sectionstree as $item1) {
             $tmp2 = "";
@@ -228,19 +227,24 @@ class TreeTopics
                     continue; 
                 }
 
-                $tmp3 .= sprintf($menuitemtemplate, $this->get_section_id($item2->section),
-                        $this->get_section_name($item2->section));
+                $sectionname = $this->get_section_name($item2->section);
+                $tmp3 .= sprintf($menuitemtemplate, "0", $this->get_section_id($item2->section), $sectionname, mb_strimwidth($sectionname, 0, $maxNbChars, "..."), "", "");
                 $tmp3 .= $menuseparator;
             }
             if (strlen($tmp3) > 0) {
-                $tmp2 .= sprintf("<ul class='menu-level2 tt-menu-color2' id='level2' data-parent-section='%s'>%s</ul>",
+                $sectionid = $this->get_section_id($item1->section);
+                $tmp2 .= sprintf("<ul class='menu-level2 tt-menu-color2' id='level2' data-parent-section='%s' data-status='closed'>%s</ul>",
                         $this->get_section_id($item1->section), $tmp3);
-                $tmp1 .= sprintf($menuitemleveltemplate, $this->get_section_id($item1->section), $this->get_section_name($item1->section), $tmp2);
+
+                $sectionname = $this->get_section_name($item1->section);
+                $tmp1 .= sprintf($menuitemtemplate, "1", $sectionid, $sectionname, mb_strimwidth($sectionname, 0, $maxNbChars, "..."),  $sectionid, $tmp2);
                 $tmp1 .= $menuseparator;
                 /*var_dump($tmp1);
                 exit();*/
             }else{
-                $tmp1 .= sprintf($menuitemtemplate, $this->get_section_id($item1->section), $this->get_section_name($item1->section));
+                $sectionname = $this->get_section_name($item1->section);
+
+                $tmp1 .= sprintf($menuitemtemplate, "0", $this->get_section_id($item1->section),  $sectionname, mb_strimwidth($sectionname, 0, $maxNbChars, "..."), "", "");
                 $tmp1 .= $menuseparator;
             }
 
