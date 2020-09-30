@@ -391,7 +391,7 @@ M.recit.course.format.TreeTopics = class{
         }
     }
 
-    ctrlMenu(event, sectionId){
+    ctrlMenu(sectionId){
         let menu, menuItem, menuItemDesc;
 
         if(this.menu === null){ return;}
@@ -400,16 +400,11 @@ M.recit.course.format.TreeTopics = class{
 
         if(!menu.classList.contains('menuM1') && !menu.classList.contains('menuM3')){ return;}
 
-        if(event === null){ 
-            menuItemDesc = menu.querySelector(`[data-section=${sectionId}]`);
-            menuItem = (menuItemDesc !== null ? menuItemDesc.parentElement.parentElement : null);
-        }
-        else{
-            menuItem = event.currentTarget.parentElement.parentElement;
-            menuItemDesc = event.currentTarget;
-        }
+        menuItemDesc = menu.querySelector(`[data-section=${sectionId}]`);
 
-        if(menuItem === null){ return; }
+        if(menuItemDesc === null){ return; }
+        
+        menuItem = menuItemDesc.parentElement.parentElement;
 
         // Reset menu level 1 selection.
         this.resetMenuSelection();
@@ -543,7 +538,7 @@ M.recit.course.format.TreeTopics = class{
             return;
         }
 
-        this.ctrlMenu(event, sectionId);
+        this.ctrlMenu(sectionId);
 
         M.recit.course.format.TreeTopicsUtils.setCookie('section', sectionId);
 
@@ -568,23 +563,30 @@ M.recit.course.format.TreeTopics = class{
         let currentSection = M.recit.course.format.TreeTopicsUtils.getCookie('section');
         let btnPrevious = this.pagination.firstChild.firstChild;
         let btnNext = this.pagination.firstChild.lastChild;
+       
+        let iSection = 0;
+        for(iSection = 0; iSection < sections.length; iSection++){
+            if(sections[iSection].getAttribute('data-section') === currentSection){
+                break;
+            }
+        }
 
-        let iSection = parseInt(currentSection.split("-").pop()) || 0;
-        
+        if(!sections[iSection]){ return; }
+
         if(iSection <= 0){
             btnPrevious.classList.add("disabled");
         }
         else{
             btnPrevious.classList.remove("disabled");
-            btnPrevious.firstChild.setAttribute('data-section', `section-${iSection-1}`);
+            btnPrevious.firstChild.setAttribute('data-section', sections[iSection-1].getAttribute('data-section'));
         }
 
-        if(iSection >= sections.length - 2){
+        if(iSection >= sections.length - 1){
             btnNext.classList.add("disabled");
         }
         else{
             btnNext.classList.remove("disabled");
-            btnNext.firstChild.setAttribute('data-section', `section-${iSection+1}`);
+            btnNext.firstChild.setAttribute('data-section', sections[iSection+1].getAttribute('data-section'));
         }
 
     }
