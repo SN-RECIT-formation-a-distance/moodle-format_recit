@@ -143,11 +143,11 @@ class TreeTopics
         $menu = "";
         if ($mode == TT_DISPLAY_TABS) {
             switch ($model) {
-                case 1: $menu = $this->render_sections_menu_m1();
+                case 1: 
+                case 3:
+                    $menu = $this->render_sections_menu_m1();
                     break;
                 case 2: $menu = $this->render_sections_menu_m5();
-                    break;
-                case 3: $menu = $this->render_sections_menu_m3();
                     break;
                 case 5: $menu = $this->render_sections_menu_m5();
                     break;
@@ -257,7 +257,7 @@ class TreeTopics
      * Function render sections menu m2 of TreeTopics. Mega menu !!!
      * @return string
      */
-    protected function render_sections_menu_m3() { 
+    /*protected function render_sections_menu_m3() { 
         //Template for the responsive menu icon
         $menuicontemplate =
                 "<li class='menu-item'>
@@ -363,7 +363,7 @@ class TreeTopics
         }
         
         return sprintf($html, $tmp1, "");
-    }
+    }*/
 
     /**
      * Function render sections menu m5 of TreeTopics.

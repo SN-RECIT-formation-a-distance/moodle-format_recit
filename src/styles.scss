@@ -154,7 +154,7 @@ $max-width-responsive: 1024px;
         }
     }
     //Mega Menu
-    .menuM3{
+    /*.menuM3{
         position: relative; 
         z-index: 1020;       
 
@@ -249,9 +249,7 @@ $max-width-responsive: 1024px;
                 }
             }
         }
-        
-
-    }
+    }*/
 
     .menuM5{
         //background-color: $primary;
@@ -407,7 +405,7 @@ $max-width-responsive: 1024px;
 
         //-------------------- Mega Menu responsive ---------------------------/
          //Closed responsive menuM3.
-         .menuM3{ 
+        /* .menuM3{ 
             width: 100%;
             position: relative;
             display: block;
@@ -593,7 +591,7 @@ $max-width-responsive: 1024px;
 
                 }
             }
-        }
+        }*/
        
         .menuM5{
             ul.navbar-nav{
