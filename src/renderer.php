@@ -854,7 +854,13 @@ class TreeTopics
         $selectedSection = (isset($_COOKIE['section']) ? $_COOKIE['section'] : 'menu');
 
         $result = '<div class="row">';
-        $result .= '<div class="col-2">';
+        $result .= '<div class="bg-light p-2 w-100">';
+        $result .= '<button class="btn btn-outline-primary btn-sm m-1 mr-2" type="button" data-toggle="collapse" data-target="#navTabs" aria-expanded="false" aria-controls="navTabs"><i class="fa fa-bars"></i></button>';
+        $result .= '<span class="h6 text-muted">Liste de sections</span>';
+        $result .= '</div>';
+        $result .= '</div>';
+        $result .= '<div class="row">';        
+        $result .= '<div class="col-xs col-sm-4 col-lg-2 collapse show p-0" id="navTabs">';
         $result .= '<div class="nav nav-pills bg-light  flex-column" id="v-pills-tab" role="tablist" aria-orientation="vertical">';
 
         $sectionid = 'menu';
@@ -871,7 +877,7 @@ class TreeTopics
         
         $result .= '</div>';
         $result .= '</div>';
-        $result .= '<div class="col-10">';
+        $result .= '<div class="col-xl">';
         $result .= '<div class="tab-content" id="v-pills-tabContent">';
 
         $html = "";
@@ -885,7 +891,7 @@ class TreeTopics
         }       
 
         $sectionid = 'menu';
-        $templateTabContent = '<div class="tab-pane fade show %s" id="v-pills-%s" role="tabpanel" aria-labelledby="v-pills-%s-tab">%s</div>';
+        $templateTabContent = '<div class="tab-pane fade show %s p-2" id="v-pills-%s" role="tabpanel" aria-labelledby="v-pills-%s-tab">%s</div>';
         $result .= sprintf($templateTabContent, ($selectedSection === $sectionid ? 'active editing-mode-menu' : 'editing-mode-menu'), $sectionid, $sectionid, $html);
 
         foreach ($this->sectionslist as $section) {
