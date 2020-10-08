@@ -96,7 +96,7 @@ $max-width-responsive: 1024px;
             width: 100%; list-style: none; margin: auto; display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: center; padding: 0; height: 70px;
 
             .menu-item{
-                padding: .5rem; margin: .1rem;  min-width: 120px; align-self: center; display: flex; justify-content: center; align-items: center;
+                padding: .5rem; margin: .1rem; align-self: center; display: flex; justify-content: center; align-items: center;
                 .menu-item-title{
                     display: flex; align-items: center;
                     .menu-item-desc{padding: .3rem;    font-size: 16px;      font-weight: 600;    text-align: center;
