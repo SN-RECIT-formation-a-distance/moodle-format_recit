@@ -51,7 +51,6 @@ $max-width-responsive: 1024px;
     }
 
     &.vertical{
-        grid-template-columns: 80% 20%;
         grid-template-rows: auto;
 
         .navbar{align-items: baseline; align-content: baseline;}
@@ -84,6 +83,19 @@ $max-width-responsive: 1024px;
             }
         }
     }   
+
+    &.vertical-right{
+        @extend .vertical;
+
+        grid-template-columns: 80% 20%;
+    }
+
+    &.vertical-left{
+        @extend .vertical;
+
+        grid-template-columns: 20% 80%;
+        
+    }
 
     .menuM1{
         position: relative; margin-bottom: 60px;

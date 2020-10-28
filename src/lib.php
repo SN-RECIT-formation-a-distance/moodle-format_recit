@@ -414,6 +414,8 @@ class format_treetopics extends format_base {
                         array(
                             1 => new lang_string('tabmodel1', 'format_treetopics'),
                             2 => new lang_string('tabmodel2', 'format_treetopics'),
+                            3 => new lang_string('tabmodel3', 'format_treetopics'),
+                            //3 => new lang_string('tabmodel3', 'format_treetopics'),
                             //3 => new lang_string('tabmodel3', 'format_treetopics'),
                             5 => new lang_string('tabmodel5', 'format_treetopics')
                         )

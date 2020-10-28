@@ -91,7 +91,17 @@ class TreeTopics
             $html = "<div class='treetopics'>%s</div>";
             $html = sprintf($html, $this->render_contract());
         } else {
-            $orientation = ($this->is_menu_horizontal() ? "horizontal" : "vertical");
+            $orientation = "";
+            
+            switch($this->course->tttabsmodel){
+                case 5:
+                    $orientation = "horizontal"; break;
+                case 2:
+                    $orientation = "vertical-right"; break;
+                case 3:
+                    $orientation = "vertical-left"; break;
+            }
+
             $html = "<div class='treetopics $orientation'>%s</div>";
             
             $html = sprintf($html, $this->render_sections());
@@ -144,12 +154,12 @@ class TreeTopics
         if ($mode == TT_DISPLAY_TABS) {
             switch ($model) {
                 case 1: 
-                case 3:
                     $menu = $this->render_sections_menu_m1();
                     break;
-                case 2: $menu = $this->render_sections_menu_m5();
-                    break;
-                case 5: $menu = $this->render_sections_menu_m5();
+                case 2: 
+                case 3: 
+                case 5:
+                    $menu = $this->render_sections_menu_m5();
                     break;
                 default: 
                     $menu = $this->render_sections_menu_m5();
@@ -161,7 +171,13 @@ class TreeTopics
         
         $content = "<div id='sectioncontent_placeholder'></div>";
 
-        return ($this->is_menu_horizontal() ? $menu.$content : $content.$menu);
+        $options = array(1, 3, 5);
+        if(in_array($this->course->tttabsmodel, $options)){
+            return $menu.$content;
+        }
+        else{
+            return $content.$menu;
+        }
     }
 
     /**
@@ -391,7 +407,14 @@ class TreeTopics
 
         $hmenu = sprintf($navbar, "navbar-expand-lg",  sprintf($collapse, $menuitems));
         $vmenu = sprintf($navbar, "navbar-expand-lg", sprintf($collapse, $menuitems));
-        $html = ($this->is_menu_horizontal() ? $hmenu : $vmenu);
+        
+        $options = array(1, 5);
+        if(in_array($this->course->tttabsmodel, $options)){
+            $html = $hmenu;
+        }
+        else{
+            $html = $vmenu;
+        }
 
         $tmp1 = "";
         $tmp2 = "";
@@ -706,16 +729,6 @@ class TreeTopics
                 $this->get_section_id($section), $this->get_section_name($section),
                     $this->moodlerenderer->get_course_section_cm_list($this->course, $section));
         }
-    }
-
-    /**
-     * Function for checking horizontal menu of TreeTopics.
-     *
-     * @return bool
-     */
-    protected function is_menu_horizontal() {
-        $options = array(1, 3, 5);
-        return (in_array($this->course->tttabsmodel, $options));
     }
 
     /**

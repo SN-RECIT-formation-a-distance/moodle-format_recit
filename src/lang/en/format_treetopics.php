@@ -48,8 +48,8 @@ $string['tabsmodel'] = 'Menu Model';
 $string['horizontal'] = 'Horizontal';
 $string['vertical'] = 'Vertical';
 $string['tabmodel1'] = 'Horizontal 2 Levels';
-$string['tabmodel2'] = 'Vertical';
-$string['tabmodel3'] = 'Mega menu';
+$string['tabmodel2'] = 'Vertical Right';
+$string['tabmodel3'] = 'Vertical Left';
 $string['tabmodel5'] = 'Horizontal 1 Level';
 
 $string['menudisplay'] = 'Menu display';
