@@ -97,9 +97,12 @@ class WebApi{
      * Set the section level
      */
     protected function set_section_level() {
+        global $CFG;
         try {
+            $prefix = $CFG->prefix;
+
             $data = $this->request->data;
-            $query = "insert into mdl_course_format_options (courseid, format, sectionid, name, value)
+            $query = "insert into {$prefix}course_format_options (courseid, format, sectionid, name, value)
             values($data->courseId, 'treetopics', $data->sectionId, 'ttsectiondisplay', '$data->level')
             ON DUPLICATE KEY UPDATE value = '$data->level'";
 
@@ -114,9 +117,13 @@ class WebApi{
      * @return void
      */
     protected function set_section_content_display() {
+        global $CFG;
+       
         try {
+            $prefix = $CFG->prefix;
+
             $data = $this->request->data;
-            $query = "insert into mdl_course_format_options (courseid, format, sectionid, name, value)
+            $query = "insert into {$prefix}course_format_options (courseid, format, sectionid, name, value)
             values($data->courseId, 'treetopics', $data->sectionId, 'ttsectioncontentdisplay', '$data->value')
             ON DUPLICATE KEY UPDATE value = '$data->value'";
 
