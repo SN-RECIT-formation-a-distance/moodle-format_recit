@@ -353,6 +353,35 @@ M.recit.course.format.TreeTopicsEditingMode = class{
     goToSection(event, sectionId){
         M.recit.course.format.TreeTopicsUtils.setCookie('section', sectionId);
     }
+
+    onBtnShowHideHiddenActivities(event){
+        let btn = event.currentTarget;
+        let icon = btn.querySelector("i");
+        let text = btn.querySelector("span");
+        let display = 'block';
+
+        if(icon.classList.contains("fa-eye")){
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+            text.textContent = M.str.format_treetopics.showhiddenactivities;
+            display = 'none';
+        }
+        else{
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+            text.textContent = M.str.format_treetopics.hidehiddenactivities;
+            display = 'block';
+        }
+
+        let elems = document.querySelectorAll("li .activity")
+        for(let el of elems){
+            let ret = el.querySelectorAll("div .availabilityinfo.ishidden");
+
+            if(ret.length > 0){
+                el.style.display = display;
+            }
+        }
+    }
 }
 
 M.recit.course.format.TreeTopics = class{

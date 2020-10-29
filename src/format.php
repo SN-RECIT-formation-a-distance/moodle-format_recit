@@ -29,6 +29,8 @@ require_once($CFG->libdir.'/filelib.php');
 require_once($CFG->libdir.'/completionlib.php');
 
 $PAGE->requires->js_call_amd('format_treetopics/core', 'init');
+$PAGE->requires->string_for_js('showhiddenactivities', 'format_treetopics');
+$PAGE->requires->string_for_js('hidehiddenactivities', 'format_treetopics');
 
 // Horrible backwards compatible parameter aliasing..
 if ($topic = optional_param('topic', 0, PARAM_INT)) {
