@@ -223,6 +223,12 @@ M.recit.course.format.TreeTopicsEditingMode = class{
         this.initRadioSectionContentDisplay();
 
         this.initFilter();
+
+        // Ouvrir la liste de sections automatiquement si la largeur de l'écran est plus grande que 1024
+        if(window.screen.width > 1024){
+            document.getElementById('navTabs').classList.add("show");
+            document.querySelector('[data-target="#navTabs"]').classList.add("collapsed");
+        }
     }
 
 
@@ -250,7 +256,6 @@ M.recit.course.format.TreeTopicsEditingMode = class{
 
     onChangeLevel(radio, section){
         let callback = function(result){
-            console.log()
             if(result.success){
                 section.setAttribute("data-section-level", radio.value);
             }

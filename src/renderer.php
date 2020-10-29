@@ -873,7 +873,7 @@ class TreeTopics
         $result .= '</div>';
         $result .= '</div>';
         $result .= '<div class="row">';        
-        $result .= '<div class="col-xs col-sm-4 col-lg-2 collapse show p-0" id="navTabs">';
+        $result .= '<div class="col-xs col-sm-4 col-lg-2 collapse p-0" id="navTabs">';
         $result .= '<div class="nav nav-pills bg-light  flex-column" id="v-pills-tab" role="tablist" aria-orientation="vertical">';
 
         $sectionid = 'menu';
