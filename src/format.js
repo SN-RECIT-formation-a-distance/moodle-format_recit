@@ -633,6 +633,12 @@ M.recit.course.format.TreeTopics.messages = {
 
 // Without jQuery (doesn't work in older IEs).
 document.addEventListener('DOMContentLoaded', function() {
+    let editingon = (M.recit.course.format.TreeTopicsUtils.getUrlVars().notifyeditingon === "1") || false;
+    
     M.recit.course.format.TreeTopics.instance = new M.recit.course.format.TreeTopics();
-    M.recit.course.format.TreeTopicsEditingMode.instance = new M.recit.course.format.TreeTopicsEditingMode(M.recit.course.format.TreeTopics.instance.webApi);
+
+    if(editingon){
+        M.recit.course.format.TreeTopicsEditingMode.instance = new M.recit.course.format.TreeTopicsEditingMode(M.recit.course.format.TreeTopics.instance.webApi);
+    }
+    
 }, false);
