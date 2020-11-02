@@ -226,8 +226,12 @@ M.recit.course.format.TreeTopicsEditingMode = class{
 
         // Ouvrir la liste de sections automatiquement si la largeur de l'écran est plus grande que 1024
         if(window.screen.width > 1024){
-            document.getElementById('navTabs').classList.add("show");
-            document.querySelector('[data-target="#navTabs"]').classList.add("collapsed");
+            let navTabs = document.getElementById('navTabs');
+
+            if(navTabs){
+                navTabs.classList.add("show");
+                document.querySelector('[data-target="#navTabs"]').classList.add("collapsed");
+            }
         }
     }
 
@@ -633,12 +637,7 @@ M.recit.course.format.TreeTopics.messages = {
 
 // Without jQuery (doesn't work in older IEs).
 document.addEventListener('DOMContentLoaded', function() {
-    let editingon = (M.recit.course.format.TreeTopicsUtils.getUrlVars().notifyeditingon === "1") || false;
-    
     M.recit.course.format.TreeTopics.instance = new M.recit.course.format.TreeTopics();
 
-    if(editingon){
-        M.recit.course.format.TreeTopicsEditingMode.instance = new M.recit.course.format.TreeTopicsEditingMode(M.recit.course.format.TreeTopics.instance.webApi);
-    }
-    
+    M.recit.course.format.TreeTopicsEditingMode.instance = new M.recit.course.format.TreeTopicsEditingMode(M.recit.course.format.TreeTopics.instance.webApi);
 }, false);
