@@ -51,8 +51,7 @@ class TreeTopics
     protected $sectionslist = array();
     /** @var array */
     protected $sectionstree = array();
-    /** @var boolean */
-    protected $sectionsingleloading = true;
+
     /**
      * Construc for TreeTopics
      */
