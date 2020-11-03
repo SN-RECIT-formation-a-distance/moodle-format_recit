@@ -557,6 +557,7 @@ M.recit.course.format.TreeTopics = class{
             this.sectionContent.removeChild(this.sectionContent.lastElementChild);
         }
         
+        window.scrollTo(0,0); 
         this.sectionContent.appendChild(doc.body.firstChild);
     }
 
