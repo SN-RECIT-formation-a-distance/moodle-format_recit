@@ -406,8 +406,8 @@ M.recit.course.format.TreeTopics = class{
         let params = M.recit.course.format.TreeTopicsUtils.getUrlVars();
 
         // If there is no sectionId defined then it displays the section-0.
-        let sectionId = params.sectionId || M.recit.course.format.TreeTopicsUtils.getCookie('section') || 'section-0';
-        
+        let sectionId = params.sectionId || window.location.hash.substr(1, window.location.hash.length) || M.recit.course.format.TreeTopicsUtils.getCookie('section') || 'section-0';
+
         this.pagination = document.getElementById('sectionPagination');
         
         this.menu = document.getElementById("tt-recit-nav");
