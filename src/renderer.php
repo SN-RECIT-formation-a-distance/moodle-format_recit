@@ -842,7 +842,7 @@ class TreeTopics
         $html .= "<br/><br/>";
         $html .= html_writer::start_tag('div', array('class' => self::ID_APPEND . 'contract'));
         $html .= html_writer::tag('h2', "Contrat d'engagement", array('class' => self::ID_APPEND . 'contract-title'));
-        $html .= html_writer::tag('pre', $section->ttcontract_editor, array('class' => self::ID_APPEND . 'contract-content'));
+        $html .= html_writer::tag('div', $section->ttcontract_editor, array('class' => self::ID_APPEND . 'contract-content'));
 
         $html .= "<div>";
         $html .= sprintf("<label><input id='%s' type='checkbox'/>
