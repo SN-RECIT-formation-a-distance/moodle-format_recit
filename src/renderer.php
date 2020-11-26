@@ -936,7 +936,7 @@ class TreeTopics
         else{   
             $result .= sprintf("<h2>%s</h2>",  $this->get_section_name($section));
             $result .= "<div class='btn-group pull-right'>";
-            $result .= sprintf("<a class='btn btn-outline-primary' href='%s/course/editsection.php?id=%ld&sr'><i class='fa fa-fw fa-pencil-alt'></i> %s</a>", $CFG->wwwroot, 
+            $result .= sprintf("<a class='btn btn-outline-primary' href='%s/course/editsection.php?id=%ld&sr'><i class='fa fa-fw fa-pencil'></i> %s</a>", $CFG->wwwroot, 
                             $section->id, get_string('editsection', 'format_treetopics'));
             $result .= sprintf("<button class='btn btn-outline-primary' onclick='M.recit.course.format.TreeTopicsEditingMode.instance.onBtnShowHideHiddenActivities(event)'><i class='fa fa-fw fa-eye'></i> <span>%s</span></button>", get_string('hidehiddenactivities', 'format_treetopics'));
             $result .= "</div>";
