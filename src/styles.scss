@@ -637,7 +637,7 @@ $max-width-responsive: 1024px;
             display: grid; grid-template-columns: 100%;
             .tt-imagebuttons{ 
                 margin: 0;
-                .tt-section-image{width: 375px;height: 150px;}
+                .tt-section-image{width: 375px;height: auto;}
             }
         }
     }
@@ -645,26 +645,26 @@ $max-width-responsive: 1024px;
     /* Medium devices (landscape tablets, 768px and up) */
     @media only screen and (min-width: 768px) {
         .grid1{display: grid;grid-template-columns: 100%;
-            .tt-section-image{width: 100%; height: 400px;}
+            .tt-section-image{width: 100%; height: auto;}
         }
         .grid2, .grid3, .grid4, .grid5, .grid6 {display: grid; grid-template-columns: 50% 50%;
-            .tt-section-image{ width: 335px; height: 170px;}
+            .tt-section-image{ width: 335px; height: auto;}
         }
     }
     
     /* Large devices (laptops/desktops, 992px and up) */
     @media only screen and (min-width: 992px) {
         .grid1{ display: grid; grid-template-columns: 100%;
-            .tt-section-image{ width: 100%; height: 552px; }
+            .tt-section-image{ width: 100%; height: auto; }
         }
         .grid2{display: grid; grid-template-columns: 50% 50%;
-            .tt-section-image{ width: 100%; height: 276px; }
+            .tt-section-image{ width: 100%; height: auto; }
         }
         .grid3{display: grid; grid-template-columns: 33% 33% 34%;
-            .tt-section-image{ width: 100%; height: 184px; }
+            .tt-section-image{ width: 100%; height: auto; }
         }
         .grid4, .grid5, .grid6{ display: grid; grid-template-columns: 25% 25% 25% 25%;
-            .tt-section-image{ width: 100%; height: 138px; }
+            .tt-section-image{ width: 100%; height: auto; }
         }
     }
 }

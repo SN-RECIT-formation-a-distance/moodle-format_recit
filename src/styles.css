@@ -735,7 +735,7 @@
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/recitfad-vm-devserver\/shared\/moodledev39\/course\/format\/treetopics\/styles\.scss}line{font-family:\00003640}}
         .treetopics .grid1 .tt-imagebuttons .tt-section-image, .treetopics .grid2 .tt-imagebuttons .tt-section-image, .treetopics .grid3 .tt-imagebuttons .tt-section-image, .treetopics .grid4 .tt-imagebuttons .tt-section-image, .treetopics .grid5 .tt-imagebuttons .tt-section-image, .treetopics .grid6 .tt-imagebuttons .tt-section-image {
           width: 375px;
-          height: 150px; } }
+          height: auto; } }
   @media only screen and (min-width: 768px) {
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/recitfad-vm-devserver\/shared\/moodledev39\/course\/format\/treetopics\/styles\.scss}line{font-family:\00003647}}
     .treetopics .grid1 {
@@ -744,7 +744,7 @@
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/recitfad-vm-devserver\/shared\/moodledev39\/course\/format\/treetopics\/styles\.scss}line{font-family:\00003648}}
       .treetopics .grid1 .tt-section-image {
         width: 100%;
-        height: 400px; }
+        height: auto; }
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/recitfad-vm-devserver\/shared\/moodledev39\/course\/format\/treetopics\/styles\.scss}line{font-family:\00003650}}
     .treetopics .grid2, .treetopics .grid3, .treetopics .grid4, .treetopics .grid5, .treetopics .grid6 {
       display: grid;
@@ -752,7 +752,7 @@
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/recitfad-vm-devserver\/shared\/moodledev39\/course\/format\/treetopics\/styles\.scss}line{font-family:\00003651}}
       .treetopics .grid2 .tt-section-image, .treetopics .grid3 .tt-section-image, .treetopics .grid4 .tt-section-image, .treetopics .grid5 .tt-section-image, .treetopics .grid6 .tt-section-image {
         width: 335px;
-        height: 170px; } }
+        height: auto; } }
   @media only screen and (min-width: 992px) {
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/recitfad-vm-devserver\/shared\/moodledev39\/course\/format\/treetopics\/styles\.scss}line{font-family:\00003657}}
     .treetopics .grid1 {
@@ -761,7 +761,7 @@
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/recitfad-vm-devserver\/shared\/moodledev39\/course\/format\/treetopics\/styles\.scss}line{font-family:\00003658}}
       .treetopics .grid1 .tt-section-image {
         width: 100%;
-        height: 552px; }
+        height: auto; }
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/recitfad-vm-devserver\/shared\/moodledev39\/course\/format\/treetopics\/styles\.scss}line{font-family:\00003660}}
     .treetopics .grid2 {
       display: grid;
@@ -769,7 +769,7 @@
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/recitfad-vm-devserver\/shared\/moodledev39\/course\/format\/treetopics\/styles\.scss}line{font-family:\00003661}}
       .treetopics .grid2 .tt-section-image {
         width: 100%;
-        height: 276px; }
+        height: auto; }
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/recitfad-vm-devserver\/shared\/moodledev39\/course\/format\/treetopics\/styles\.scss}line{font-family:\00003663}}
     .treetopics .grid3 {
       display: grid;
@@ -777,7 +777,7 @@
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/recitfad-vm-devserver\/shared\/moodledev39\/course\/format\/treetopics\/styles\.scss}line{font-family:\00003664}}
       .treetopics .grid3 .tt-section-image {
         width: 100%;
-        height: 184px; }
+        height: auto; }
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/recitfad-vm-devserver\/shared\/moodledev39\/course\/format\/treetopics\/styles\.scss}line{font-family:\00003666}}
     .treetopics .grid4, .treetopics .grid5, .treetopics .grid6 {
       display: grid;
@@ -785,6 +785,6 @@
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/recitfad-vm-devserver\/shared\/moodledev39\/course\/format\/treetopics\/styles\.scss}line{font-family:\00003667}}
       .treetopics .grid4 .tt-section-image, .treetopics .grid5 .tt-section-image, .treetopics .grid6 .tt-section-image {
         width: 100%;
-        height: 138px; } }
+        height: auto; } }
 
 /*# sourceMappingURL=styles.css.map */
