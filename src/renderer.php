@@ -269,118 +269,6 @@ class TreeTopics
     }
 
     /**
-     * Function render sections menu m2 of TreeTopics. Mega menu !!!
-     * @return string
-     */
-    /*protected function render_sections_menu_m3() { 
-        //Template for the responsive menu icon
-        $menuicontemplate =
-                "<li class='menu-item'>
-                    <a class='menu-item-desc' href='#' data-section='%s'
-                        onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s</a>
-                        <h5 id='section-title'></h5>
-                        <div id='sous-title'><h5 id='sousSection-title'></h5></div>
-                </li>";  
-        $menuitemleveltemplate =
-                "<li class='menu-item'>
-                    <div class='arrow'></div>
-                    <a class='menu-item-desc' href='#' data-section='%s'
-                        onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s<i class='fas fa-plus' id='sectionIcon'></i></a>
-                        %s
-                </li>";
-        $menuactivitiestemplate =
-                "<li class='menu-item'>
-                    <a class='menu-item-desc' href='#' data-section='%s'
-                        onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s</a>
-                        <h5 id='section-title'></h5>
-                        <div id='sous-title'><h5 id='sousSection-title'></h5></div>
-                        <ul class='menu-level3' id='level3'>%s</ul>
-                </li>";  
-        $menuitemtemplate =
-                "<li class='menu-item'>
-                    <div class='arrow'></div>
-                    <a class='menu-item-desc' href='#' data-section='%s'
-                        onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s<i class='fas fa-plus' id='sectionIcon'></i></a>
-                </li>";
-
-        $menuseparator = "<li></li>";
-
-        $html = "
-                <div id='dark-background-menu'></div>
-                <nav class='menuM3' id='tt-recit-nav'>
-                    <ul class='menu-level1 tt-menu-color1'id='level1'>%s</ul>
-                    %s
-                </nav>";
-
-        $tmp1 = "";
-        $tmp2 = "";
-        //Ajout des l'icons du menu responsive
-        $tmp1 .= sprintf($menuicontemplate, "icon", "<i class='fa fa-bars' id='faIcon'></i>");
-
-        $tmp1 .= sprintf($menuitemtemplate, "map", "<i class='fa fa-map'></i> Mon cours");
-        $tmp1 .= $menuseparator;
-
-        $context = context_course::instance($this->course->id);
-
-        foreach ($this->sectionstree as $item1) {
-            $tmp2 = "";
-            if ($item1->section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES) {
-                continue;
-            }
-            
-            if( !$item1->section->visible ){
-                continue; 
-            }
-
-            $tmp3 = "";
-            foreach ($item1->child as $item2) {
-                
-                if ($item2->section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES) {
-                    continue;
-                }
-
-                if( !$item2->section->visible ){
-                    continue; 
-                }
-
-                $tmp4 = "";
-                $modinfo = get_fast_modinfo($this->course->id);
-                foreach ($modinfo->cms as $cm) {
-                    // Use normal access control and visibility, but exclude labels and hidden activities.
-                    if (!$cm->has_view()) {
-                        continue;
-                    }
-
-                    if($cm->section == $item2->section->id){
-                        $tmp4 .= sprintf($this->get_activity_name($cm));
-                        $tmp4 = format_text($tmp4, array('filter' => true));
-                    }
-                }
-                if (strlen($tmp4) > 0) {
-                    $tmp3 .= sprintf($menuactivitiestemplate, $this->get_section_id($item2->section),
-                    $this->get_section_name($item2->section), $tmp4);
-                }else{
-                    $tmp3 .= sprintf($menuitemtemplate, $this->get_section_id($item2->section),
-                            $this->get_section_name($item2->section));
-                    $tmp3 .= $menuseparator;
-                }
-            }
-            
-            if (strlen($tmp3) > 0) {
-                $tmp2 .= sprintf("<ul class='menu-level2 tt-menu-color2' id='level2' data-parent-section='%s'>%s</ul>",
-                        $this->get_section_id($item1->section), $tmp3);
-                $tmp1 .= sprintf($menuitemleveltemplate, $this->get_section_id($item1->section), $this->get_section_name($item1->section), $tmp2);
-                $tmp1 .= $menuseparator;
-            }else{
-                $tmp1 .= sprintf($menuitemtemplate, $this->get_section_id($item1->section), $this->get_section_name($item1->section));
-                $tmp1 .= $menuseparator;
-            }
-        }
-        
-        return sprintf($html, $tmp1, "");
-    }*/
-
-    /**
      * Function render sections menu m5 of TreeTopics.
      * @return string
      */
@@ -892,10 +780,15 @@ class TreeTopics
         $result .= '<div class="col-xl">';
         $result .= '<div class="tab-content" id="v-pills-tabContent">';
 
-        $html = "";
+        $html = "<div class='btn-group  pull-right'>";
         $html .= sprintf("<a href='%s/course/changenumsections.php?courseid=%ld&insertsection=0&sesskey=%s&sectionreturn=0' 
-                        class='btn btn-outline-primary pull-right'><i class='fa fa-plus'></i> %s</a>", 
+                        class='btn btn-outline-primary' title='%s'><i class='fa fa-plus'></i></a>", 
                         $CFG->wwwroot, $COURSE->id, sesskey(), get_string('addsections', 'format_treetopics'));
+        $html .= sprintf("<button class='btn btn-outline-primary' onclick='M.recit.course.format.TreeTopicsEditingMode.instance.onBtnShowHideCmList(event)' title='%s'><i class='fa fa-fw fa-eye-slash'></i></button>", 
+                        get_string('sectionshowhideactivities', 'format_treetopics'));
+        $html .= sprintf("<button class='btn btn-outline-primary' onclick='window.location.reload();' title='%s'><i class='fa fa-fw fa-refresh'></i></button>", 
+                    get_string('saveandrefresh', 'format_treetopics'));
+        $html .= "</div>";
         $html .= "<br/><br/><br/>";
 
         foreach ($this->sectionslist as $section) {
@@ -931,14 +824,15 @@ class TreeTopics
         if($showMenu){
             $result .= $format_treetopics_renderer->section_header($section, $this->course, false, 0, false);
             $result .= sprintf("<div class='section_add_menus' id='add_menus-%s'></div>", $sectionid);
+            $result .= sprintf("<div data-course-section-cm-list='1' style='display:none;'>%s</div>", $format_treetopics_renderer->get_course_section_cm_list($this->course, $section));
             $result .= $format_treetopics_renderer->section_footer();
         }
         else{   
             $result .= sprintf("<h2>%s</h2>",  $this->get_section_name($section));
             $result .= "<div class='btn-group pull-right'>";
-            $result .= sprintf("<a class='btn btn-outline-primary' href='%s/course/editsection.php?id=%ld&sr'><i class='fa fa-fw fa-pencil'></i> %s</a>", $CFG->wwwroot, 
+            $result .= sprintf("<a class='btn btn-outline-primary' href='%s/course/editsection.php?id=%ld&sr' title='%s'><i class='fa fa-fw fa-sliders'></i></a>", $CFG->wwwroot, 
                             $section->id, get_string('editsection', 'format_treetopics'));
-            $result .= sprintf("<button class='btn btn-outline-primary' onclick='M.recit.course.format.TreeTopicsEditingMode.instance.onBtnShowHideHiddenActivities(event)'><i class='fa fa-fw fa-eye'></i> <span>%s</span></button>", get_string('hidehiddenactivities', 'format_treetopics'));
+            $result .= sprintf("<button class='btn btn-outline-primary' onclick='M.recit.course.format.TreeTopicsEditingMode.instance.onBtnShowHideHiddenActivities(event)' title='%s'><i class='fa fa-fw fa-eye'></i></button>", get_string('showhidehiddenactivities', 'format_treetopics'));
             $result .= "</div>";
             $result .= "<br/><br/>";
             $result .= $format_treetopics_renderer->section_header($section, $this->course, false, 0, true, false);

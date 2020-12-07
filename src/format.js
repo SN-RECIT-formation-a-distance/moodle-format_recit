@@ -157,13 +157,6 @@ M.recit.course.format.TreeTopicsWebApi = class{
         options.service = "get_section_content";
         this.post(this.gateway, options, onSuccess);
     }
-
-    /*getSectionContentEditingmode(data, onSuccess){
-        let options = {};
-        options.data = data;
-        options.service = "get_section_content_editingmode";
-        this.post(this.gateway, options, onSuccess);
-    }*/
 }
 
 M.recit.course.format.TreeTopicsUtils = class{
@@ -208,7 +201,7 @@ M.recit.course.format.TreeTopicsUtils = class{
 
 M.recit.course.format.TreeTopicsEditingMode = class{
     constructor(webApi){
-        this.onChangeFilter = this.onChangeFilter.bind(this);
+        //this.onChangeFilter = this.onChangeFilter.bind(this);
         this.onChangeLevel = this.onChangeLevel.bind(this);
         this.onChangeContentDisplay = this.onChangeContentDisplay.bind(this);
 
@@ -222,7 +215,7 @@ M.recit.course.format.TreeTopicsEditingMode = class{
         this.initRadioSectionLevel();
         this.initRadioSectionContentDisplay();
 
-        this.initFilter();
+        //this.initFilter();
 
         // Ouvrir la liste de sections automatiquement si la largeur de l'écran est plus grande que 1024
         if(window.screen.width > 1024){
@@ -293,7 +286,7 @@ M.recit.course.format.TreeTopicsEditingMode = class{
         this.webApi.setSectionContentDisplay({courseId: courseId, sectionId: section.getAttribute("data-section-id"), value: radio.value}, callback);
     }
 
-    initFilter(){
+    /*initFilter(){
         this.filter = document.getElementById("ttModeEditionFilter");
 
         if(this.filter === null){ return; }
@@ -352,7 +345,7 @@ M.recit.course.format.TreeTopicsEditingMode = class{
                 el.style.display = (display ? "block" : 'none');
             }
         }
-    }
+    }*/
 
     goToSection(event, sectionId){
         M.recit.course.format.TreeTopicsUtils.setCookie('section', sectionId);
@@ -361,19 +354,16 @@ M.recit.course.format.TreeTopicsEditingMode = class{
     onBtnShowHideHiddenActivities(event){
         let btn = event.currentTarget;
         let icon = btn.querySelector("i");
-        let text = btn.querySelector("span");
         let display = 'block';
 
         if(icon.classList.contains("fa-eye")){
             icon.classList.remove("fa-eye");
             icon.classList.add("fa-eye-slash");
-            text.textContent = M.str.format_treetopics.showhiddenactivities;
             display = 'none';
         }
         else{
             icon.classList.remove("fa-eye-slash");
             icon.classList.add("fa-eye");
-            text.textContent = M.str.format_treetopics.hidehiddenactivities;
             display = 'block';
         }
 
@@ -384,6 +374,28 @@ M.recit.course.format.TreeTopicsEditingMode = class{
             if(ret.length > 0){
                 el.style.display = display;
             }
+        }
+    }
+
+    onBtnShowHideCmList(event){
+        let btn = event.currentTarget;
+        let icon = btn.querySelector("i");
+        let display = 'block';
+
+        if(icon.classList.contains("fa-eye")){
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+            display = 'none';
+        }
+        else{
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+            display = 'block';
+        }
+
+        let elems = document.querySelectorAll("[data-course-section-cm-list='1']");
+        for(let el of elems){
+            el.style.display = display;
         }
     }
 }
