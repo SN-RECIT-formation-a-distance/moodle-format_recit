@@ -273,7 +273,9 @@ class TreeTopics
      * @return string
      */
     protected function render_sections_menu_m5() {
-        $navbar = "<nav class='navbar navbar-dark %s theme-bg-color menuM5' id='tt-recit-nav'>%s</nav>";
+        $color = DEFAULT_MENU_BACKGROUND_COLOR;
+        if (!empty($this->course->ttbackgroundmenucolor)) $color = $this->course->ttbackgroundmenucolor;
+        $navbar = "<nav class='navbar navbar-dark %s menuM5' style='background-color:#".$color."' id='tt-recit-nav'>%s</nav>";
 
         $collapse = "<button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#menuM5-collapse'
                             aria-controls='menuM5-collapse' aria-expanded='false' aria-label='Toggle navigation'>

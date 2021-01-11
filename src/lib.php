@@ -39,6 +39,9 @@ const TT_DISPLAY_TABS_LEVEL_1 = 1;
 const TT_DISPLAY_TABS_LEVEL_2 = 2;
 /** @var int */
 const TT_DISPLAY_TABS_LEVEL_3 = 3;
+
+/** ­@var string hex */
+const DEFAULT_MENU_BACKGROUND_COLOR = '0069bf';
 /*
 function format_treetopics_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=[]) {
     // Make sure the user is logged in and has access to the module (plugins that are not course modules should
@@ -375,6 +378,10 @@ class format_treetopics extends format_base {
                     'default' => 4,
                     'type' => PARAM_INT,
                 ),
+                'ttbackgroundmenucolor' => array(
+                    'default' => DEFAULT_MENU_BACKGROUND_COLOR,
+                    'type' => PARAM_TEXT,
+                ),
                 'tthascontract' => array(
                     'default' => false,
                     'type' => PARAM_BOOL,
@@ -436,6 +443,12 @@ class format_treetopics extends format_base {
                             6 => '6'
                         )
                     )
+                ),
+                'ttbackgroundmenucolor' => array(
+                    'label' => new lang_string('backgroundmenucolor', 'format_treetopics'),
+                    'help' => 'backgroundmenucolor',
+                    'help_component' => 'format_treetopics',
+                    'element_type' => 'text',
                 ),
                 'tthascontract' => array(
                     'label' => new lang_string('hascontract', 'format_treetopics'),
@@ -694,6 +707,12 @@ class format_treetopics extends format_base {
             $oldcourse = (array)$oldcourse;
             $options = $this->course_format_options();
             foreach ($options as $key => $unused) {
+                if ($key == 'ttbackgroundmenucolor'){
+                    $code = $data[$key];
+                    if (!ctype_xdigit($code) || strlen($code) !== 6){
+                        $data[$key] = DEFAULT_MENU_BACKGROUND_COLOR;
+                    }
+                }
                 if (!array_key_exists($key, $data)) {
                     // Make sure to set the boolean value to 0 (this property is not sent by post when check input is unchecked).
                     if (in_array($key, array(/*'ttdisplayshortcuts',*/ 'tthascontract', 'ttshownavsection'))) {
