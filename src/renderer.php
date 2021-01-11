@@ -832,9 +832,16 @@ class TreeTopics
         else{   
             $result .= sprintf("<h2>%s</h2>",  $this->get_section_name($section));
             $result .= "<div class='btn-group pull-right'>";
-            $result .= sprintf("<a class='btn btn-outline-primary' href='%s/course/editsection.php?id=%ld&sr' title='%s'><i class='fa fa-fw fa-sliders'></i></a>", $CFG->wwwroot, 
-                            $section->id, get_string('editsection', 'format_treetopics'));
+            $result .= sprintf("<a class='btn btn-outline-primary' href='%s/course/editsection.php?id=%ld&sr' title='%s'><i class='fa fa-fw fa-sliders'></i></a>", $CFG->wwwroot, $section->id, get_string('editsection', 'format_treetopics'));
             $result .= sprintf("<button class='btn btn-outline-primary' onclick='M.recit.course.format.TreeTopicsEditingMode.instance.onBtnShowHideHiddenActivities(event)' title='%s'><i class='fa fa-fw fa-eye'></i></button>", get_string('showhidehiddenactivities', 'format_treetopics'));
+            $result .= html_writer::tag('button', "<i class='fas fa-plus'></i>", [
+                'class' => 'section-modchooser-link btn btn-outline-primary',
+                'data-action' => 'open-chooser',
+                'data-sectionid' => $section->section,
+                'data-sectionreturnid' => $section->section,
+                'title' => get_string('addresourceoractivity'),
+                ]
+            );
             $result .= "</div>";
             $result .= "<br/><br/>";
             $result .= $format_treetopics_renderer->section_header($section, $this->course, false, 0, true, false);
