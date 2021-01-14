@@ -348,6 +348,8 @@ class TreeTopics
 
         $sectionid = $this->get_section_id($section);
         $sectionname = $this->get_section_name($section);
+        $color = DEFAULT_MENU_BACKGROUND_COLOR;
+        if (!empty($this->course->ttbackgroundmenucolor)) $color = $this->course->ttbackgroundmenucolor;
 
         // collapse action is taken on JS by goToSection function
         $templateMenuItem = "
@@ -366,7 +368,7 @@ class TreeTopics
                 } else {
                     $dropdownid = $sectionid.'DropdownMenuLink';
                     $html = sprintf($templateMenuItem, "nav-item dropdown menu-item", "nav-link dropdown-toggle", "dropdown", "$sectionid.dropdownmenu", "aria-haspopup='true' aria-expanded='false' id='$dropdownid'",
-                                "<ul class='dropdown-menu theme-bg-color' aria-labelledby='$dropdownid' id='$sectionid.dropdownmenu'>$subsection</ul>");
+                                "<ul class='dropdown-menu' style='background-color:#".$color."' aria-labelledby='$dropdownid' id='$sectionid.dropdownmenu'>$subsection</ul>");
                 }
             } else if ($section->ttsectiondisplay == 2) {
                 if (empty($subsection)) {
