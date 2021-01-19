@@ -109,3 +109,4 @@ $string['next_section'] = 'Next section';
 $string['navsection_help'] = 'Allows to display buttons at the bottom of the page in order to navigate between the different sections of the course';
 $string['backgroundmenucolor'] = 'Background menu color';
 $string['backgroundmenucolor_help'] = 'Background menu color: please add the hex code of the color without the hashtag. Example: FF0000 (red)';
+$string['backgroundmenucolorl2'] = 'Level 2 background menu color';

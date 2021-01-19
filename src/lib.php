@@ -42,6 +42,7 @@ const TT_DISPLAY_TABS_LEVEL_3 = 3;
 
 /** ­@var string hex */
 const DEFAULT_MENU_BACKGROUND_COLOR = '0069bf';
+const DEFAULT_MENU_BACKGROUND_COLOR_L2 = '606972';
 /*
 function format_treetopics_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=[]) {
     // Make sure the user is logged in and has access to the module (plugins that are not course modules should
@@ -382,6 +383,10 @@ class format_treetopics extends format_base {
                     'default' => DEFAULT_MENU_BACKGROUND_COLOR,
                     'type' => PARAM_TEXT,
                 ),
+                'ttbackgroundmenucolorl2' => array(
+                    'default' => DEFAULT_MENU_BACKGROUND_COLOR_L2,
+                    'type' => PARAM_TEXT,
+                ),
                 'tthascontract' => array(
                     'default' => false,
                     'type' => PARAM_BOOL,
@@ -446,6 +451,12 @@ class format_treetopics extends format_base {
                 ),
                 'ttbackgroundmenucolor' => array(
                     'label' => new lang_string('backgroundmenucolor', 'format_treetopics'),
+                    'help' => 'backgroundmenucolor',
+                    'help_component' => 'format_treetopics',
+                    'element_type' => 'text',
+                ),
+                'ttbackgroundmenucolorl2' => array(
+                    'label' => new lang_string('backgroundmenucolorl2', 'format_treetopics'),
                     'help' => 'backgroundmenucolor',
                     'help_component' => 'format_treetopics',
                     'element_type' => 'text',

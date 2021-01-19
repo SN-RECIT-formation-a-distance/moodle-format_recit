@@ -185,6 +185,8 @@ class TreeTopics
      */
     protected function render_sections_menu_m1() {  
         $maxNbChars = 25;
+        $color = "EAC167";
+        if (!empty($this->course->ttbackgroundmenucolor)) $color = $this->course->ttbackgroundmenucolor;
 
         $menuitemtemplate =
                 "<li class='menu-item' data-submenu='%s'>
@@ -201,7 +203,7 @@ class TreeTopics
         $html = "
                 <nav class='menuM1' id='tt-recit-nav' data-status='closed'>                    
                     <div class='background-menu-mobile'></div>
-                    <ul class='menu-level1 tt-menu-color1'id='level1'>
+                    <ul class='menu-level1' style='background-color:#".$color."' id='level1'>
                         <li class='btn-menu-responsive'>
                             <button class='btn btn-outline-light btn-sm' data-btn='open'
                                 onclick='M.recit.course.format.TreeTopics.instance.ctrlOpeningMenuResponsive(\"open\")'><i class='fa fa-bars'></i>
@@ -248,7 +250,9 @@ class TreeTopics
             }
             if (strlen($tmp3) > 0) {
                 $sectionid = $this->get_section_id($item1->section);
-                $tmp2 .= sprintf("<ul class='menu-level2 tt-menu-color2' id='level2' data-parent-section='%s' data-status='closed'>%s</ul>",
+                $color = DEFAULT_MENU_BACKGROUND_COLOR_L2;
+                if (!empty($this->course->ttbackgroundmenucolorl2)) $color = $this->course->ttbackgroundmenucolorl2;
+                $tmp2 .= sprintf("<ul class='menu-level2' style='background-color:#".$color."' id='level2' data-parent-section='%s' data-status='closed'>%s</ul>",
                         $this->get_section_id($item1->section), $tmp3);
 
                 $sectionname = $this->get_section_name($item1->section);
