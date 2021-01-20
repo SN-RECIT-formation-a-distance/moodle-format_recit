@@ -192,7 +192,7 @@ class TreeTopics
                 "<li class='menu-item' data-submenu='%s'>
                     <div class='menu-item-title'>
                         <div class='arrow'></div>
-                        <a class='menu-item-desc' href='#' data-section='%s' onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)' title='%s'>%s</a>
+                        <a class='menu-item-desc' href='#' data-section='%s' onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)' title='%s' %s>%s</a>
                         <button class='btn btn-sm btn-outline-light btn-expand-sub-menu' onclick='M.recit.course.format.TreeTopics.instance.ctrlOpeningSubMenuResponsive(event, \"%s\")'><i class='fa fa-plus'></i></button>
                     </div>
                     %s
@@ -221,8 +221,12 @@ class TreeTopics
 
         $tmp1 = "";
         $tmp2 = "";
+        $color = DEFAULT_MENU_BACKGROUND_COLOR;
+        if (!empty($this->course->ttbackgroundmenucolor)) $color = $this->course->ttbackgroundmenucolor;
+        $colorl2 = DEFAULT_MENU_BACKGROUND_COLOR_L2;
+        if (!empty($this->course->ttbackgroundmenucolorl2)) $colorl2 = $this->course->ttbackgroundmenucolorl2;
 
-        $tmp1 .= sprintf($menuitemtemplate, "0", "map", "Menu", "<i class='fa fa-map'></i>", "", "");
+        $tmp1 .= sprintf($menuitemtemplate, "0", "map", "", "Menu", "<i class='fa fa-map'></i>", "", "");
         $tmp1 .= $menuseparator;
         foreach ($this->sectionstree as $item1) {
             $tmp2 = "";
@@ -245,25 +249,23 @@ class TreeTopics
                 }
 
                 $sectionname = $this->get_section_name($item2->section);
-                $tmp3 .= sprintf($menuitemtemplate, "0", $this->get_section_id($item2->section), $sectionname, mb_strimwidth($sectionname, 0, $maxNbChars, "..."), "", "");
+                $tmp3 .= sprintf($menuitemtemplate, "0", $this->get_section_id($item2->section), $sectionname, "style='color:#$color;'", mb_strimwidth($sectionname, 0, $maxNbChars, "..."), "", "");
                 $tmp3 .= $menuseparator;
             }
             if (strlen($tmp3) > 0) {
                 $sectionid = $this->get_section_id($item1->section);
-                $color = DEFAULT_MENU_BACKGROUND_COLOR_L2;
-                if (!empty($this->course->ttbackgroundmenucolorl2)) $color = $this->course->ttbackgroundmenucolorl2;
-                $tmp2 .= sprintf("<ul class='menu-level2' style='background-color:#".$color."' id='level2' data-parent-section='%s' data-status='closed'>%s</ul>",
+                $tmp2 .= sprintf("<ul class='menu-level2' style='background-color:#".$colorl2.";' id='level2' data-parent-section='%s' data-status='closed'>%s</ul>",
                         $this->get_section_id($item1->section), $tmp3);
 
                 $sectionname = $this->get_section_name($item1->section);
-                $tmp1 .= sprintf($menuitemtemplate, "1", $sectionid, $sectionname, mb_strimwidth($sectionname, 0, $maxNbChars, "..."),  $sectionid, $tmp2);
+                $tmp1 .= sprintf($menuitemtemplate, "1", $sectionid, $sectionname, "", mb_strimwidth($sectionname, 0, $maxNbChars, "..."),  $sectionid, $tmp2);
                 $tmp1 .= $menuseparator;
                 /*var_dump($tmp1);
                 exit();*/
             }else{
                 $sectionname = $this->get_section_name($item1->section);
 
-                $tmp1 .= sprintf($menuitemtemplate, "0", $this->get_section_id($item1->section),  $sectionname, mb_strimwidth($sectionname, 0, $maxNbChars, "..."), "", "");
+                $tmp1 .= sprintf($menuitemtemplate, "0", $this->get_section_id($item1->section), $sectionname, "", mb_strimwidth($sectionname, 0, $maxNbChars, "..."), "", "");
                 $tmp1 .= $menuseparator;
             }
 

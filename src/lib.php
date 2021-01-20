@@ -41,7 +41,7 @@ const TT_DISPLAY_TABS_LEVEL_2 = 2;
 const TT_DISPLAY_TABS_LEVEL_3 = 3;
 
 /** ­@var string hex */
-const DEFAULT_MENU_BACKGROUND_COLOR = '0069bf';
+const DEFAULT_MENU_BACKGROUND_COLOR = 'eac167';
 const DEFAULT_MENU_BACKGROUND_COLOR_L2 = '606972';
 /*
 function format_treetopics_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=[]) {
