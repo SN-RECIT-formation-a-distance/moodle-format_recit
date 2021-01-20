@@ -380,11 +380,11 @@ class format_treetopics extends format_base {
                     'type' => PARAM_INT,
                 ),
                 'ttbackgroundmenucolor' => array(
-                    'default' => DEFAULT_MENU_BACKGROUND_COLOR,
+                    'default' => '',
                     'type' => PARAM_TEXT,
                 ),
                 'ttbackgroundmenucolorl2' => array(
-                    'default' => DEFAULT_MENU_BACKGROUND_COLOR_L2,
+                    'default' => '',
                     'type' => PARAM_TEXT,
                 ),
                 'tthascontract' => array(
