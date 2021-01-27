@@ -185,8 +185,6 @@ class TreeTopics
      */
     protected function render_sections_menu_m1() {  
         $maxNbChars = 25;
-        $color = "EAC167";
-        if (!empty($this->course->ttbackgroundmenucolor)) $color = $this->course->ttbackgroundmenucolor;
 
         $menuitemtemplate =
                 "<li class='menu-item' data-submenu='%s'>
@@ -203,7 +201,7 @@ class TreeTopics
         $html = "
                 <nav class='menuM1' id='tt-recit-nav' data-status='closed'>                    
                     <div class='background-menu-mobile'></div>
-                    <ul class='menu-level1' style='background-color:#".$color."' id='level1'>
+                    <ul class='menu-level1' id='level1'>
                         <li class='btn-menu-responsive'>
                             <button class='btn btn-outline-light btn-sm' data-btn='open'
                                 onclick='M.recit.course.format.TreeTopics.instance.ctrlOpeningMenuResponsive(\"open\")'><i class='fa fa-bars'></i>
@@ -221,10 +219,6 @@ class TreeTopics
 
         $tmp1 = "";
         $tmp2 = "";
-        $color = DEFAULT_MENU_BACKGROUND_COLOR;
-        if (!empty($this->course->ttbackgroundmenucolor)) $color = $this->course->ttbackgroundmenucolor;
-        $colorl2 = DEFAULT_MENU_BACKGROUND_COLOR_L2;
-        if (!empty($this->course->ttbackgroundmenucolorl2)) $colorl2 = $this->course->ttbackgroundmenucolorl2;
 
         $tmp1 .= sprintf($menuitemtemplate, "0", "map", "", "Menu", "<i class='fa fa-map'></i>", "", "");
         $tmp1 .= $menuseparator;
@@ -249,12 +243,12 @@ class TreeTopics
                 }
 
                 $sectionname = $this->get_section_name($item2->section);
-                $tmp3 .= sprintf($menuitemtemplate, "0", $this->get_section_id($item2->section), $sectionname, "style='color:#$color;'", mb_strimwidth($sectionname, 0, $maxNbChars, "..."), "", "");
+                $tmp3 .= sprintf($menuitemtemplate, "0", $this->get_section_id($item2->section), $sectionname, "", mb_strimwidth($sectionname, 0, $maxNbChars, "..."), "", "");
                 $tmp3 .= $menuseparator;
             }
             if (strlen($tmp3) > 0) {
                 $sectionid = $this->get_section_id($item1->section);
-                $tmp2 .= sprintf("<ul class='menu-level2' style='background-color:#".$colorl2.";' id='level2' data-parent-section='%s' data-status='closed'>%s</ul>",
+                $tmp2 .= sprintf("<ul class='menu-level2'  id='level2' data-parent-section='%s' data-status='closed'>%s</ul>",
                         $this->get_section_id($item1->section), $tmp3);
 
                 $sectionname = $this->get_section_name($item1->section);
@@ -279,9 +273,7 @@ class TreeTopics
      * @return string
      */
     protected function render_sections_menu_m5() {
-        $color = DEFAULT_MENU_BACKGROUND_COLOR;
-        if (!empty($this->course->ttbackgroundmenucolor)) $color = $this->course->ttbackgroundmenucolor;
-        $navbar = "<nav class='navbar navbar-dark %s menuM5' style='background-color:#".$color."' id='tt-recit-nav'>%s</nav>";
+        $navbar = "<nav class='navbar navbar-dark %s menuM5' id='tt-recit-nav'>%s</nav>";
 
         $collapse = "<button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#menuM5-collapse'
                             aria-controls='menuM5-collapse' aria-expanded='false' aria-label='Toggle navigation'>
@@ -354,8 +346,6 @@ class TreeTopics
 
         $sectionid = $this->get_section_id($section);
         $sectionname = $this->get_section_name($section);
-        $color = DEFAULT_MENU_BACKGROUND_COLOR;
-        if (!empty($this->course->ttbackgroundmenucolor)) $color = $this->course->ttbackgroundmenucolor;
 
         // collapse action is taken on JS by goToSection function
         $templateMenuItem = "
@@ -374,14 +364,14 @@ class TreeTopics
                 } else {
                     $dropdownid = $sectionid.'DropdownMenuLink';
                     $html = sprintf($templateMenuItem, "nav-item dropdown menu-item", "nav-link dropdown-toggle", "dropdown", "$sectionid.dropdownmenu", "aria-haspopup='true' aria-expanded='false' id='$dropdownid'",
-                                "<ul class='dropdown-menu' style='background-color:#".$color."' aria-labelledby='$dropdownid' id='$sectionid.dropdownmenu'>$subsection</ul>");
+                                "<ul class='dropdown-menu' aria-labelledby='$dropdownid' id='$sectionid.dropdownmenu'>$subsection</ul>");
                 }
             } else if ($section->ttsectiondisplay == 2) {
                 if (empty($subsection)) {
                     $html = sprintf($templateMenuItem, "", "dropdown-item", "", "#menuM5-collapse", "", "");
                 } else {
                     $dropdownid = $sectionid.'DropdownMenuLink';
-                    $html = sprintf($templateMenuItem, "dropdown-submenu", "dropdown-item dropdown-toggle", "", "#menuM5-collapse", "id='$dropdownid'", "<ul class='dropdown-menu theme-bg-color'>$subsection</ul>");
+                    $html = sprintf($templateMenuItem, "dropdown-submenu", "dropdown-item dropdown-toggle", "", "#menuM5-collapse", "id='$dropdownid'", "<ul class='dropdown-menu'>$subsection</ul>");
                 }
             } else if ($section->ttsectiondisplay == 3) {
                 $html = sprintf($templateMenuItem, "", "dropdown-item", "", "#menuM5-collapse", "", "");

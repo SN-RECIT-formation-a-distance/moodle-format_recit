@@ -107,6 +107,3 @@ $string['contract_help'] = 'Le contract d\'engagement est un texte expliquant à
 $string['prev_section'] = 'Section précédente';
 $string['next_section'] = 'Section suivante';
 $string['navsection_help'] = "Permet d'afficher des boutons en bas de page afin de naviguer entre les différentes sections du cours";
-$string['backgroundmenucolor'] = 'Couleur de fond du menu';
-$string['backgroundmenucolorl2'] = 'Couleur de fond du niveau 2 du menu';
-$string['backgroundmenucolor_help'] = 'Couleur de fond du menu: veuillez ajouter le code hexadecimale sans le dièse. Par example: FF0000 (rouge). Les couleurs par défaut sont EAC167 (jaune), 0C5EA0 (bleu)';

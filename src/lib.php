@@ -40,9 +40,6 @@ const TT_DISPLAY_TABS_LEVEL_2 = 2;
 /** @var int */
 const TT_DISPLAY_TABS_LEVEL_3 = 3;
 
-/** ­@var string hex */
-const DEFAULT_MENU_BACKGROUND_COLOR = 'eac167';
-const DEFAULT_MENU_BACKGROUND_COLOR_L2 = '606972';
 /*
 function format_treetopics_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=[]) {
     // Make sure the user is logged in and has access to the module (plugins that are not course modules should
@@ -367,10 +364,6 @@ class format_treetopics extends format_base {
                     'default' => $courseconfig->hiddensections,
                     'type' => PARAM_INT,
                 ),
-                /*'ttdisplayshortcuts' => array(
-                    'default' => false,
-                    'type' => PARAM_BOOL,
-                ),*/
                 'tttabsmodel' => array(
                     'default' => 1,
                     'type' => PARAM_INT,
@@ -378,14 +371,6 @@ class format_treetopics extends format_base {
                 'ttimagegridcolumns' => array(
                     'default' => 4,
                     'type' => PARAM_INT,
-                ),
-                'ttbackgroundmenucolor' => array(
-                    'default' => '',
-                    'type' => PARAM_TEXT,
-                ),
-                'ttbackgroundmenucolorl2' => array(
-                    'default' => '',
-                    'type' => PARAM_TEXT,
                 ),
                 'tthascontract' => array(
                     'default' => false,
@@ -411,12 +396,6 @@ class format_treetopics extends format_base {
                             )
                         )
                 ),
-                /*'ttdisplayshortcuts' => array(
-                    'label' => new lang_string('displayshortcuts', 'format_treetopics'),
-                    'help' => 'displayshortcuts',
-                    'help_component' => 'format_treetopics',
-                    'element_type' => 'checkbox'
-                ),*/
                 'tttabsmodel' => array(
                     'label' => new lang_string('tabsmodel', 'format_treetopics'),
                     'help' => 'tabsmodel',
@@ -448,18 +427,6 @@ class format_treetopics extends format_base {
                             6 => '6'
                         )
                     )
-                ),
-                'ttbackgroundmenucolor' => array(
-                    'label' => new lang_string('backgroundmenucolor', 'format_treetopics'),
-                    'help' => 'backgroundmenucolor',
-                    'help_component' => 'format_treetopics',
-                    'element_type' => 'text',
-                ),
-                'ttbackgroundmenucolorl2' => array(
-                    'label' => new lang_string('backgroundmenucolorl2', 'format_treetopics'),
-                    'help' => 'backgroundmenucolor',
-                    'help_component' => 'format_treetopics',
-                    'element_type' => 'text',
                 ),
                 'tthascontract' => array(
                     'label' => new lang_string('hascontract', 'format_treetopics'),
@@ -718,12 +685,6 @@ class format_treetopics extends format_base {
             $oldcourse = (array)$oldcourse;
             $options = $this->course_format_options();
             foreach ($options as $key => $unused) {
-                if ($key == 'ttbackgroundmenucolor'){
-                    $code = $data[$key];
-                    if (!ctype_xdigit($code) || strlen($code) !== 6){
-                        $data[$key] = DEFAULT_MENU_BACKGROUND_COLOR;
-                    }
-                }
                 if (!array_key_exists($key, $data)) {
                     // Make sure to set the boolean value to 0 (this property is not sent by post when check input is unchecked).
                     if (in_array($key, array(/*'ttdisplayshortcuts',*/ 'tthascontract', 'ttshownavsection'))) {
@@ -737,38 +698,6 @@ class format_treetopics extends format_base {
 
         return $this->update_format_options($data);
     }
-
-    /**
-     * public function update_section_format_options($data) {
-        global $CFG;
-        $data = (array)$data;
-        $course = $this->get_course();
-        $context = context_course::instance($course->id);
-        $attachmentid = $data['ttsectionfile'];
-
-        file_prepare_draft_area($attachmentid, $context->id, 'format_treetopics', 'attachment', $data['id'],
-            array('subdirs' => 0, 'maxbytes' => 4096, 'maxfiles' => 64));
-        file_save_draft_area_files($attachmentid, $context->id, 'format_treetopics', 'attachment', $data['id'],
-            array('subdirs' => 0, 'maxbytes' => 4096, 'maxfiles' => 64));
-        $fs = get_file_storage();
-        $files = $fs->get_area_files($context->id, 'format_treetopics', 'attachment', $data['id'], '', false);
-        foreach ($files as $file) {
-          if($file->get_itemid() == $data['id'])
-          {
-              $data['ttsectionimage-context'] = $file->get_contextid();
-              $data['ttsectionimage-component'] = $file->get_component();
-              $data['ttsectionimage-filearea'] = $file->get_filearea();
-              $data['ttsectionimage-itemid'] = $file->get_itemid();
-              $data['ttsectionimage-filepath'] = $file->get_filepath();
-              $data['ttsectionimage-filename'] = $file->get_filename();
-              file_save_draft_area_files($attachmentid, $file->get_contextid(), $file->get_component(), $file->get_filearea(),
-                    $file->get_itemid(), array('subdirs' => 0));
-              break;
-          }
-        }
-
-        return $this->update_format_options($data, $data['id']);
-    }*/
 
     /**
      * Updates format options for a course or section
