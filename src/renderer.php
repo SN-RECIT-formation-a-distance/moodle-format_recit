@@ -183,8 +183,10 @@ class TreeTopics
      * Function render sections menu m1 of TreeTopics.
      * @return string
      */
-    protected function render_sections_menu_m1() {  
+    protected function render_sections_menu_m1() { 
+        global $PAGE;
         $maxNbChars = 25;
+        $showNavOverview = (isset($this->course->tthidenavoverview) && $this->course->tthidenavoverview == 0) || $PAGE->user_is_editing();
 
         $menuitemtemplate =
                 "<li class='menu-item' data-submenu='%s'>
@@ -202,7 +204,9 @@ class TreeTopics
                 <nav class='menuM1' id='tt-recit-nav' data-status='closed'>                    
                     <div class='background-menu-mobile'></div>
                     <ul class='menu-level1' id='level1'>
-                        <li class='btn-menu-responsive'>
+                    <li class='btn-menu-responsive'>";
+                    if ($showNavOverview){
+                        $html .= "
                             <button class='btn btn-outline-light btn-sm' data-btn='open'
                                 onclick='M.recit.course.format.TreeTopics.instance.ctrlOpeningMenuResponsive(\"open\")'><i class='fa fa-bars'></i>
                             </button>
@@ -211,7 +215,9 @@ class TreeTopics
                             <button class='btn btn-outline-light btn-sm' data-btn='close'
                                 onclick='M.recit.course.format.TreeTopics.instance.ctrlOpeningMenuResponsive(\"closed\")'><i class='fa fa-times'></i>
                             </button>
-                        </li>
+                        ";
+                    }
+            $html .= "</li>
                         %s
                     </ul>
                     %s
@@ -220,7 +226,8 @@ class TreeTopics
         $tmp1 = "";
         $tmp2 = "";
 
-        $tmp1 .= sprintf($menuitemtemplate, "0", "map", "", "Menu", "<i class='fa fa-map'></i>", "", "");
+        if ($showNavOverview)
+            $tmp1 .= sprintf($menuitemtemplate, "0", "map", "", "Menu", "<i class='fa fa-map'></i>", "", "");
         $tmp1 .= $menuseparator;
         foreach ($this->sectionstree as $item1) {
             $tmp2 = "";
@@ -254,8 +261,6 @@ class TreeTopics
                 $sectionname = $this->get_section_name($item1->section);
                 $tmp1 .= sprintf($menuitemtemplate, "1", $sectionid, $sectionname, "", mb_strimwidth($sectionname, 0, $maxNbChars, "..."),  $sectionid, $tmp2);
                 $tmp1 .= $menuseparator;
-                /*var_dump($tmp1);
-                exit();*/
             }else{
                 $sectionname = $this->get_section_name($item1->section);
 
@@ -387,9 +392,24 @@ class TreeTopics
      * @return string
      */
     public function render_section_content($sectionid) {
-        
+        global $PAGE;
         if($sectionid === 'map'){
-            return $this->get_map_sections();
+            $showNavOverview = (isset($this->course->tthidenavoverview) && $this->course->tthidenavoverview == 0) || $PAGE->user_is_editing();
+            if ($showNavOverview){
+                return $this->get_map_sections();
+            }else{
+                foreach ($this->sectionstree as $item1) {
+                    if( !$item1->section->visible ){
+                        continue; 
+                    }
+        
+                    $id = $this->get_section_id($item1->section);
+                    if ($id) { 
+                        $sectionid = $id;
+                        break;
+                    }
+                }
+            }
         }
 
         $found = null; 

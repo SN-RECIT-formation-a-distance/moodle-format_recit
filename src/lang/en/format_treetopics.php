@@ -77,6 +77,8 @@ $string['showsectiontitle'] = 'Show section name';
 $string['hascontract'] = 'Use a contract';
 $string['contract'] = 'Contract content';
 $string['navsection'] = 'Show navigation by section';
+$string['navsectionoverview'] = 'Hide navigation overview button';
+$string['navsectionoverview_help'] = 'Hide navigation overview button';
 
 $string['menudisplay_help'] = 'Help';
 $string['displayshortcuts_help'] = 'Help';

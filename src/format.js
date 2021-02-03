@@ -477,21 +477,22 @@ M.recit.course.format.TreeTopics = class{
 
     ctrlMenuResponsive(menu, menuItem, menuItemDesc, branch){
         let itemMenuResponsive = menu.querySelector('.btn-menu-responsive');
-        let icon = itemMenuResponsive.children[0].firstChild;
         let sectionTitle = itemMenuResponsive.children[1];
         let sectionSubtitle = itemMenuResponsive.children[2];
 
-        //Make appear the title of the section in the responsive menu
-        sectionTitle.innerHTML = menuItemDesc.textContent;
+        if (sectionTitle){
+            //Make appear the title of the section in the responsive menu
+            sectionTitle.innerHTML = menuItemDesc.textContent;
 
-        if(branch !== null){
-            //Make appear the title of the sous section in the responsive menu
-            let sections = branch.getElementsByClassName('menu-item');
-            for(let sec of sections){
-                if(sec.getAttribute('data-selected') === "1"){
-                    let subsection = sec.getElementsByClassName('menu-item-desc');
-                    sectionSubtitle.innerHTML = subsection.textContent;
-                    break;
+            if(branch !== null){
+                //Make appear the title of the sous section in the responsive menu
+                let sections = branch.getElementsByClassName('menu-item');
+                for(let sec of sections){
+                    if(sec.getAttribute('data-selected') === "1"){
+                        let subsection = sec.getElementsByClassName('menu-item-desc');
+                        sectionSubtitle.innerHTML = subsection.textContent;
+                        break;
+                    }
                 }
             }
         }

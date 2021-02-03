@@ -376,10 +376,14 @@ class format_treetopics extends format_base {
                     'default' => false,
                     'type' => PARAM_BOOL,
                 ),
+                'tthidenavoverview' => array(
+                    'default' => false,
+                    'type' => PARAM_BOOL,
+                ),
                 'ttshownavsection' => array(
                     'default' => false,
                     'type' => PARAM_BOOL,
-                )
+                ),
             );
         }
         if ($foreditform && !isset($courseformatoptions['ttsectiondisplay']['label'])) {
@@ -434,12 +438,18 @@ class format_treetopics extends format_base {
                     'help_component' => 'format_treetopics',
                     'element_type' => 'checkbox'
                 ),
+                'tthidenavoverview' => array(
+                    'label' => new lang_string('navsectionoverview', 'format_treetopics'),
+                    'help' => 'navsectionoverview',
+                    'help_component' => 'format_treetopics',
+                    'element_type' => 'checkbox'
+                ),
                 'ttshownavsection' => array(
                     'label' => new lang_string('navsection', 'format_treetopics'),
                     'help' => 'navsection',
                     'help_component' => 'format_treetopics',
                     'element_type' => 'checkbox'
-                )
+                ),
             );
             $courseformatoptions = array_merge_recursive($courseformatoptions, $courseformatoptionsedit);
         }
@@ -687,7 +697,7 @@ class format_treetopics extends format_base {
             foreach ($options as $key => $unused) {
                 if (!array_key_exists($key, $data)) {
                     // Make sure to set the boolean value to 0 (this property is not sent by post when check input is unchecked).
-                    if (in_array($key, array(/*'ttdisplayshortcuts',*/ 'tthascontract', 'ttshownavsection'))) {
+                    if (in_array($key, array(/*'ttdisplayshortcuts',*/ 'tthascontract', 'ttshownavsection', 'tthidenavoverview'))) {
                         $data[$key] = 0;
                     } else if (array_key_exists($key, $oldcourse)) {
                         $data[$key] = $oldcourse[$key];

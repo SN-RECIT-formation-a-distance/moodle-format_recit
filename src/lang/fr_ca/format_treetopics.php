@@ -80,6 +80,8 @@ $string['showsectiontitle'] = 'Afficher le nom de la section';
 $string['hascontract'] = 'Utiliser le contrat d\'engagement';
 $string['contract'] = 'Contrat d\'engagement';
 $string['navsection'] = 'Afficher la navigation par section';
+$string['navsectionoverview'] = 'Cacher le bouton de la carte de navigation';
+$string['navsectionoverview_help'] = 'Cacher le bouton de la carte de navigation';
 
 $string['menudisplay_help'] = 'Le menu de navigation peut se présenter au dessus du contenu principal ou à sa doite. Vous pouvez choisir le mode d\'affichage de menu désiré.';
 $string['displayshortcuts_help'] = 'Ce format de cours permet de masquer ou afficher les ressources et activités ainsi que le résumé de section. Si vous selectionnez cette option, les boutons seront affichés.';
