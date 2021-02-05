@@ -801,9 +801,9 @@ class TreeTopics
         $result .= '<div class="tab-content" id="v-pills-tabContent">';
 
         $html = "<div class='btn-group  pull-right'>";
-        $html .= sprintf("<a href='%s/course/changenumsections.php?courseid=%ld&insertsection=0&sesskey=%s&sectionreturn=0' 
+        $html .= sprintf("<a href='%s/course/changenumsections.php?courseid=%ld&insertsection=0&sesskey=%s&returnurl=%s&sectionreturn=menu' 
                         class='btn btn-outline-primary' title='%s'><i class='fa fa-plus'></i></a>", 
-                        $CFG->wwwroot, $COURSE->id, sesskey(), get_string('addsections', 'format_treetopics'));
+                        $CFG->wwwroot, $COURSE->id, sesskey(), course_get_url($COURSE), get_string('addsections', 'format_treetopics'));
         $html .= sprintf("<button class='btn btn-outline-primary' onclick='M.recit.course.format.TreeTopicsEditingMode.instance.onBtnShowHideCmList(event)' title='%s'><i class='fa fa-fw fa-eye-slash'></i></button>", 
                         get_string('sectionshowhideactivities', 'format_treetopics'));
         $html .= sprintf("<button class='btn btn-outline-primary' onclick='window.location.reload();' title='%s'><i class='fa fa-fw fa-refresh'></i></button>", 
