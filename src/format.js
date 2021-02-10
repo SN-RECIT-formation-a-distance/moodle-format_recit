@@ -495,15 +495,8 @@ M.recit.course.format.TreeTopics = class{
                     }
                 }
             }
-            this.ctrlOpeningMenuResponsive('closed');
-
-            //Open menu if it's a tablet
-            const userAgent = navigator.userAgent.toLowerCase();
-            const isTablet = /(ipad|tablet|(android(?!.*mobile))|(windows(?!.*phone)(.*touch))|kindle|playbook|silk|(puffin(?!.*(IP|AP|WP))))/.test(userAgent);
-            if (isTablet){
-                this.ctrlOpeningMenuResponsive('open');
-            }
         }
+        this.ctrlOpeningMenuResponsive('closed');
     }
 
     //Open and close the menu responsive
