@@ -274,6 +274,8 @@ class TreeTopics
      * @return string
      */
     protected function render_sections_menu_m5() {
+        global $PAGE;
+        $showNavOverview = (isset($this->course->tthidenavoverview) && $this->course->tthidenavoverview == 0) || $PAGE->user_is_editing();
         $navbar = "<nav class='navbar navbar-dark %s menuM5' id='tt-recit-nav'>%s</nav>";
 
         $collapse = "<button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#menuM5-collapse'
@@ -284,13 +286,15 @@ class TreeTopics
                         %s
                     </div>";
 
-        $menuitems = "<ul class='navbar-nav mr-auto mt-2 mt-lg-0'>
-                        <li class='nav-item menu-item'>
+        $menuitems = "<ul class='navbar-nav mr-auto mt-2 mt-lg-0'>";
+            if ($showNavOverview){
+                        $menuitems .= "<li class='nav-item menu-item'>
                             <a class='nav-link' href='#' data-section='map'
                                 onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>
                                 <i class='fa fa-map'></i></a>
-                        </li>
-                        %s
+                        </li>";
+            }
+                    $menuitems .= "    %s
                     </ul>";
 
         $hmenu = sprintf($navbar, "navbar-expand-lg",  sprintf($collapse, $menuitems));
