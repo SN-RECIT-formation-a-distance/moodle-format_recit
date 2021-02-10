@@ -204,9 +204,7 @@ class TreeTopics
                 <nav class='menuM1' id='tt-recit-nav' data-status='closed'>                    
                     <div class='background-menu-mobile'></div>
                     <ul class='menu-level1' id='level1'>
-                    <li class='btn-menu-responsive'>";
-                    if ($showNavOverview){
-                        $html .= "
+                    <li class='btn-menu-responsive'>
                             <button class='btn btn-outline-light btn-sm' data-btn='open'
                                 onclick='M.recit.course.format.TreeTopics.instance.ctrlOpeningMenuResponsive(\"open\")'><i class='fa fa-bars'></i>
                             </button>
@@ -215,9 +213,7 @@ class TreeTopics
                             <button class='btn btn-outline-light btn-sm' data-btn='close'
                                 onclick='M.recit.course.format.TreeTopics.instance.ctrlOpeningMenuResponsive(\"closed\")'><i class='fa fa-times'></i>
                             </button>
-                        ";
-                    }
-            $html .= "</li>
+                    </li>
                         %s
                     </ul>
                     %s
