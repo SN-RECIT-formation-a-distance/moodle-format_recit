@@ -768,7 +768,7 @@ class format_treetopics extends format_base {
                     // view and no need to call rebuild_course_cache().
                 }
 
-                if (is_array($data[$key])) {
+                if ((isset($data[$key])) && (is_array($data[$key]))) {
                     $newvalue = $data[$key]['text'];
                 }
 
