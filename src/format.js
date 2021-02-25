@@ -563,6 +563,8 @@ M.recit.course.format.TreeTopics = class{
             return;
         }
 
+        
+
         let doc = new DOMParser().parseFromString(result.data, "text/html");
         
         while (this.sectionContent.lastElementChild) {
@@ -571,6 +573,14 @@ M.recit.course.format.TreeTopics = class{
         
         window.scrollTo(0,0); 
         this.sectionContent.appendChild(doc.body.firstChild);
+
+        this.postProcessingFilters();
+    }
+
+    postProcessingFilters(){
+        if(M.filter_mathjaxloader){
+            M.filter_mathjaxloader.typeset();
+        }
     }
 
     goToSection(event, sectionId) {
