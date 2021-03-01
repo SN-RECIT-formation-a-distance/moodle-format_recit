@@ -470,6 +470,7 @@ M.recit.course.format.TreeTopics = class{
         // Select menu level2 item.
         if((menuItem.parentElement.getAttribute("id") === "level2")){
             menuItem.parentElement.setAttribute("data-selected", "1");
+            menuItem.parentElement.parentElement.setAttribute("data-selected", "1");
         }
 
         this.ctrlMenuResponsive(menu, menuItem, menuItemDesc, branch);
