@@ -1,6 +1,6 @@
 echo off
 set zipName=format_treetopics
-set pluginName=format_treetopics
+set pluginName=treetopics
 
 rem remove the current 
 del %zipName%
