@@ -168,7 +168,11 @@ class TreeTopics
             return "La section 0 doit être \"Affichage sous forme d'onglets\".";
         }
         
-        $content = "<div id='sectioncontent_placeholder'></div>";
+        $content = "
+            <div id='sectioncontent_placeholder'></div>
+            <div id='tt-loading' class='fa-5x' style='display: none; position: fixed; z-index: 9999; top: 50%; left: 50%; transform: translate(50%, 50%);'>
+                <i class='fas fa-spinner fa-spin'></i>
+            </div>";
 
         $options = array(1, 3, 5);
         if(in_array($this->course->tttabsmodel, $options)){

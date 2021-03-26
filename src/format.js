@@ -97,6 +97,7 @@ M.recit.course.format.TreeTopicsWebApi = class{
 
         this.post = this.post.bind(this);
         this.onError = this.onError.bind(this);
+        this.loading = document.getElementById("tt-loading");
     }
 
     getGateway(){
@@ -112,6 +113,8 @@ M.recit.course.format.TreeTopicsWebApi = class{
         data = JSON.stringify(data);
 
         let xhr = new XMLHttpRequest();
+        let that = this;
+
         xhr.open("post", url, true);
         // Header sent to the server, specifying a particular format (the content of message body).
         xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
@@ -128,12 +131,14 @@ M.recit.course.format.TreeTopicsWebApi = class{
                     console.log(error, this);
                 }
 
+                that.loading.style.display = "none";
                 callbackSuccess.call(this, result);
             }
         }
 
         xhr.onerror = this.onError;
 
+        this.loading.style.display = "block";
         xhr.send(data);
     }
 

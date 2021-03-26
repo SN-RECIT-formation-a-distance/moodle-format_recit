@@ -340,8 +340,8 @@ class format_treetopics extends format_base {
     public function get_default_blocks() {
         return array(
             BLOCK_POS_LEFT => array(),
-            BLOCK_POS_RIGHT => array(),
-            BLOCK_POS_TOP => array()
+            BLOCK_POS_RIGHT => array()
+            //BLOCK_POS_TOP => array()
         );
     }
 
@@ -485,8 +485,8 @@ class format_treetopics extends format_base {
             $form->getElement('ttcontract_editor')->freeze();
         } else {
             $form->getElement('ttsectiondisplay')->updateAttributes($disabled);
-            $form->getElement('ttsectionshowactivities')->updateAttributes($disabled);
-            $form->getElement('ttsectiontitle')->updateAttributes($disabled);
+            //$form->getElement('ttsectionshowactivities')->updateAttributes($disabled);
+            //$form->getElement('ttsectiontitle')->updateAttributes($disabled);
             $form->getElement('ttsectionimageurl')->updateAttributes($disabled);
             $form->getElement('btnSeeDepFiles')->updateAttributes($disabled);
             $form->getElement('btnUploadDepFiles')->updateAttributes($disabled);
