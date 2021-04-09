@@ -64,6 +64,7 @@ $string['sectionshowactivities'] = 'Show activities';
 $string['sectionshowhideactivities'] = 'Show/Hide activities';
 $string['saveandrefresh'] = 'Save and Refresh';
 $string['imagegridcolumns'] = 'Max number of columns';
+$string['maxsection'] = 'Max sections ';
 $string['sectionimage'] = 'Image';
 $string['sectionimagecontext'] = 'Image Context';
 $string['sectionimagecomponent'] = 'Image Component';

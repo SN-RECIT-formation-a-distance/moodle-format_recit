@@ -666,7 +666,7 @@ class format_treetopics extends format_base {
             // delete and add sections when needed.
             $courseconfig = get_config('moodlecourse');
             $max = (int)$courseconfig->maxsections;
-            $element = $mform->addElement('select', 'numsections', get_string('numberweeks'), range(0, $max ?: 52));
+            $element = $mform->addElement('select', 'numsections', get_string('numsection', 'format_treetopics'), range(0, $max ?: 100));
             $mform->setType('numsections', PARAM_INT);
             if (is_null($mform->getElementValue('numsections'))) {
                 $mform->setDefault('numsections', $courseconfig->numsections);

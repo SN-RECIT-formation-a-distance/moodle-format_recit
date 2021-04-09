@@ -64,6 +64,7 @@ $string['sectionshowactivities'] = 'Afficher les ressources et les activités';
 $string['sectionshowhideactivities'] = 'Afficher/Cacher les ressources et activités';
 $string['saveandrefresh'] = 'Enregistrer et rafraîchir';
 $string['imagegridcolumns'] = 'Nombre maximal de colonnes ';
+$string['maxsection'] = 'Nombre maximal de sections ';
 $string['sectionimage'] = 'Image';
 $string['sectionimagecontext'] = 'Contexte de l\'image';
 $string['sectionimagecomponent'] = 'Composant de l\'image';
