@@ -168,11 +168,8 @@ class TreeTopics
             return "La section 0 doit être \"Affichage sous forme d'onglets\".";
         }
         
-        $content = "
-            <div id='sectioncontent_placeholder'></div>
-            <div id='tt-loading' class='fa-5x' style='display: none; position: fixed; z-index: 9999; top: 50%; left: 50%; transform: translate(50%, 50%);'>
-                <i class='fas fa-spinner fa-spin'></i>
-            </div>";
+        $content = "<div id='sectioncontent_placeholder'></div>";
+        $content .= $this->getHtmlLoading();
 
         $options = array(1, 3, 5);
         if(in_array($this->course->tttabsmodel, $options)){
@@ -819,6 +816,8 @@ class TreeTopics
             $html .= $this->render_editing_mode_section_content($format_treetopics_renderer, $section, true);
         }       
 
+        $html .= $this->getHtmlLoading();
+
         $sectionid = 'menu';
         $templateTabContent = '<div class="tab-pane fade show %s p-2" id="v-pills-%s" role="tabpanel" aria-labelledby="v-pills-%s-tab">%s</div>';
         $result .= sprintf($templateTabContent, ($selectedSection === $sectionid ? 'active editing-mode-menu' : 'editing-mode-menu'), $sectionid, $sectionid, $html);
@@ -873,6 +872,15 @@ class TreeTopics
         }
         
         return $result;
+    }
+
+    protected function getHtmlLoading(){
+        $html = "
+        <div id='tt-loading' class='fa-5x' style='display: none; position: fixed; z-index: 9999; top: 50%; left: 50%; transform: translate(50%, 50%);'>
+            <i class='fas fa-spinner fa-spin'></i>
+        </div>";
+
+        return $html;
     }
 }
 

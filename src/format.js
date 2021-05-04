@@ -131,14 +131,20 @@ M.recit.course.format.TreeTopicsWebApi = class{
                     console.log(error, this);
                 }
 
-                that.loading.style.display = "none";
+                if(that.loading){
+                    that.loading.style.display = "none";
+                }
+                
                 callbackSuccess.call(this, result);
             }
         }
 
         xhr.onerror = this.onError;
 
-        this.loading.style.display = "block";
+        if(this.loading){
+            this.loading.style.display = "block";
+        }
+        
         xhr.send(data);
     }
 
