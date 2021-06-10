@@ -583,10 +583,21 @@ M.recit.course.format.TreeTopics = class{
             this.sectionContent.removeChild(this.sectionContent.lastElementChild);
         }
         
+        this.preProcessingFilters(doc);
+
         window.scrollTo(0,0); 
         this.sectionContent.appendChild(doc.body.firstChild);
 
         this.postProcessingFilters();
+    }
+
+    preProcessingFilters(doc){
+        let h5pobjects = doc.body.querySelectorAll('.h5p-iframe');
+        for (let iframe of h5pobjects){
+            iframe.onload = function(){
+                iframe.style.height = iframe.contentWindow.document.documentElement.scrollHeight + 'px'; //adjust iframe to page height
+            }
+        }
     }
 
     postProcessingFilters(){
