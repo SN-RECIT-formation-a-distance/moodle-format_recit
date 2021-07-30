@@ -855,7 +855,7 @@ class TreeTopics
             $result .= "<div class='btn-group pull-right'>";
             $result .= sprintf("<a class='btn btn-outline-primary' href='%s/course/editsection.php?id=%ld&sr' title='%s'><i class='fa fa-fw fa-sliders'></i></a>", $CFG->wwwroot, $section->id, get_string('editsection', 'format_treetopics'));
             $result .= sprintf("<button class='btn btn-outline-primary' onclick='M.recit.course.format.TreeTopicsEditingMode.instance.onBtnShowHideHiddenActivities(event)' title='%s'><i class='fa fa-fw fa-eye'></i></button>", get_string('showhidehiddenactivities', 'format_treetopics'));
-            $result .= html_writer::tag('button', "<i class='fas fa-plus'></i>", [
+            $result .= html_writer::tag('button', "<i class='fa fa-plus'></i>", [
                 'class' => 'section-modchooser-link btn btn-outline-primary',
                 'data-action' => 'open-chooser',
                 'data-sectionid' => $section->section,
@@ -877,7 +877,7 @@ class TreeTopics
     protected function getHtmlLoading(){
         $html = "
         <div id='tt-loading' class='fa-5x' style='display: none; position: fixed; z-index: 9999; top: 50%; left: 50%; transform: translate(50%, 50%);'>
-            <i class='fas fa-spinner fa-spin'></i>
+            <i class='fa fa-spinner fa-spin'></i>
         </div>";
 
         return $html;
