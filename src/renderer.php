@@ -235,6 +235,10 @@ class TreeTopics
             if( !$item1->section->visible ){
                 continue; 
             }
+            
+            if( $this->course->ttcustompath == 1 && !$item1->section->available ){
+                continue; 
+            }
 
             $tmp3 = "";
             foreach ($item1->child as $item2) {
@@ -343,12 +347,16 @@ class TreeTopics
     /**
      * Function render sections menu m5 items of TreeTopics.
      *
-     * @param string $section
+     * @param object $section
      * @param string $subsection
      * @return string
      */
     protected function render_sections_menu_m5_items($section, $subsection = "") {
         $html = "";
+            
+        if(isset($this->course->ttcustompath) && $this->course->ttcustompath == 1 && !$section->available ){
+            return $html; 
+        }
 
         $sectionid = $this->get_section_id($section);
         $sectionname = $this->get_section_name($section);

@@ -81,6 +81,8 @@ $string['showsectiontitle'] = 'Afficher le nom de la section';
 $string['hascontract'] = 'Utiliser le contrat d\'engagement';
 $string['contract'] = 'Contrat d\'engagement';
 $string['navsection'] = 'Afficher la navigation par section';
+$string['custompath'] = 'Activer le cheminement personalisé par groupe';
+$string['custompath_help'] = "Cela cachera les sections que l'élève n'a pas accès et modifira la manière dont Moodle calcule l'achèvement du cours.";
 $string['navsectionoverview'] = 'Cacher le bouton de la carte de navigation';
 $string['navsectionoverview_help'] = 'Cacher le bouton de la carte de navigation';
 

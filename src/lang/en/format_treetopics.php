@@ -53,6 +53,8 @@ $string['tabmodel2'] = 'Vertical Right';
 $string['tabmodel3'] = 'Vertical Left';
 $string['tabmodel5'] = 'Horizontal 1 Level';
 
+$string['custompath'] = 'Activer le cheminement personalisé';
+$string['custompath_help'] = "Cela cachera les sections que l'élève n'a pas accès et modifira la manière dont Moodle calcule la completion du cours";
 $string['menudisplay'] = 'Menu display';
 $string['displayshortcuts'] = 'Display shortcuts when editing mode on';
 $string['sectionsecondarydisplay'] = 'Secondary sections display';
