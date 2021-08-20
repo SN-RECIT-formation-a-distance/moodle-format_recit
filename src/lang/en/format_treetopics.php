@@ -53,7 +53,12 @@ $string['tabmodel2'] = 'Vertical Right';
 $string['tabmodel3'] = 'Vertical Left';
 $string['tabmodel5'] = 'Horizontal 1 Level';
 
-$string['custompath'] = 'Activer le cheminement personalisé';
+$string['custompath'] = 'Activate custom path by group';
+$string['custompathtag'] = 'Activate custom path by tag';
+$string['custompathtag1prefix'] = 'Cheminement personalisé: Préfix de tag #1 pour afficher l\'activité';
+$string['custompathtag1grade'] = 'Cheminement personalisé tag #1: Afficher si seuil est plus petit que';
+$string['custompathtag2prefix'] = 'Cheminement personalisé: Préfix de tag #2 pour afficher l\'activité';
+$string['custompathtag2grade'] = 'Cheminement personalisé tag #2: Afficher si seuil est plus grand que';
 $string['custompath_help'] = "Cela cachera les sections que l'élève n'a pas accès et modifira la manière dont Moodle calcule la completion du cours";
 $string['menudisplay'] = 'Menu display';
 $string['displayshortcuts'] = 'Display shortcuts when editing mode on';

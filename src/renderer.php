@@ -25,6 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/course/format/renderer.php');
+require_once "$CFG->dirroot/local/recitcommon/php/CustomPath.php";
 
 //js_reset_all_caches();
 /**
@@ -56,9 +57,11 @@ class TreeTopics
      * Construc for TreeTopics
      */
     public function __construct() {
-        global $COURSE, $OUTPUT;
+        global $COURSE, $OUTPUT, $DB, $USER;
         //$context = context_course::instance($COURSE->id);
         $this->output = $OUTPUT;
+        
+        $this->cp = new CustomPath($DB, $COURSE, $USER, $this->get_custom_path_parameters());
     }
 
      /**
@@ -108,6 +111,17 @@ class TreeTopics
         }
 
         echo $html;
+    }
+
+    protected function get_custom_path_parameters(){
+        global $COURSE;
+        $course = course_get_format($COURSE)->get_course();
+        return array(
+            '1prefix' => $course->ttcustompathtag1prefix ?? 'tag1-',
+            '1grade' => $course->ttcustompathtag1grade ?? 70,
+            '2prefix' => $course->ttcustompathtag2prefix ?? 'tag2-',
+            '2grade' => $course->ttcustompathtag2grade ?? 70,
+        );
     }
 
     /**
@@ -505,7 +519,7 @@ class TreeTopics
                 array('noclean' => true, 'filter' => true));
         $content = "";
         if ($section->ttsectionshowactivities == 1) {
-            $content = $this->moodlerenderer->get_course_section_cm_list($this->course, $section);
+            $content = $this->get_course_section_cm_list($this->course, $section);
         }
         $html = "<div class='tt-imagebuttons auto2' data-section='$sectionid'>";
         $html .= "<div class='tt-section-image-link tt-grid-element tt-section-image-link-selected' style='position:relative;'>";
@@ -545,7 +559,7 @@ class TreeTopics
 
         $content = "";
         if ($section->ttsectionshowactivities == 1) {
-            $content = $this->moodlerenderer->get_course_section_cm_list($this->course, $section);
+            $content = $this->get_course_section_cm_list($this->course, $section);
         }
 
         // Prepare the container to receive the section display image.
@@ -585,6 +599,78 @@ class TreeTopics
         $html .= "</div>";
 
         return $html;
+    }
+
+
+    public function get_course_section_cm_list($course, $section, $sectionreturn = null, $displayoptions = []) {
+        global $USER;
+
+        $output = '';
+
+        $format = course_get_format($course);
+        $modinfo = $this->modinfo;
+
+        if (is_object($section)) {
+            $section = $modinfo->get_section_info($section->section);
+        } else {
+            $section = $modinfo->get_section_info($section);
+        }
+        $completioninfo = new completion_info($course);
+
+        // check if we are currently in the process of moving a module with JavaScript disabled
+        $ismoving = ismoving($course->id);
+
+        if ($ismoving) {
+            $strmovefull = strip_tags(get_string("movefull", "", "'$USER->activitycopyname'"));
+        }
+
+        // Get the list of modules visible to user (excluding the module being moved if there is one)
+        $moduleshtml = [];
+        if (!empty($modinfo->sections[$section->section])) {
+            foreach ($modinfo->sections[$section->section] as $modnumber) {
+                $mod = $modinfo->cms[$modnumber];
+
+                if ($ismoving and $mod->id == $USER->activitycopy) {
+                    // do not display moving mod
+                    continue;
+                }
+                
+                if (isset($course->ttcustompathtag) && $course->ttcustompathtag == 1 && !$this->cp->isCmVisible($mod)){
+                    continue;
+                }
+
+                if ($modulehtml = $this->moodlerenderer->course_section_cm_list_item($course,
+                        $completioninfo, $mod, $sectionreturn, $displayoptions)) {
+                    $moduleshtml[$modnumber] = $modulehtml;
+                }
+            }
+        }
+
+        $sectionoutput = '';
+        if (!empty($moduleshtml) || $ismoving) {
+            foreach ($moduleshtml as $modnumber => $modulehtml) {
+                if ($ismoving) {
+                    $movingurl = new moodle_url('/course/mod.php', array('moveto' => $modnumber, 'sesskey' => sesskey()));
+                    $sectionoutput .= html_writer::tag('li',
+                        html_writer::link($movingurl, '', array('title' => $strmovefull, 'class' => 'movehere')),
+                        array('class' => 'movehere'));
+                }
+
+                $sectionoutput .= $modulehtml;
+            }
+
+            if ($ismoving) {
+                $movingurl = new moodle_url('/course/mod.php', array('movetosection' => $section->id, 'sesskey' => sesskey()));
+                $sectionoutput .= html_writer::tag('li',
+                    html_writer::link($movingurl, '', array('title' => $strmovefull, 'class' => 'movehere')),
+                    array('class' => 'movehere'));
+            }
+        }
+
+        // Always output the section module list.
+        $output .= html_writer::tag('ul', $sectionoutput, array('class' => 'section img-text'));
+
+        return $output;
     }
 
     /**
@@ -637,13 +723,13 @@ class TreeTopics
     protected function get_map_link($section) {
         if ($section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES) {
             return sprintf("<li>%s<div class='activity-list'>%s</div></li>",
-                    $this->get_section_name($section), $this->moodlerenderer->get_course_section_cm_list($this->course, $section));
+                    $this->get_section_name($section), $this->get_course_section_cm_list($this->course, $section));
         } else {
             return sprintf("<li><a href='#' data-section='%s'
                 onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s<a/>
                 <div class='activity-list'>%s</div></li>",
                 $this->get_section_id($section), $this->get_section_name($section),
-                    $this->moodlerenderer->get_course_section_cm_list($this->course, $section));
+                    $this->get_course_section_cm_list($this->course, $section));
         }
     }
 
@@ -985,6 +1071,13 @@ class format_treetopics_renderer extends format_section_renderer_base {
      */
     public function get_course_section_cm_list($course, $section) {
         return $this->courserenderer->course_section_cm_list($course, $section, 0);
+    }
+
+    /**
+     * Function get course section cm list of format_treetopics_renderer class
+     */
+    public function course_section_cm_list_item($course, $completioninfo, $mod, $sectionreturn, $displayoptions) {
+        return $this->courserenderer->course_section_cm_list_item($course, $completioninfo, $mod, $sectionreturn, $displayoptions);
     }
     
      /**

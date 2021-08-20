@@ -26,6 +26,8 @@
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot. '/course/format/lib.php');
 require_once($CFG->dirroot. '/course/editsection_form.php');
+require_once "$CFG->dirroot/local/recitcommon/php/CustomPath.php";
+require_once dirname(__FILE__). "/renderer.php";
 /** @var int */
 const TT_DISPLAY_NONE = 0;
 /** @var int */
@@ -72,31 +74,71 @@ function format_treetopics_pluginfile($course, $cm, $context, $filearea, $args, 
 }*/
 
 function treetopics_completion_callback(){
+    global $COURSE;
+
+    $course = course_get_format($COURSE)->get_course();
+    if ($course->enablecompletion == 0) return;
+
+    treetopics_check_custompath_completion_by_group();
+    treetopics_check_custompath_completion_by_tag();
+}
+
+function treetopics_check_custompath_completion_by_group(){
     global $USER, $COURSE, $DB;
 
     $course = course_get_format($COURSE)->get_course();
-    if (!isset($course->ttcustompath) || $course->ttcustompath == 0 || $course->enablecompletion == 0) return;
-    
-    $modinfo = get_fast_modinfo($course);
 
-    foreach ($modinfo->get_section_info_all() as $section){
-        if ($section->available){
-            foreach ($modinfo->cms as $cm){
-                if ($cm->section == $section->id && $cm->completion == 1){
-                    $result = $DB->get_record('course_modules_completion', array('coursemoduleid' => $cm->id, 'userid' => $USER->id));
-                    if (!$result || $result->completionstate == 0) return;
+    //By group
+    if (isset($course->ttcustompath) && $course->ttcustompath == 1){
+        $modinfo = get_fast_modinfo($course);
+
+        foreach ($modinfo->get_section_info_all() as $section){
+            if ($section->available){
+                foreach ($modinfo->cms as $cm){
+                    if ($cm->section == $section->id && $cm->completion == 1){
+                        $result = $DB->get_record('course_modules_completion', array('coursemoduleid' => $cm->id, 'userid' => $USER->id));
+                        if (!$result || $result->completionstate == 0) return;
+                    }
                 }
             }
         }
+
+        $params = array(
+            'userid'    => $USER->id,
+            'course'  => $COURSE->id
+        );
+
+        $ccompletion = new completion_completion($params);
+        return $ccompletion->mark_complete();
     }
+}
 
-    $params = array(
-        'userid'    => $USER->id,
-        'course'  => $COURSE->id
-    );
+function treetopics_check_custompath_completion_by_tag(){
+    global $USER, $COURSE, $DB;
 
-    $ccompletion = new completion_completion($params);
-    return $ccompletion->mark_complete();
+    $course = course_get_format($COURSE)->get_course();
+
+    //by tag
+    if (isset($course->ttcustompathtag) && $course->ttcustompathtag == 1){
+        $modinfo = get_fast_modinfo($course);
+        $tt = new TreeTopics();
+        $cp = $tt->cp;
+
+        foreach ($modinfo->cms as $cm){
+            if ($cm->completion == 1 && $cp->isCmVisible($cm)){
+                $result = $DB->get_record('course_modules_completion', array('coursemoduleid' => $cm->id, 'userid' => $USER->id));
+                if (!$result || $result->completionstate == 0) return;
+            }
+        }
+
+        $params = array(
+            'userid'    => $USER->id,
+            'course'  => $COURSE->id
+        );
+
+        $ccompletion = new completion_completion($params);
+        return $ccompletion->mark_complete();
+    }
 }
 
 /**
@@ -408,6 +450,26 @@ class format_treetopics extends format_base {
                     'default' => false,
                     'type' => PARAM_BOOL,
                 ),
+                'ttcustompathtag' => array(
+                    'default' => false,
+                    'type' => PARAM_BOOL,
+                ),
+                'ttcustompathtag1prefix' => array(
+                    'default' => '',
+                    'type' => PARAM_TEXT,
+                ),
+                'ttcustompathtag1grade' => array(
+                    'default' => 70,
+                    'type' => PARAM_INT,
+                ),
+                'ttcustompathtag2prefix' => array(
+                    'default' => '',
+                    'type' => PARAM_TEXT,
+                ),
+                'ttcustompathtag2grade' => array(
+                    'default' => 70,
+                    'type' => PARAM_INT,
+                ),
                 'tthidenavoverview' => array(
                     'default' => false,
                     'type' => PARAM_BOOL,
@@ -475,6 +537,36 @@ class format_treetopics extends format_base {
                     'help' => 'custompath',
                     'help_component' => 'format_treetopics',
                     'element_type' => 'checkbox'
+                ),
+                'ttcustompathtag' => array(
+                    'label' => new lang_string('custompathtag', 'format_treetopics'),
+                    'help' => 'custompath',
+                    'help_component' => 'format_treetopics',
+                    'element_type' => 'checkbox'
+                ),
+                'ttcustompathtag1prefix' => array(
+                    'label' => new lang_string('custompathtag1prefix', 'format_treetopics'),
+                    'help' => 'custompath',
+                    'help_component' => 'format_treetopics',
+                    'element_type' => 'text'
+                ),
+                'ttcustompathtag1grade' => array(
+                    'label' => new lang_string('custompathtag1grade', 'format_treetopics'),
+                    'help' => 'custompath',
+                    'help_component' => 'format_treetopics',
+                    'element_type' => 'text'
+                ),
+                'ttcustompathtag2prefix' => array(
+                    'label' => new lang_string('custompathtag2prefix', 'format_treetopics'),
+                    'help' => 'custompath',
+                    'help_component' => 'format_treetopics',
+                    'element_type' => 'text'
+                ),
+                'ttcustompathtag2grade' => array(
+                    'label' => new lang_string('custompathtag2grade', 'format_treetopics'),
+                    'help' => 'custompath',
+                    'help_component' => 'format_treetopics',
+                    'element_type' => 'text'
                 ),
                 'tthidenavoverview' => array(
                     'label' => new lang_string('navsectionoverview', 'format_treetopics'),
