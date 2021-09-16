@@ -192,7 +192,7 @@ M.recit.course.format.TreeTopicsUtils = class{
         let d = new Date();
         d.setTime(d.getTime() + (minutesExpire * 60 * 1000));
         let expires = "expires=" + d.toUTCString();
-        document.cookie = id + "=" + value + "; " + expires;
+        document.cookie = id + "=" + value + ";SameSite=Lax;" + expires;
     };
 
     static getUrlVars(){
