@@ -537,7 +537,7 @@ class TreeTopics
     /**
      * Function to get section tab of TreeTopics.
      *
-     * @param object $section
+     * @param string $section
      * @param string $subcontent
      * @return string
      */
@@ -603,10 +603,11 @@ class TreeTopics
 
 
     public function get_course_section_cm_list($course, $section, $sectionreturn = null, $displayoptions = []) {
-        global $USER, $CFG, $PAGE;
+        global $USER;
 
         $output = '';
 
+        $format = course_get_format($course);
         $modinfo = $this->modinfo;
 
         if (is_object($section)) {
@@ -638,15 +639,9 @@ class TreeTopics
                     continue;
                 }
 
-                if ($modulehtml = $this->moodlerenderer->course_section_cm_list_item($course, $completioninfo, $mod, $sectionreturn, $displayoptions)) {
-                    $tags = '';
-                    if ($PAGE->user_is_editing() && isset($course->ttcustompathtag) && $course->ttcustompathtag == 1){
-                        $activity_tags = core_tag_tag::get_item_tags_array('core', 'course_modules', $mod->id);
-                        foreach ($activity_tags as $tag){
-                            $tags .= "<a href='".$CFG->wwwroot."/tag/index.php?tag=" .urlencode($tag) . "'><span class='badge badge-info'>".$tag. "</span></a> ";
-                        }
-                    }
-                    $moduleshtml[$modnumber] = $modulehtml . ' '.$tags;
+                if ($modulehtml = $this->moodlerenderer->course_section_cm_list_item($course,
+                        $completioninfo, $mod, $sectionreturn, $displayoptions)) {
+                    $moduleshtml[$modnumber] = $modulehtml;
                 }
             }
         }
@@ -946,7 +941,7 @@ class TreeTopics
         if($showMenu){
             $result .= $format_treetopics_renderer->section_header($section, $this->course, false, 0, false);
             $result .= sprintf("<div class='section_add_menus' id='add_menus-%s'></div>", $sectionid);
-            $result .= sprintf("<div data-course-section-cm-list='1' style='display:none;'>%s</div>", $this->get_course_section_cm_list($this->course, $section));
+            $result .= sprintf("<div data-course-section-cm-list='1' style='display:none;'>%s</div>", $format_treetopics_renderer->get_course_section_cm_list($this->course, $section));
             $result .= $format_treetopics_renderer->section_footer();
         }
         else{   
@@ -965,7 +960,7 @@ class TreeTopics
             $result .= "</div>";
             $result .= "<br/><br/>";
             $result .= $format_treetopics_renderer->section_header($section, $this->course, false, 0, true, false);
-            $result .= $this->get_course_section_cm_list($this->course, $section);
+            $result .= $format_treetopics_renderer->get_course_section_cm_list($this->course, $section);
             $result .= $format_treetopics_renderer->get_course_section_add_cm_control($this->course, $section->section);
             $result .= $format_treetopics_renderer->section_footer();
         }
