@@ -29,7 +29,7 @@ $plugin->version   = 2021050400;        // The current plugin version (Date: YYY
 $plugin->requires  = 2018051700;        // Requires this Moodle version.
 $plugin->component = 'format_treetopics';    // Full name of the plugin (used for diagnostics).
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = 'R13-V1.13.0';
+$plugin->release = 'R13-V1.13.1';
 $plugin->dependencies = [
     'theme_recit' => 2021050400
 ];
