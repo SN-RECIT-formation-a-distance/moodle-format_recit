@@ -31,6 +31,7 @@ $string['showhidehiddenactivities'] = 'Show/Hide hidden activities';
 $string['deletesection'] = 'Delete topic';
 $string['newsectionname'] = 'New name for topic {$a}';
 $string['sectionname'] = 'Topic';
+$string['numsection'] = 'Section';
 $string['pluginname'] = 'RÉCIT format';
 $string['section0name'] = 'General';
 $string['page-course-view-topics'] = 'Any course main page in topics format';

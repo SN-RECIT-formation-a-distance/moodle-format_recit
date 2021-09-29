@@ -33,6 +33,7 @@ $string['newsectionname'] = 'Nouveau nom pour la section {$a}';
 $string['sectionname'] = 'Section';
 $string['pluginname'] = 'Format RÉCIT';
 $string['section0name'] = 'Introduction';
+$string['numsection'] = 'Section';
 $string['page-course-view-topics'] = 'Toutes les pages principales de cours dans le format';
 $string['page-course-view-topics-x'] = 'Toutes les pages du cours dans le format';
 $string['hidefromothers'] = 'Cacher la section';
