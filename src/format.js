@@ -573,9 +573,7 @@ M.recit.course.format.TreeTopics = class{
         }
         if(result.data === null){
             return;
-        }
-
-        
+        }        
 
         let doc = new DOMParser().parseFromString(result.data, "text/html");
         
@@ -588,7 +586,7 @@ M.recit.course.format.TreeTopics = class{
         window.scrollTo(0,0); 
         this.sectionContent.appendChild(doc.body.firstChild);
 
-        this.postProcessingFilters();
+        this.postProcessingFilters(result.data);
     }
 
     preProcessingFilters(doc){
@@ -600,9 +598,33 @@ M.recit.course.format.TreeTopics = class{
         }
     }
 
-    postProcessingFilters(){
+    postProcessingFilters(webApiResult){
         if(M.filter_mathjaxloader){
             M.filter_mathjaxloader.typeset();
+        }
+
+        this.loadMapLoaderPlugin(webApiResult);
+    }
+
+    loadMapLoaderPlugin(webApiResult){
+        let match = webApiResult.match(/maploader\(\{(?:\s|.)*?\}\)/);
+
+        if(match){ 
+            let script = document.createElement("script");
+            script.src = `${M.cfg.wwwroot}/mod/mapmodules/js/maploader.js`;
+            window.document.head.appendChild(script);
+            
+            let loader = function(){
+                if(typeof maploader === "undefined"){
+                    setTimeout(loader, 500)
+                    return;
+                }
+
+                let mapLoaderCode = match.pop();
+                let f = new Function(mapLoaderCode);
+                f();
+            }
+            loader();
         }
     }
 
