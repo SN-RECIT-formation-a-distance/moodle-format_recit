@@ -71,34 +71,6 @@ function format_treetopics_pluginfile($course, $cm, $context, $filearea, $args, 
     send_stored_file($file, 86400, 0, $forcedownload, $options);
 }*/
 
-function treetopics_completion_callback(){
-    global $USER, $COURSE, $DB;
-
-    $course = course_get_format($COURSE)->get_course();
-    if (!isset($course->ttcustompath) || $course->ttcustompath == 0 || $course->enablecompletion == 0) return;
-    
-    $modinfo = get_fast_modinfo($course);
-
-    foreach ($modinfo->get_section_info_all() as $section){
-        if ($section->available){
-            foreach ($modinfo->cms as $cm){
-                if ($cm->section == $section->id && $cm->completion == 1){
-                    $result = $DB->get_record('course_modules_completion', array('coursemoduleid' => $cm->id, 'userid' => $USER->id));
-                    if (!$result || $result->completionstate == 0) return;
-                }
-            }
-        }
-    }
-
-    $params = array(
-        'userid'    => $USER->id,
-        'course'  => $COURSE->id
-    );
-
-    $ccompletion = new completion_completion($params);
-    return $ccompletion->mark_complete();
-}
-
 /**
  * Default form for editing course section
  *
