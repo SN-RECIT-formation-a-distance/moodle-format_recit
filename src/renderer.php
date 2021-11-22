@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Class format_treetopics_renderer extends of format_section_renderer_base.
+ * Class format_recit_renderer extends of format_section_renderer_base.
  *
- * @package    format_treetopics
+ * @package    format_recit
  * @copyright  RECITFAD
  * @author     RECITFAD
  * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
@@ -28,32 +28,28 @@ require_once($CFG->dirroot.'/course/format/renderer.php');
 
 //js_reset_all_caches();
 /**
- * TreeTopics specifics functions.
+ * FormatRecit specifics functions.
  *
  * @author RECITFAD
  */
-class TreeTopics
+class FormatRecit
 {
     /** @var string */
     const ID_APPEND = 'tt-';
 
-    /** @var format_treetopics_renderer */
-    protected $moodlerenderer = null;
     /** @var stdClass */
     protected $course = null;
     /** @var string */
     protected $output = null;
     /** @var stdClass */
     protected $modinfo = null;
-    /** @var stdClass */
-    protected $courseformat = null;
     /** @var array */
     protected $sectionslist = array();
     /** @var array */
     protected $sectionstree = array();
 
     /**
-     * Construc for TreeTopics
+     * Construc for FormatRecit
      */
     public function __construct() {
         global $COURSE, $OUTPUT;
@@ -62,24 +58,16 @@ class TreeTopics
     }
 
      /**
-     * Function load of TreeTopics.
+     * Function load of FormatRecit.
      *
-     * @param format_treetopics_renderer $moodlerenderer
      * @param stdClass $course
      */
-    public function load($moodlerenderer, $course) {
-        $this->moodlerenderer = $moodlerenderer;
+    public function load($course) {
         $this->course = $course;
-
-        $this->modinfo = get_fast_modinfo($course);
-        $this->courseformat = course_get_format($course);
-        $this->sectionslist = $this->modinfo->get_section_info_all();
-
-        $this->create_section_tree();
     }
 
     /**
-     * Function render of TreeTopics.
+     * Function render of FormatRecit.
      *
      * @return string
      */
@@ -87,7 +75,7 @@ class TreeTopics
         $this->signing_contract();
 
         if ($this->show_contract()) {
-            $html = "<div class='treetopics'>%s</div>";
+            $html = "<div class='formatrecit'>%s</div>";
             $html = sprintf($html, $this->render_contract());
         } else {
             $orientation = "";
@@ -101,611 +89,14 @@ class TreeTopics
                     $orientation = "vertical-left"; break;
             }
 
-            $html = "<div class='treetopics $orientation'>%s</div>";
-            
-            $html = sprintf($html, $this->render_sections());
-            $html .= $this->render_pagination();
+            $html = "<div class='formatrecit $orientation'>%s</div>";
         }
 
         echo $html;
     }
 
     /**
-     * Function create section tree of TreeTopics.
-     */
-    protected function create_section_tree() {
-        $this->sectionstree = array();
-
-        foreach ($this->sectionslist as $section) {
-            switch ($section->ttsectiondisplay) {
-                case 1:
-                    $item1 = new stdClass();
-                    $item1->section = $section;
-                    $item1->child = array();
-                    $this->sectionstree[] = $item1;
-                    break;
-                case 2:
-                    $item2 = new stdClass();
-                    $item2->section = $section;
-                    $item2->child = array();
-                    $item1->child[] = $item2;
-                    break;
-                case 3:
-                    $item3 = new stdClass();
-                    $item3->section = $section;
-                    $item3->child = array();
-                    $item2->child[] = $item3;
-                    break;
-            }
-        }
-    }
-
-    /**
-     * Function render sections of TreeTopics.
-     * @return string
-     */
-    protected function render_sections() {
-        // La section 0 controle le mode d'affichage.
-        $mode = $this->sectionslist[0]->ttsectioncontentdisplay;
-        $model = $this->course->tttabsmodel;
-        
-        $menu = "";
-        if ($mode == TT_DISPLAY_TABS) {
-            switch ($model) {
-                case 1: 
-                    $menu = $this->render_sections_menu_m1();
-                    break;
-                case 2: 
-                case 3: 
-                case 5:
-                    $menu = $this->render_sections_menu_m5();
-                    break;
-                default: 
-                    $menu = $this->render_sections_menu_m5();
-            }
-        }
-        else{
-            return "La section 0 doit être \"Affichage sous forme d'onglets\".";
-        }
-        
-        $content = "<div id='sectioncontent_placeholder'></div>";
-        $content .= $this->getHtmlLoading();
-
-        $options = array(1, 3, 5);
-        if(in_array($this->course->tttabsmodel, $options)){
-            return $menu.$content;
-        }
-        else{
-            return $content.$menu;
-        }
-    }
-
-    /**
-     * Function render sections menu m1 of TreeTopics.
-     * @return string
-     */
-    protected function render_sections_menu_m1() { 
-        global $PAGE;
-        $maxNbChars = 25;
-        $showNavOverview = (isset($this->course->tthidenavoverview) && $this->course->tthidenavoverview == 0) || $PAGE->user_is_editing();
-
-        $menuitemtemplate =
-                "<li class='menu-item' data-submenu='%s'>
-                    <div class='menu-item-title'>
-                        <div class='arrow'></div>
-                        <a class='menu-item-desc' href='#' data-section='%s' onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)' title='%s' %s>%s</a>
-                        <button class='btn btn-sm btn-outline-light btn-expand-sub-menu' onclick='M.recit.course.format.TreeTopics.instance.ctrlOpeningSubMenuResponsive(event, \"%s\")'><i class='fa fa-plus'></i></button>
-                    </div>
-                    %s
-                </li>";
-
-        $menuseparator = "<li></li>";
-
-        $html = "
-                <nav class='menuM1' id='tt-recit-nav' data-status='closed'>                    
-                    <div class='background-menu-mobile'></div>
-                    <ul class='menu-level1' id='level1'>
-                    <li class='btn-menu-responsive'>
-                            <button class='btn btn-outline-light btn-sm' data-btn='open'
-                                onclick='M.recit.course.format.TreeTopics.instance.ctrlOpeningMenuResponsive(\"open\")'><i class='fa fa-bars'></i>
-                            </button>
-                            <div class='section-title'></div>
-                            <div class='sous-section-title'></div>
-                            <button class='btn btn-outline-light btn-sm' data-btn='close'
-                                onclick='M.recit.course.format.TreeTopics.instance.ctrlOpeningMenuResponsive(\"closed\")'><i class='fa fa-times'></i>
-                            </button>
-                    </li>
-                        %s
-                    </ul>
-                    %s
-                </nav>";
-
-        $tmp1 = "";
-        $tmp2 = "";
-
-        if ($showNavOverview)
-            $tmp1 .= sprintf($menuitemtemplate, "0", "map", "", "Menu", "<i class='fa fa-map'></i>", "", "");
-        $tmp1 .= $menuseparator;
-        foreach ($this->sectionstree as $item1) {
-            $tmp2 = "";
-            if ($item1->section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES) {
-                continue;
-            }
-            
-            if( !$item1->section->visible ){
-                continue; 
-            }
-            
-            if( $this->course->ttcustompath == 1 && !$item1->section->available ){
-                continue; 
-            }
-
-            $tmp3 = "";
-            foreach ($item1->child as $item2) {
-                if ($item2->section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES) {
-                    continue;
-                }
-
-                if( !$item2->section->visible ){
-                    continue; 
-                }
-
-                $sectionname = $this->get_section_name($item2->section);
-                $tmp3 .= sprintf($menuitemtemplate, "0", $this->get_section_id($item2->section), $sectionname, "", mb_strimwidth($sectionname, 0, $maxNbChars, "..."), "", "");
-                $tmp3 .= $menuseparator;
-            }
-            if (strlen($tmp3) > 0) {
-                $sectionid = $this->get_section_id($item1->section);
-                $tmp2 .= sprintf("<ul class='menu-level2'  id='level2' data-parent-section='%s' data-status='closed'>%s</ul>",
-                        $this->get_section_id($item1->section), $tmp3);
-
-                $sectionname = $this->get_section_name($item1->section);
-                $tmp1 .= sprintf($menuitemtemplate, "1", $sectionid, $sectionname, "", mb_strimwidth($sectionname, 0, $maxNbChars, "..."),  $sectionid, $tmp2);
-                $tmp1 .= $menuseparator;
-            }else{
-                $sectionname = $this->get_section_name($item1->section);
-
-                $tmp1 .= sprintf($menuitemtemplate, "0", $this->get_section_id($item1->section), $sectionname, "", mb_strimwidth($sectionname, 0, $maxNbChars, "..."), "", "");
-                $tmp1 .= $menuseparator;
-            }
-
-            
-        }
-        return sprintf($html, $tmp1, "");
-    }
-
-    /**
-     * Function render sections menu m5 of TreeTopics.
-     * @return string
-     */
-    protected function render_sections_menu_m5() {
-        global $PAGE;
-        $showNavOverview = (isset($this->course->tthidenavoverview) && $this->course->tthidenavoverview == 0) || $PAGE->user_is_editing();
-        $navbar = "<nav class='navbar navbar-dark %s menuM5' id='tt-recit-nav'>%s</nav>";
-
-        $collapse = "<button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#menuM5-collapse'
-                            aria-controls='menuM5-collapse' aria-expanded='false' aria-label='Toggle navigation'>
-                        <span class='navbar-toggler-icon'></span>
-                    </button>
-                    <div class='collapse navbar-collapse' id='menuM5-collapse'>
-                        %s
-                    </div>";
-
-        $menuitems = "<ul class='navbar-nav mr-auto mt-2 mt-lg-0'>";
-            if ($showNavOverview){
-                        $menuitems .= "<li class='nav-item menu-item'>
-                            <a class='nav-link' href='#' data-section='map'
-                                onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>
-                                <i class='fa fa-map'></i></a>
-                        </li>";
-            }
-                    $menuitems .= "    %s
-                    </ul>";
-
-        $hmenu = sprintf($navbar, "navbar-expand-lg",  sprintf($collapse, $menuitems));
-        $vmenu = sprintf($navbar, "navbar-expand-lg", sprintf($collapse, $menuitems));
-        
-        $options = array(1, 5);
-        if(in_array($this->course->tttabsmodel, $options)){
-            $html = $hmenu;
-        }
-        else{
-            $html = $vmenu;
-        }
-
-        $tmp1 = "";
-        $tmp2 = "";
-        $tmp3 = "";
-        foreach ($this->sectionstree as $item1) {
-            
-            if( !$item1->section->visible ){
-                continue; 
-            }
-
-            foreach ($item1->child as $item2) {
-                if( !$item2->section->visible ){
-                    continue; 
-                }
-
-                foreach ($item2->child as $item3) {
-                    if( !$item3->section->visible ){
-                        continue; 
-                    }
-
-                    $tmp3 .= $this->render_sections_menu_m5_items($item3->section);
-                }
-                $tmp2 .= $this->render_sections_menu_m5_items($item2->section, $tmp3);
-                $tmp3 = "";
-            }
-            $tmp1 .= $this->render_sections_menu_m5_items($item1->section, $tmp2);
-            $tmp2 = "";
-        }
-
-        return sprintf($html, $tmp1);
-    }
-
-    /**
-     * Function render sections menu m5 items of TreeTopics.
-     *
-     * @param object $section
-     * @param string $subsection
-     * @return string
-     */
-    protected function render_sections_menu_m5_items($section, $subsection = "") {
-        $html = "";
-            
-        if(isset($this->course->ttcustompath) && $this->course->ttcustompath == 1 && !$section->available ){
-            return $html; 
-        }
-
-        $sectionid = $this->get_section_id($section);
-        $sectionname = $this->get_section_name($section);
-
-        // collapse action is taken on JS by goToSection function
-        $templateMenuItem = "
-            <li class='%s'>
-                <a class='%s' href='#' data-section='$sectionid' data-toggle='%s' data-target='%s' %s 
-                    onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>
-                    $sectionname
-                </a>
-                %s
-            </li>";
-
-        if ($section->ttsectioncontentdisplay == TT_DISPLAY_TABS) {
-            if ($section->ttsectiondisplay == 1) {
-                if (empty($subsection)) {
-                    $html = sprintf($templateMenuItem, "nav-item menu-item", "nav-link", "", "#menuM5-collapse", "", "");
-                } else {
-                    $dropdownid = $sectionid.'DropdownMenuLink';
-                    $html = sprintf($templateMenuItem, "nav-item dropdown menu-item", "nav-link dropdown-toggle", "dropdown", "$sectionid.dropdownmenu", "aria-haspopup='true' aria-expanded='false' id='$dropdownid'",
-                                "<ul class='dropdown-menu' aria-labelledby='$dropdownid' id='$sectionid.dropdownmenu'>$subsection</ul>");
-                }
-            } else if ($section->ttsectiondisplay == 2) {
-                if (empty($subsection)) {
-                    $html = sprintf($templateMenuItem, "", "dropdown-item", "", "#menuM5-collapse", "", "");
-                } else {
-                    $dropdownid = $sectionid.'DropdownMenuLink';
-                    $html = sprintf($templateMenuItem, "dropdown-submenu", "dropdown-item dropdown-toggle", "", "#menuM5-collapse", "id='$dropdownid'", "<ul class='dropdown-menu'>$subsection</ul>");
-                }
-            } else if ($section->ttsectiondisplay == 3) {
-                $html = sprintf($templateMenuItem, "", "dropdown-item", "", "#menuM5-collapse", "", "");
-            }
-        }
-
-        return $html;
-    }
-
-    /**
-     * Function render sections content of TreeTopics.
-     *
-     * @return string
-     */
-    public function render_section_content($sectionid) {
-        global $PAGE;
-        if($sectionid === 'map'){
-            $showNavOverview = (isset($this->course->tthidenavoverview) && $this->course->tthidenavoverview == 0) || $PAGE->user_is_editing();
-            if ($showNavOverview){
-                return $this->get_map_sections();
-            }else{
-                foreach ($this->sectionstree as $item1) {
-                    if( !$item1->section->visible ){
-                        continue; 
-                    }
-        
-                    $id = $this->get_section_id($item1->section);
-                    if ($id) { 
-                        $sectionid = $id;
-                        break;
-                    }
-                }
-            }
-        }
-
-        $found = null; 
-        $result = "";
-        foreach ($this->sectionstree as $item1) {
-            if( !$item1->section->visible ){
-                continue; 
-            }
-
-            $id = $this->get_section_id($item1->section);
-            if ($id == $sectionid) { 
-                $found = $item1;
-                break;
-            }
-
-            foreach ($item1->child as $item2) {
-                if( !$item2->section->visible ){
-                    continue; 
-                }
-
-                $id = $this->get_section_id($item2->section);
-                if ($id == $sectionid) { 
-                    $found = $item2;
-                    break;
-                }
-            }
-        }
-
-        if(empty($found)){
-            return null;
-        }
-
-        $tmp = "";
-        foreach ($found->child as $item) { 
-            if( !$item->section->visible ){
-                continue; 
-            }
-
-            if ($item->section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES) {
-                $tmp .= $this->render_section_content_item($item->section);
-            }
-        }
-
-        $result = $this->render_section_content_item($found->section, $tmp);
-
-        return $result;
-    }
-
-    /**
-     * Function render section content item of TreeTopics.
-     *
-     * @param string $section
-     * @param string $subcontent
-     * @return string
-     */
-    protected function render_section_content_item($section, $subcontent = "") {
-        // The section 0 is required to display as tab in order to display all the children.
-        if (($section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES) && ($section->section > 0)) {
-            $html = $this->get_section_display_image($section, $subcontent);
-        } else {
-            $html = $this->get_section_display_tab($section, $subcontent);
-        }
-
-        return $html;
-    }
-
-    /**
-     * Function to get section image of TreeTopics.
-     *
-     * @param string $section
-     * @param string $subcontent
-     * @return string
-     */
-    protected function get_section_display_image($section, $subcontent) {
-        $sectionid = $this->get_section_id($section);
-        $sectionname = $this->get_section_name($section);
-
-        $formatoptions = format_base::instance($this->course)->get_format_options($section);
-        $imgsource = (isset($formatoptions['ttsectionimageurl'])
-                ? format_treetopics::rewrite_file_url($formatoptions['ttsectionimageurl']) : "");
-
-        $sectiontitle = ($formatoptions['ttsectiontitle'] == 1 ? "<div class='tt-section-title'>$sectionname</div>" : "");
-        $sectionsummary = format_text($section->ttsectionimagesummary_editor, FORMAT_MOODLE,
-                array('noclean' => true, 'filter' => true));
-        $content = "";
-        if ($section->ttsectionshowactivities == 1) {
-            $content = $this->moodlerenderer->get_course_section_cm_list($this->course, $section);
-        }
-        $html = "<div class='tt-imagebuttons auto2' data-section='$sectionid'>";
-        $html .= "<div class='tt-section-image-link tt-grid-element tt-section-image-link-selected' style='position:relative;'>";
-        $html .= "<img class='tt-section-image' src='$imgsource' alt='$sectionname'>";
-        $html .= "$sectiontitle";
-        $html .= "$sectionsummary";
-        $html .= "$content";
-        $html .= "<div style='display: flex;'>$subcontent</div>";
-        $html .= "</div>";
-        $html .= "</div>";
-
-        return $html;
-    }
-
-    /**
-     * Function to get section tab of TreeTopics.
-     *
-     * @param string $section
-     * @param string $subcontent
-     * @return string
-     */
-    protected function get_section_display_tab($section, $subcontent) {
-        //$sections = $modinfo->get_section_info_all();
-     //   $thissection = $infosections[$this];
-        $sectionid = $this->get_section_id($section);
-        $sectionname = $this->get_section_name($section);
-        $sectionavail = $this->moodlerenderer->section_availability($section);
-
-        $sectionstyle = '';
-
-        if (!$section->visible ) {
-            $sectionstyle = ' hidden';
-        }
-        if (course_get_format($this->course)->is_section_current($section)) {
-            $sectionstyle = ' current';
-        }
-
-        $content = "";
-        if ($section->ttsectionshowactivities == 1) {
-            $content = $this->moodlerenderer->get_course_section_cm_list($this->course, $section);
-        }
-
-        // Prepare the container to receive the section display image.
-        $colsize = 100 / max($this->course->ttimagegridcolumns, 1);
-        $gritemplatecols = "";
-        for ($i = 0; $i < $this->course->ttimagegridcolumns; $i++) {
-            $gritemplatecols .= "$colsize% ";
-        }
-
-        $context = context_course::instance($this->course->id);
-        $sectionsummary ='';
-        if (!$section->available)
-        {}
-         else{
-            
-                // Show summary if section is available or has
-            $sectionsummary = file_rewrite_pluginfile_urls($section->summary, 'pluginfile.php', $context->id, 'course', 'section',
-                    $section->id);
-
-            $sectionsummary = format_text($sectionsummary,  $section->summaryformat, array('noclean' => true, 'overflowdiv' => true,
-                    'filter' => true));
-         }
-        $html = "<div class='section main clearfix tt-section $sectionstyle' role='region' aria-label='$sectionname'";
-        $html .= " data-section='$sectionid'>";
-
-        if($section->ttsectiontitle == 1){
-            $html .= "<h2>$sectionname</h2>";
-        }
-
-        $html .= "<div class='content'>";
-        $html .= "$sectionavail";
-        $html .= "<div class='summary'>$sectionsummary</div>";
-        $html .= "$content";
-        $html .= "<!-- sections display image type container -->";
-        $html .= "<div class='grid{$this->course->ttimagegridcolumns}' style=''>$subcontent</div>";
-        $html .= "</div>";
-        $html .= "</div>";
-
-        return $html;
-    }
-
-    /**
-     * Function to get map of sections of TreeTopics.
-     *
-     * @return string
-     */
-    protected function get_map_sections() {
-        $tmp1 = "";
-        foreach ($this->sectionstree as $item1) {
-            $tmp2 = "";
-            foreach ($item1->child as $item2) {
-                $tmp3 = "";
-                foreach ($item2->child as $item3) {
-                    $tmp3 .= $this->get_map_link($item3->section);
-                }
-
-                $tmp2 .= $this->get_map_link($item2->section);
-
-                if (strlen($tmp3) > 0) {
-                    $tmp2 .= "<ul>$tmp3</ul>";
-                }
-            }
-
-            $tmp1 .= $this->get_map_link($item1->section);
-
-            if (strlen($tmp2) > 0) {
-                $tmp1 .= "<ul>$tmp2</ul>";
-            }
-        }
-
-        $content = "<ul class='root'>$tmp1</ul>";
-
-        $html = "<div class='section main clearfix tt-section menu-map' role='region' aria-label='carte'";
-        $html .= " data-section='map'>";
-        $html .= "<h2>Carte</h2>";
-        $html .= "<div class='content'>";
-        $html .= "$content";
-        $html .= "</div>";
-        $html .= "</div>";
-
-        return $html;
-    }
-
-    /**
-     * Function to get map link of TreeTopics.
-     * @param string $section
-     * @return string
-     */
-    protected function get_map_link($section) {
-        if ($section->ttsectioncontentdisplay == TT_DISPLAY_IMAGES) {
-            return sprintf("<li>%s<div class='activity-list'>%s</div></li>",
-                    $this->get_section_name($section), $this->moodlerenderer->get_course_section_cm_list($this->course, $section));
-        } else {
-            return sprintf("<li><a href='#' data-section='%s'
-                onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s<a/>
-                <div class='activity-list'>%s</div></li>",
-                $this->get_section_id($section), $this->get_section_name($section),
-                    $this->moodlerenderer->get_course_section_cm_list($this->course, $section));
-        }
-    }
-
-    /**
-     * Function render pagination of TreeTopics.
-     *
-     * @return string
-     */
-    protected function render_pagination() {
-        if (!$this->course->ttshownavsection) {
-            return "";
-        }
-        $result = "<nav id='sectionPagination' aria-label='Pagination de sections'
-            style='margin-top: 3rem; border-top: 1px solid #efefef; padding-top: 1rem;'>";
-        $result .= '<ul class="pagination justify-content-center ">';
-        $result .= '<li class="page-item">';
-        $result .= sprintf("<a class='page-link' href='#' tabindex='-1'
-            onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'><i class='fa fa-arrow-left'></i> %s</a>",
-                get_string('prev_section', 'format_treetopics', 'fr_ca'));
-        $result .= '</li>';
-        $result .= '<li class="page-item">';
-        $result .= sprintf("<a class='page-link' href='#' tabindex='-1'
-            onclick='M.recit.course.format.TreeTopics.instance.goToSection(event)'>%s <i class='fa fa-arrow-right'></i></a>",
-                get_string('next_section', 'format_treetopics', 'fr_ca'));
-        $result .= '</li>';
-        $result .= '</ul>';
-        $result .= '</nav>';
-
-        return $result;
-
-    }
-
-    /**
-     * Generate a section's id
-     *
-     * @param stdClass $section The course_section entry from DB
-     * @return string the section's string id
-     */
-    protected function get_section_id($section) {
-        return sprintf("section-%d", $section->section);
-    }
-
-    /**
-     * Function to get section name of TreeTopics.
-     * @param string $section
-     * @return string
-     */
-    protected function get_section_name($section) {
-        return (empty($section->name) ? get_string('section') . '' . $section->section : $section->name);
-    }
-
-    /**
-     * Function to get section name of TreeTopics.
-     * @param string $section
-     * @return string
-     */
-    protected function get_activity_name($activity) {
-        return sprintf('[[' . $activity->name . ']]');
-    }
-
-    /**
-     * Function show contract of TreeTopics.
+     * Function show contract of FormatRecit.
      * @return boolean
      */
     protected function show_contract() {
@@ -713,7 +104,7 @@ class TreeTopics
     }
 
     /**
-     * Function signing contract of TreeTopics.
+     * Function signing contract of FormatRecit.
      */
     protected function signing_contract() {
         if ((isset($_GET["ttc"])) && ($_GET["ttc"] == '1')) {
@@ -723,29 +114,29 @@ class TreeTopics
     }
 
     /**
-     * Function for checking signed contract of TreeTopics.
+     * Function for checking signed contract of FormatRecit.
      * @return boolean
      */
     protected function contract_is_signed() {
         global $DB, $USER;
-        $result = $DB->record_exists('format_treetopics_contract', ['courseid' => $this->course->id, 'userid' => $USER->id]);
+        $result = $DB->record_exists('format_recit_contract', ['courseid' => $this->course->id, 'userid' => $USER->id]);
         return $result;
     }
 
     /**
-     * Function to update signed contract of TreeTopics.
+     * Function to update signed contract of FormatRecit.
      */
     protected function contract_sign() {
         global $DB, $USER;
 
         if (!$this->contract_is_signed()) {
-            $DB->insert_record('format_treetopics_contract',
+            $DB->insert_record('format_recit_contract',
                     array('courseid' => $this->course->id, 'userid' => $USER->id, 'timemodified' => time()));
         }
     }
 
     /**
-     * Function render contract of TreeTopics.
+     * Function render contract of FormatRecit.
      * @return string
      */
     protected function render_contract() {
@@ -754,9 +145,8 @@ class TreeTopics
         $signed = $this->contract_is_signed();
 
         $section = $this->sectionslist[0];
-        $html = $this->render_section_content_item($section);
 
-        $html .= "<br/><br/>";
+        $html = "<br/><br/>";
         $html .= html_writer::start_tag('div', array('class' => self::ID_APPEND . 'contract'));
         $html .= html_writer::tag('h2', "Contrat d'engagement", array('class' => self::ID_APPEND . 'contract-title'));
         $html .= html_writer::tag('div', $section->ttcontract_editor, array('class' => self::ID_APPEND . 'contract-content'));
@@ -777,7 +167,7 @@ class TreeTopics
         return $html;
     }
 
-    public function render_editing_mode($format_treetopics_renderer){
+    public function render_editing_mode($format_recit_renderer){
         global $CFG, $COURSE;
 
         $selectedSection = (isset($_COOKIE['section']) ? $_COOKIE['section'] : 'menu');
@@ -794,7 +184,7 @@ class TreeTopics
 
         $sectionid = 'menu';
         $templateNavItem = "<a class='nav-item nav-link %s' id='v-pills-%s-tab' data-toggle='pill' href='#v-pills-%s' role='tab' 
-                            onclick='M.recit.course.format.TreeTopicsEditingMode.instance.goToSection(event, \"%s\")'
+                            onclick='M.recit.course.format.recit.EditingMode.instance.goToSection(event, \"%s\")'
                             aria-controls='v-pills-%s' aria-selected='true'>%s</a>";
 
         $result .= sprintf($templateNavItem, ($selectedSection === $sectionid ? 'active' : ''), $sectionid, $sectionid, $sectionid, $sectionid, "Menu");
@@ -812,16 +202,16 @@ class TreeTopics
         $html = "<div class='btn-group  pull-right'>";
         $html .= sprintf("<a href='%s/course/changenumsections.php?courseid=%ld&insertsection=0&sesskey=%s&returnurl=%s&sectionreturn=menu' 
                         class='btn btn-outline-primary' title='%s'><i class='fa fa-plus'></i></a>", 
-                        $CFG->wwwroot, $COURSE->id, sesskey(), course_get_url($COURSE), get_string('addsections', 'format_treetopics'));
-        $html .= sprintf("<button class='btn btn-outline-primary' onclick='M.recit.course.format.TreeTopicsEditingMode.instance.onBtnShowHideCmList(event)' title='%s'><i class='fa fa-fw fa-eye-slash'></i></button>", 
-                        get_string('sectionshowhideactivities', 'format_treetopics'));
+                        $CFG->wwwroot, $COURSE->id, sesskey(), course_get_url($COURSE), get_string('addsections', 'format_recit'));
+        $html .= sprintf("<button class='btn btn-outline-primary' onclick='M.recit.course.format.recit.EditingMode.instance.onBtnShowHideCmList(event)' title='%s'><i class='fa fa-fw fa-eye-slash'></i></button>", 
+                        get_string('sectionshowhideactivities', 'format_recit'));
         $html .= sprintf("<button class='btn btn-outline-primary' onclick='window.location.reload();' title='%s'><i class='fa fa-fw fa-refresh'></i></button>", 
-                    get_string('saveandrefresh', 'format_treetopics'));
+                    get_string('saveandrefresh', 'format_recit'));
         $html .= "</div>";
         $html .= "<br/><br/><br/>";
 
         foreach ($this->sectionslist as $section) {
-            $html .= $this->render_editing_mode_section_content($format_treetopics_renderer, $section, true);
+            $html .= $this->render_editing_mode_section_content($format_recit_renderer, $section, true);
         }       
 
         $html .= $this->getHtmlLoading();
@@ -833,7 +223,7 @@ class TreeTopics
         foreach ($this->sectionslist as $section) {
             $sectionid = $this->get_section_id($section);
             $result .= sprintf($templateTabContent, ($selectedSection === $sectionid ? 'active' : ''), $sectionid, $sectionid, 
-                        $this->render_editing_mode_section_content($format_treetopics_renderer, $section));
+                        $this->render_editing_mode_section_content($format_recit_renderer, $section));
         }
         
         $result .= '</div>';
@@ -842,7 +232,7 @@ class TreeTopics
         return $result;
     }
 
-    protected function render_editing_mode_section_content($format_treetopics_renderer, $section, $showMenu = false){
+    protected function render_editing_mode_section_content($format_recit_renderer, $section, $showMenu = false){
         global $CFG;
 
         // Title with completion help icon.
@@ -853,16 +243,16 @@ class TreeTopics
         $result .= $completioninfo->display_help_icon();
         
         if($showMenu){
-            $result .= $format_treetopics_renderer->section_header($section, $this->course, false, 0, false);
+            $result .= $format_recit_renderer->section_header($section, $this->course, false, 0, false);
             $result .= sprintf("<div class='section_add_menus' id='add_menus-%s'></div>", $sectionid);
-            $result .= sprintf("<div data-course-section-cm-list='1' style='display:none;'>%s</div>", $format_treetopics_renderer->get_course_section_cm_list($this->course, $section));
-            $result .= $format_treetopics_renderer->section_footer();
+            $result .= sprintf("<div data-course-section-cm-list='1' style='display:none;'>%s</div>", $format_recit_renderer->get_course_section_cm_list($this->course, $section));
+            $result .= $format_recit_renderer->section_footer();
         }
         else{   
             $result .= sprintf("<h2>%s</h2>",  $this->get_section_name($section));
             $result .= "<div class='btn-group pull-right'>";
-            $result .= sprintf("<a class='btn btn-outline-primary' href='%s/course/editsection.php?id=%ld&sr' title='%s'><i class='fa fa-fw fa-sliders'></i></a>", $CFG->wwwroot, $section->id, get_string('editsection', 'format_treetopics'));
-            $result .= sprintf("<button class='btn btn-outline-primary' onclick='M.recit.course.format.TreeTopicsEditingMode.instance.onBtnShowHideHiddenActivities(event)' title='%s'><i class='fa fa-fw fa-eye'></i></button>", get_string('showhidehiddenactivities', 'format_treetopics'));
+            $result .= sprintf("<a class='btn btn-outline-primary' href='%s/course/editsection.php?id=%ld&sr' title='%s'><i class='fa fa-fw fa-sliders'></i></a>", $CFG->wwwroot, $section->id, get_string('editsection', 'format_recit'));
+            $result .= sprintf("<button class='btn btn-outline-primary' onclick='M.recit.course.format.recit.EditingMode.instance.onBtnShowHideHiddenActivities(event)' title='%s'><i class='fa fa-fw fa-eye'></i></button>", get_string('showhidehiddenactivities', 'format_recit'));
             $result .= html_writer::tag('button', "<i class='fa fa-plus'></i>", [
                 'class' => 'section-modchooser-link btn btn-outline-primary',
                 'data-action' => 'open-chooser',
@@ -873,10 +263,10 @@ class TreeTopics
             );
             $result .= "</div>";
             $result .= "<br/><br/>";
-            $result .= $format_treetopics_renderer->section_header($section, $this->course, false, 0, true, false);
-            $result .= $format_treetopics_renderer->get_course_section_cm_list($this->course, $section);
-            $result .= $format_treetopics_renderer->get_course_section_add_cm_control($this->course, $section->section);
-            $result .= $format_treetopics_renderer->section_footer();
+            $result .= $format_recit_renderer->section_header($section, $this->course, false, 0, true, false);
+            $result .= $format_recit_renderer->get_course_section_cm_list($this->course, $section);
+            $result .= $format_recit_renderer->get_course_section_add_cm_control($this->course, $section->section);
+            $result .= $format_recit_renderer->section_footer();
         }
         
         return $result;
@@ -898,10 +288,10 @@ class TreeTopics
  * @copyright 2012 Dan Poltawski
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class format_treetopics_renderer extends format_section_renderer_base {
+class format_recit_renderer extends format_section_renderer_base {
 
-    /** @var TreeTopics */
-    protected $treetopics = null;
+    /** @var FormatRecit */
+    protected $formatrecit = null;
 
     /** 
      * @const int
@@ -919,17 +309,17 @@ class format_treetopics_renderer extends format_section_renderer_base {
     public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
 
-        // Since format_treetopics_renderer::section_edit_controls() only displays the 'Set current section' control
+        // Since format_recit_renderer::section_edit_controls() only displays the 'Set current section' control
         // when editing mode is on.
         // We need to be sure that the link 'Turn editing mode on' is available for a user who does not have any other
         // managing capability.
         $page->set_other_editing_capability('moodle/course:setcurrentsection');
 
-        $this->treetopics = new TreeTopics();
+        $this->formatrecit = new FormatRecit();
     }
 
     /**
-     * Function render tree topics of format_treetopics_renderer class.
+     * Function render tree topics of format_recit_renderer class.
      * @param stdClass $course
      */
     public function render_tree_topics($course) {
@@ -940,15 +330,15 @@ class format_treetopics_renderer extends format_section_renderer_base {
                     $this->print_multiple_section_page($course, null, null, null, null);
                     break;
                 case 2:
-                    $this->treetopics->load($this, course_get_format($course)->get_course());
-                    echo $this->treetopics->render_editing_mode($this);
+                    $this->formatrecit->load($this, course_get_format($course)->get_course());
+                    echo $this->formatrecit->render_editing_mode($this);
                     break;
             }
         } else {
             echo $this->output->heading($this->page_title(), 2, 'accesshide');
             echo $this->course_activity_clipboard($course, 0);  // Copy activity clipboard..
-            $this->treetopics->load($this, course_get_format($course)->get_course());
-            $this->treetopics->render();
+            $this->formatrecit->load($this, course_get_format($course)->get_course());
+            $this->formatrecit->render();
         }
     }
 
@@ -957,7 +347,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
      * @return string HTML to output.
      */
     protected function start_section_list() {
-        // Could "return html_writer::start_tag('div', array('class' => 'treetopics'));".
+        // Could "return html_writer::start_tag('div', array('class' => 'recit'));".
         return "";
     }
 
@@ -979,7 +369,7 @@ class format_treetopics_renderer extends format_section_renderer_base {
     }
 
     /**
-     * Function get course section cm list of format_treetopics_renderer class.
+     * Function get course section cm list of format_recit_renderer class.
      * @param stdClass $course
      * @param string $section
      */
@@ -1215,12 +605,12 @@ class format_treetopics_renderer extends format_section_renderer_base {
             if ($section->section > 0) {
                 $level = sprintf('<form class="inline-form-editing-mode">%s%s%s</form>',
                 sprintf($radiosectionlevel, $section->section, "1",
-                        ($section->ttsectiondisplay == 1 ? "checked" : ""), get_string('displaytabslev1', 'format_treetopics')),
+                        ($section->ttsectiondisplay == 1 ? "checked" : ""), get_string('displaytabslev1', 'format_recit')),
                 sprintf($radiosectionlevel, $section->section, "2",
-                        ($section->ttsectiondisplay == 2 ? "checked" : ""), get_string('displaytabslev2', 'format_treetopics')),
+                        ($section->ttsectiondisplay == 2 ? "checked" : ""), get_string('displaytabslev2', 'format_recit')),
                 "");
                 // Code 'sprintf($radiosectionlevel, ($section->ttsectiondisplay == 3 ? "active" : ""), "3",
-                // ($section->ttsectiondisplay == 3 ? "checked" : ""), get_string('displaytabslev3', 'format_treetopics')));'.
+                // ($section->ttsectiondisplay == 3 ? "checked" : ""), get_string('displaytabslev3', 'format_recit')));'.
             }
 
             $radiosectioncontentdisplay ='<label  ><input name="ttRadioSectionContentDisplay%ld" data-component="ttRadioSectionContentDisplay" type="radio" value="%s"  %s> %s</label>';
@@ -1228,10 +618,10 @@ class format_treetopics_renderer extends format_section_renderer_base {
             $contentdisplay = sprintf('<form class="inline-form-editing-mode">%s%s</form>',
                 sprintf($radiosectioncontentdisplay, $section->section, "-1",
                         ($section->ttsectioncontentdisplay == -1 ? "checked" : ""),
-                        get_string('displaytabs', 'format_treetopics')),
+                        get_string('displaytabs', 'format_recit')),
                 sprintf($radiosectioncontentdisplay, $section->section, "-2",
                         ($section->ttsectioncontentdisplay == -2 ? "checked" : ""),
-                        get_string('displayimages', 'format_treetopics')));
+                        get_string('displayimages', 'format_recit')));
        // }
 
         $html = sprintf("<span style='display: flex; align-items: end; line-height: 40px;'>%s%s%s</span>", $sectionname, $level, $contentdisplay);

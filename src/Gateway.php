@@ -32,7 +32,7 @@ $webApi->readRequest();
 $webApi->processRequest();
 
 /**
- * TreeTopics Web API.
+ * FormatRecit Web API.
  *
  * @author RECITFAD
  */
@@ -103,7 +103,7 @@ class WebApi{
 
             $data = $this->request->data;
             $query = "insert into {$prefix}course_format_options (courseid, format, sectionid, name, value)
-            values($data->courseId, 'treetopics', $data->sectionId, 'ttsectiondisplay', '$data->level')
+            values($data->courseId, 'recit', $data->sectionId, 'ttsectiondisplay', '$data->level')
             ON DUPLICATE KEY UPDATE value = '$data->level'";
 
             $this->mysqli->query($query);
@@ -124,7 +124,7 @@ class WebApi{
 
             $data = $this->request->data;
             $query = "insert into {$prefix}course_format_options (courseid, format, sectionid, name, value)
-            values($data->courseId, 'treetopics', $data->sectionId, 'ttsectioncontentdisplay', '$data->value')
+            values($data->courseId, 'recit', $data->sectionId, 'ttsectioncontentdisplay', '$data->value')
             ON DUPLICATE KEY UPDATE value = '$data->value'";
 
             $this->mysqli->query($query);
@@ -149,10 +149,8 @@ class WebApi{
 
             $PAGE->set_context(context_course::instance($data->courseid, MUST_EXIST));
             $PAGE->set_course($course);
-            $render = $PAGE->get_renderer('format_treetopics');
-            //$render = new format_treetopics_renderer($PAGE, $course);
-            $tt = new treetopics();
-            $tt->load($render, course_get_format($course)->get_course());
+            $tt = new FormatRecit();
+            $tt->load(course_get_format($course)->get_course());
 
             $this->reply(true, $tt->render_section_content($data->sectionid));
 

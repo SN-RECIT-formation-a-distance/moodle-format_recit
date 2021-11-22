@@ -17,16 +17,16 @@
 /**
  * Define provider.
  *
- * @package     format_treetopics
+ * @package     format_recit
  * @copyright   RECITFAD
  * @author      RECITFAD
  * @license     {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
  */
 
-namespace format_treetopics\privacy;
+namespace format_recit\privacy;
 defined('MOODLE_INTERNAL') || die();
 /**
- * Privacy Subsystem for format_treetopics implementing null_provider.
+ * Privacy Subsystem for format_recit implementing null_provider.
  *
  * @copyright  2018 Carlos Escobedo <carlos@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

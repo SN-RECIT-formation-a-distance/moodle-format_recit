@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="course/format/treetopics/db" VERSION="20190416" COMMENT="XMLDB file for Moodle course/format/treetopics"
+<XMLDB PATH="course/format/recit/db" VERSION="20190416" COMMENT="XMLDB file for Moodle course/format/recit"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="format_treetopics_contract" COMMENT="Contains all signatures for the contracts">
+    <TABLE NAME="format_recit_contract" COMMENT="Contains all signatures for the contracts">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>

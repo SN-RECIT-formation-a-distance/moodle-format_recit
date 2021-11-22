@@ -17,7 +17,7 @@
 /**
  * Define class for restoring.
  *
- * @package     format_treetopics
+ * @package     format_recit
  * @copyright   RECITFAD
  * @author      RECITFAD
  * @license     {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
@@ -26,16 +26,16 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Specialised restore for format_treetopics
+ * Specialised restore for format_recit
  *
  * Processes 'numsections' from the old backup files and hides sections that used to be "orphaned"
  *
- * @package   format_treetopics
+ * @package   format_recit
  * @category  backup
  * @copyright 2017 Marina Glancy
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class restore_format_treetopics_plugin extends restore_format_plugin {
+class restore_format_recit_plugin extends restore_format_plugin {
 
     /** @var int */
     protected $originalnumsections = 0;
@@ -97,7 +97,7 @@ class restore_format_treetopics_plugin extends restore_format_plugin {
 
         $data = $this->connectionpoint->get_data();
         $backupinfo = $this->step->get_task()->get_info();
-        if ($backupinfo->original_course_format !== 'treetopics' || !isset($data['tags']['numsections'])) {
+        if ($backupinfo->original_course_format !== 'recit' || !isset($data['tags']['numsections'])) {
             // Backup from another course format or backup file does not even have 'numsections'.
             return;
         }

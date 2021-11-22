@@ -17,7 +17,7 @@
 /**
  * Define plugin data upgrade.
  *
- * @package     format_treetopics
+ * @package     format_recit
  * @copyright   RECITFAD
  * @author      RECITFAD
  * @license     {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
@@ -26,28 +26,11 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Upgrade script for format_treetopics
+ * Upgrade script for format_recit
  *
  * @param int $oldversion the version we are upgrading from
  * @return bool result
  */
-function xmldb_format_treetopics_upgrade($oldversion) {
-    global $CFG, $DB;
-    $dbman = $DB->get_manager();
-
-    // Add a new columns suggestednote and teachertip.
-    if ($oldversion < 2020020502) {
-        // Define field jsoncontent to be added to filter_wiris_formulas.
-        $table = new xmldb_table('format_treetopics_contract');
-        $field = new xmldb_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
-
-        // Conditionally launch add field jsoncontent.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-
-           upgrade_plugin_savepoint(true, 2020020502, 'format', 'treetopics');
-    }
-
+function xmldb_format_recit_upgrade($oldversion) {
     return true;
 }

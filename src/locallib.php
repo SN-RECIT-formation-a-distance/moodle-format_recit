@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Treetopics lib file.
+ * Recit lib file.
  *
- * @package    format_treetopics
+ * @package    format_recit
  * @copyright  RECITFAD
  * @author     RECITFAD
  * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-function treetopics_completion_callback(){
+function formatrecit_completion_callback(){
     global $USER, $COURSE, $DB;
 
     $course = course_get_format($COURSE)->get_course();

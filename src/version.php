@@ -15,9 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Treetopics version control.
  *
- * @package    format_treetopics
+ * @package    format_recit
  * @copyright  RECITFAD
  * @author     RECITFAD
  * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
@@ -25,11 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2021092400;        // The current plugin version (Date: YYYYMMDDXX).
+$plugin->version   = 2021112200;        // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires  = 2018051700;        // Requires this Moodle version.
-$plugin->component = 'format_treetopics';    // Full name of the plugin (used for diagnostics).
-$plugin->maturity = MATURITY_BETA;
-$plugin->release = 'R14-V1.1';
-$plugin->dependencies = [
-    'theme_recit' => 2021092400
-];
+$plugin->component = 'format_recit';    // Full name of the plugin (used for diagnostics).
+$plugin->maturity = MATURITY_ALPHA;
+$plugin->release = 'R14-V1.0';
+$plugin->dependencies = [];

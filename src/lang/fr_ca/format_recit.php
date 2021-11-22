@@ -17,7 +17,7 @@
 /**
  * Define french strings.
  *
- * @package     format_treetopics
+ * @package     format_recit
  * @copyright   RECITFAD
  * @author      RECITFAD
  * @license     {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later

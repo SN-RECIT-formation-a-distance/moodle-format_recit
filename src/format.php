@@ -17,7 +17,7 @@
 /**
  * Set page format.
  *
- * @package    format_treetopics
+ * @package    format_recit
  * @copyright  RECITFAD
  * @author     RECITFAD
  * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
@@ -28,9 +28,9 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir.'/filelib.php');
 require_once($CFG->libdir.'/completionlib.php');
 
-$PAGE->requires->js_call_amd('format_treetopics/core', 'init');
-$PAGE->requires->string_for_js('showhidehiddenactivities', 'format_treetopics');
-$PAGE->requires->string_for_js('sectionshowhideactivities', 'format_treetopics');
+$PAGE->requires->js_call_amd('format_recit/core', 'init');
+$PAGE->requires->string_for_js('showhidehiddenactivities', 'format_recit');
+$PAGE->requires->string_for_js('sectionshowhideactivities', 'format_recit');
 
 // Horrible backwards compatible parameter aliasing..
 if ($topic = optional_param('topic', 0, PARAM_INT)) {
@@ -53,9 +53,9 @@ if (($marker >= 0) && has_capability('moodle/course:setcurrentsection', $context
 // Make sure section 0 is created.
 course_create_sections_if_missing($course, 0);
 
-$renderer = $PAGE->get_renderer('format_treetopics');
+$renderer = $PAGE->get_renderer('format_recit');
 
 $renderer->render_tree_topics($course);
 
 // Include course format js module.
-$PAGE->requires->js('/course/format/treetopics/format.js');
+$PAGE->requires->js('/course/format/recit/format.js');

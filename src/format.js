@@ -1,4 +1,4 @@
-// Javascript functions for Tree Topics course format.
+// Javascript functions for RÉCIT course format.
 
 M.course = M.course || {};
 M.course.format = M.course.format || {};
@@ -7,7 +7,7 @@ M.course.format = M.course.format || {};
  * Get sections config for this format
  *
  * The section structure is:
- * <ul class="treetopics">
+ * <ul class="formatrecit">
  *  <li class="section">...</li>
  *  <li class="section">...</li>
  *   ...
@@ -18,7 +18,7 @@ M.course.format = M.course.format || {};
 M.course.format.get_config = function() {
     return {
         container_node : 'ul',
-        container_class : 'treetopics',
+        container_class : 'formatrecit',
         section_node : 'li',
         section_class : 'section'
     };
@@ -42,7 +42,7 @@ M.course.format.swap_sections = function(Y, node1, node2) {
     // Swap menus.
     sectionlist.item(node1).one('.' + CSS.SECTIONADDMENUS).swap(sectionlist.item(node2).one('.' + CSS.SECTIONADDMENUS));
 
-    M.recit.course.format.TreeTopicsEditingMode.instance.init();
+    M.recit.course.format.recit.EditingMode.instance.init();
 }
 
 /**
@@ -91,7 +91,9 @@ M.course.format.process_sections = function(Y, sectionlist, response, sectionfro
 M.recit = M.recit || {};
 M.recit.course = M.recit.course || {};
 M.recit.course.format = M.recit.course.format || {};
-M.recit.course.format.TreeTopicsWebApi = class{
+M.recit.course.format = M.recit.course.format || {};
+M.recit.course.format.recit = M.recit.course.format.recit || {};
+M.recit.course.format.recit.WebApi = class{
     constructor(){
         this.gateway = this.getGateway();
 
@@ -101,7 +103,7 @@ M.recit.course.format.TreeTopicsWebApi = class{
     }
 
     getGateway(){
-        return `${M.cfg.wwwroot}/course/format/treetopics/Gateway.php`;
+        return `${M.cfg.wwwroot}/course/format/recit/Gateway.php`;
     }
 
     onError(jqXHR, textStatus) {
@@ -170,7 +172,7 @@ M.recit.course.format.TreeTopicsWebApi = class{
     }
 }
 
-M.recit.course.format.TreeTopicsUtils = class{
+M.recit.course.format.recit.Utils = class{
     static getCookie(cname) {
         let name = cname + "=";
         let decodedCookie = decodeURIComponent(document.cookie);
@@ -210,7 +212,7 @@ M.recit.course.format.TreeTopicsUtils = class{
     }
 }
 
-M.recit.course.format.TreeTopicsEditingMode = class{
+M.recit.course.format.recit.EditingMode = class{
     constructor(webApi){
         //this.onChangeFilter = this.onChangeFilter.bind(this);
         this.onChangeLevel = this.onChangeLevel.bind(this);
@@ -268,7 +270,7 @@ M.recit.course.format.TreeTopicsEditingMode = class{
                 section.setAttribute("data-section-level", radio.value);
             }
             else{
-                alert(M.recit.course.format.TreeTopics.messages.error);
+                alert(M.recit.course.format.recit.messages.error);
             }
         }
         let courseId = this.getQueryVariable("id");
@@ -290,76 +292,15 @@ M.recit.course.format.TreeTopicsEditingMode = class{
     onChangeContentDisplay(radio, section){
         let callback = function(result){
             if(!result.success){
-                alert(M.recit.course.format.TreeTopics.messages.error);
+                alert(M.recit.course.format.recit.messages.error);
             }
         }
         let courseId = this.getQueryVariable("id");
         this.webApi.setSectionContentDisplay({courseId: courseId, sectionId: section.getAttribute("data-section-id"), value: radio.value}, callback);
     }
 
-    /*initFilter(){
-        this.filter = document.getElementById("ttModeEditionFilter");
-
-        if(this.filter === null){ return; }
-
-        let options = this.filter.querySelectorAll("input");
-
-        for(let item of options){
-            item.onchange = this.onChangeFilter;
-            let evt = document.createEvent("HTMLEvents");
-            evt.initEvent("change", false, true);
-            item.dispatchEvent(evt);
-        }
-    }
-
-    onChangeFilter(event){
-        switch(event.target.value){
-            case "act": this.displayActivities(event.target.checked); break;
-            case "sum": this.displaySummary(event.target.checked); break;
-        }
-
-        // Cookies ctrl.
-        let options = this.filter.querySelectorAll("input");
-
-        let cookies = [];
-        for(let item of options){
-            if(item.checked){
-                cookies.push(item.value);
-            }
-        }
-
-        M.recit.course.format.TreeTopicsUtils.setCookie('ttModeEditionFilter', cookies.join(","));
-    }
-
-    displayActivities(display){
-        let sectionList = document.querySelectorAll('[data-section-level]');
-
-        for(let section of sectionList){
-            let elList = [
-                ...section.querySelectorAll("ul.section"),
-                ...section.querySelectorAll("div.section-modchooser")
-            ];
-
-            for(let el of elList){
-                el.style.display = (display ? "block" : 'none');
-            }
-        }
-
-    }
-
-    displaySummary(display){
-        let sectionList = document.querySelectorAll('[data-section-level]');
-
-        for(let section of sectionList){
-            let elList = section.querySelectorAll("div.summary");
-            for(let el of elList){
-                el.style.display = (display ? "block" : 'none');
-            }
-        }
-    }*/
-
     goToSection(event, sectionId){
-        M.recit.course.format.TreeTopicsUtils.setCookie('section', sectionId);
+        M.recit.course.format.recit.Utils.setCookie('section', sectionId);
     }
 
     onBtnShowHideHiddenActivities(event){
@@ -411,12 +352,12 @@ M.recit.course.format.TreeTopicsEditingMode = class{
     }
 }
 
-M.recit.course.format.TreeTopics = class{
+M.recit.course.format.recit.NonEditingMode = class{
     constructor(){
         this.getSectionContentResult = this.getSectionContentResult.bind(this);
         window.onscroll = this.onScroll.bind(this);
 
-        this.webApi = new M.recit.course.format.TreeTopicsWebApi();
+        this.webApi = new M.recit.course.format.recit.WebApi();
 
         this.sectionContent = null;
         this.pagination = null;
@@ -426,10 +367,10 @@ M.recit.course.format.TreeTopics = class{
     } 
     
     init(){
-        let params = M.recit.course.format.TreeTopicsUtils.getUrlVars();
+        let params = M.recit.course.format.recit.Utils.getUrlVars();
 
         // If there is no sectionId defined then it displays the section-0.
-        let sectionId = params.sectionId || window.location.hash.substr(1, window.location.hash.length) || M.recit.course.format.TreeTopicsUtils.getCookie('section') || 'section-0';
+        let sectionId = params.sectionId || window.location.hash.substr(1, window.location.hash.length) || M.recit.course.format.recit.Utils.getCookie('section') || 'section-0';
 
         this.pagination = document.getElementById('sectionPagination');
         
@@ -568,7 +509,7 @@ M.recit.course.format.TreeTopics = class{
 
     getSectionContentResult(result){
         if(!result.success){
-            alert(M.recit.course.format.TreeTopics.messages.error);
+            alert(M.recit.course.format.recit.messages.error);
             return;
         }
         if(result.data === null){
@@ -646,9 +587,9 @@ M.recit.course.format.TreeTopics = class{
 
         this.ctrlMenu(sectionId);
 
-        M.recit.course.format.TreeTopicsUtils.setCookie('section', sectionId);
+        M.recit.course.format.recit.Utils.setCookie('section', sectionId);
 
-        let params = M.recit.course.format.TreeTopicsUtils.getUrlVars();
+        let params = M.recit.course.format.recit.Utils.getUrlVars();
         
         if(this.sectionContent !== null){
             this.webApi.getSectionContent({sectionid: sectionId, courseid: params.id}, this.getSectionContentResult);
@@ -666,7 +607,7 @@ M.recit.course.format.TreeTopics = class{
         let sections = navbar.querySelectorAll('[data-section]');
         if(sections === null){ return;}
         
-        let currentSection = M.recit.course.format.TreeTopicsUtils.getCookie('section');
+        let currentSection = M.recit.course.format.recit.Utils.getCookie('section');
         let btnPrevious = this.pagination.firstChild.firstChild;
         let btnNext = this.pagination.firstChild.lastChild;
        
@@ -699,13 +640,13 @@ M.recit.course.format.TreeTopics = class{
 }
 
 // Definition static attributes and methods to work with Firefox.
-M.recit.course.format.TreeTopics.messages = {
+M.recit.course.format.recit.messages = {
     error: "Une erreur inattendue est survenue. Veuillez réessayer."
 }
 
 // Without jQuery (doesn't work in older IEs).
 document.addEventListener('DOMContentLoaded', function() {
-    M.recit.course.format.TreeTopics.instance = new M.recit.course.format.TreeTopics();
+    M.recit.course.format.recit.NonEditingMode.instance = new M.recit.course.format.recit.NonEditingMode();
 
-    M.recit.course.format.TreeTopicsEditingMode.instance = new M.recit.course.format.TreeTopicsEditingMode(M.recit.course.format.TreeTopics.instance.webApi);
+    M.recit.course.format.recit.EditingMode.instance = new M.recit.course.format.recit.EditingMode(M.recit.course.format.recit.instance.webApi);
 }, false);

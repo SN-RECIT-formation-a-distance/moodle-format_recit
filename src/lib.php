@@ -17,7 +17,7 @@
 /**
  * Treetopics lib file.
  *
- * @package    format_treetopics
+ * @package    format_recit
  * @copyright  RECITFAD
  * @author     RECITFAD
  * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
@@ -26,57 +26,13 @@
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot. '/course/format/lib.php');
 require_once($CFG->dirroot. '/course/editsection_form.php');
-/** @var int */
-const TT_DISPLAY_NONE = 0;
-/** @var int */
-const TT_DISPLAY_TABS = -1;
-/** @var int */
-const TT_DISPLAY_IMAGES = -2;
-
-/** @var int */
-const TT_DISPLAY_TABS_LEVEL_1 = 1;
-/** @var int */
-const TT_DISPLAY_TABS_LEVEL_2 = 2;
-/** @var int */
-const TT_DISPLAY_TABS_LEVEL_3 = 3;
-
-/*
-function format_treetopics_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=[]) {
-    // Make sure the user is logged in and has access to the module (plugins that are not course modules should
-    // leave out the 'cm' part).
-    require_login($course, true, $cm);
-
-    // Leave this line out if you set the itemid to null in make_pluginfile_url (set $itemid to 0 instead).
-    $itemid = array_shift($args); // The first item in the $args array.
-
-    // Use the itemid to retrieve any relevant data records and perform any security checks to see if the
-    // user really does have access to the file in question.
-
-    // Extract the filename / filepath from the $args array.
-    $filename = array_pop($args); // The last item in the $args array.
-    if (!$args) {
-        $filepath = '/'; // $args is empty => the path is '/'
-    } else {
-        $filepath = '/'.implode('/', $args).'/'; // $args contains elements of the filepath
-    }
-
-    // Retrieve the file from the Files API.
-    $fs = get_file_storage();
-    $file = $fs->get_file($context->id, 'format_treetopics', $filearea, $itemid, $filepath, $filename);
-    if (!$file) {
-        return false; // The file does not exist.
-    }
-
-    // We can now send the file back to the browser - in this case with a cache lifetime of 1 day and no filtering.
-    send_stored_file($file, 86400, 0, $forcedownload, $options);
-}*/
 
 /**
  * Default form for editing course section
  *
  * Course format plugins may specify different editing form to use
  */
-class tt_editsection_form  extends editsection_form {
+class format_recit_editsection_form  extends editsection_form {
     /** @var array */
     public const EDITOR_OPTIONS = array('context' => null, 'maxfiles' => 0, 'trusttext' => false,
             'noclean' => true, 'maxbytes' => 0);
@@ -100,7 +56,7 @@ class tt_editsection_form  extends editsection_form {
         $defaultvalue = file_prepare_standard_editor($defaultvalue, 'ttcontract', $editoroptions,
                 $editoroptions['context'], 'course', 'section', $defaultvalue->id);
 
-        $defaultvalue->ttsectionimageurl = format_treetopics::rewrite_file_url($defaultvalue->ttsectionimageurl);
+        $defaultvalue->ttsectionimageurl = format_recit::rewrite_file_url($defaultvalue->ttsectionimageurl);
 
         parent::set_data($defaultvalue);
     }
@@ -122,20 +78,20 @@ class tt_editsection_form  extends editsection_form {
             $data = file_postupdate_standard_editor($data, 'ttcontract', $editoroptions,
             $editoroptions['context'], 'course', 'section', $data->id);
 
-            $data->ttsectionimageurl = format_treetopics::rewrite_file_url($data->ttsectionimageurl, true);
+            $data->ttsectionimageurl = format_recit::rewrite_file_url($data->ttsectionimageurl, true);
         }
         return $data;
     }
 
     /**
-     * Function of class tt_editsection_form
+     * Function of class format_recit_editsection_form
      */
     public function get_editor_options() {
         return $this->_customdata['editoroptions'];
     }
 
     /**
-     * Function of class tt_editsection_form
+     * Function of class format_recit_editsection_form
      * @return MoodleQuickForm
      */
     public function get_form() {
@@ -146,14 +102,23 @@ class tt_editsection_form  extends editsection_form {
 /**
  * Main class for the Topics course format
  *
- * @package    format_treetopics
+ * @package    format_recit
  * @copyright  2012 Marina Glancy
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class format_treetopics extends format_base {
+class format_recit extends format_base {
+    /** @var int */
+    public const TT_DISPLAY_TABS = -1;
+    /** @var int */
+    public const TT_DISPLAY_IMAGES = -2;
+
+    /** @var int */
+    public const TT_DISPLAY_TABS_LEVEL_1 = 1;
+    /** @var int */
+    public const TT_DISPLAY_TABS_LEVEL_2 = 2;
 
     /**
-     * Function of class format_treetopics.
+     * Function of class format_recit.
      * @param string $fileurl
      * @param boolean $reverse
      * @return string
@@ -206,7 +171,7 @@ class format_treetopics extends format_base {
     public function get_default_section_name($section) {
         if ($section->section == 0) {
             // Return the general section.
-            return get_string('section0name', 'format_treetopics');
+            return get_string('section0name', 'format_recit');
         } else {
             // Use format_base::get_default_section_name implementation which
             // will display the section name in "Topic n" format.
@@ -405,25 +370,25 @@ class format_treetopics extends format_base {
                         )
                 ),
                 'tttabsmodel' => array(
-                    'label' => new lang_string('tabsmodel', 'format_treetopics'),
+                    'label' => new lang_string('tabsmodel', 'format_recit'),
                     'help' => 'tabsmodel',
-                    'help_component' => 'format_treetopics',
+                    'help_component' => 'format_recit',
                     'element_type' => 'select',
                     'element_attributes' => array(
                         array(
-                            1 => new lang_string('tabmodel1', 'format_treetopics'),
-                            2 => new lang_string('tabmodel2', 'format_treetopics'),
-                            3 => new lang_string('tabmodel3', 'format_treetopics'),
-                            //3 => new lang_string('tabmodel3', 'format_treetopics'),
-                            //3 => new lang_string('tabmodel3', 'format_treetopics'),
-                            5 => new lang_string('tabmodel5', 'format_treetopics')
+                            1 => new lang_string('tabmodel1', 'format_recit'),
+                            2 => new lang_string('tabmodel2', 'format_recit'),
+                            3 => new lang_string('tabmodel3', 'format_recit'),
+                            //3 => new lang_string('tabmodel3', 'format_recit'),
+                            //3 => new lang_string('tabmodel3', 'format_recit'),
+                            5 => new lang_string('tabmodel5', 'format_recit')
                         )
                     )
                 ),
                 'ttimagegridcolumns' => array(
-                    'label' => new lang_string('imagegridcolumns', 'format_treetopics'),
+                    'label' => new lang_string('imagegridcolumns', 'format_recit'),
                     'help' => 'imagegridcolumns',
-                    'help_component' => 'format_treetopics',
+                    'help_component' => 'format_recit',
                     'element_type' => 'select',
                     'element_attributes' => array(
                         array(
@@ -437,27 +402,27 @@ class format_treetopics extends format_base {
                     )
                 ),
                 'tthascontract' => array(
-                    'label' => new lang_string('hascontract', 'format_treetopics'),
+                    'label' => new lang_string('hascontract', 'format_recit'),
                     'help' => 'hascontract',
-                    'help_component' => 'format_treetopics',
+                    'help_component' => 'format_recit',
                     'element_type' => 'checkbox'
                 ),
                 'ttcustompath' => array(
-                    'label' => new lang_string('custompath', 'format_treetopics'),
+                    'label' => new lang_string('custompath', 'format_recit'),
                     'help' => 'custompath',
-                    'help_component' => 'format_treetopics',
+                    'help_component' => 'format_recit',
                     'element_type' => 'checkbox'
                 ),
                 'tthidenavoverview' => array(
-                    'label' => new lang_string('navsectionoverview', 'format_treetopics'),
+                    'label' => new lang_string('navsectionoverview', 'format_recit'),
                     'help' => 'navsectionoverview',
-                    'help_component' => 'format_treetopics',
+                    'help_component' => 'format_recit',
                     'element_type' => 'checkbox'
                 ),
                 'ttshownavsection' => array(
-                    'label' => new lang_string('navsection', 'format_treetopics'),
+                    'label' => new lang_string('navsection', 'format_recit'),
                     'help' => 'navsection',
-                    'help_component' => 'format_treetopics',
+                    'help_component' => 'format_recit',
                     'element_type' => 'checkbox'
                 ),
             );
@@ -485,7 +450,7 @@ class format_treetopics extends format_base {
         if (!array_key_exists('course', $customdata)) {
             $customdata['course'] = $this->get_course();
         }
-        $result = new tt_editsection_form($action, $customdata);
+        $result = new format_recit_editsection_form($action, $customdata);
 
         // Code "$this->editorOptions = $result->get_editor_options();".
         $form = $result->get_form();
@@ -538,11 +503,11 @@ class format_treetopics extends format_base {
         if ($sectionformatoptions === false) {
             $sectionformatoptions = array(
                 'ttsectiondisplay' => array(
-                    'default' => TT_DISPLAY_TABS_LEVEL_1,
+                    'default' => self::TT_DISPLAY_TABS_LEVEL_1,
                     'type' => PARAM_INT
                 ),
                 'ttsectioncontentdisplay' => array(
-                    'default' => TT_DISPLAY_TABS,
+                    'default' => self::TT_DISPLAY_TABS,
                     'type' => PARAM_INT
                 ),
                 'ttsectionshowactivities' => array(
@@ -575,51 +540,51 @@ class format_treetopics extends format_base {
             $contextcourse = context_course::instance($course->id);
             $sectionformatoptionsedit = array(
                 'ttsectiondisplay' => array(
-                    'label' => new lang_string('sectiondisplay', 'format_treetopics'),
+                    'label' => new lang_string('sectiondisplay', 'format_recit'),
                     'help' => 'sectiondisplay',
-                    'help_component' => 'format_treetopics',
+                    'help_component' => 'format_recit',
                     'element_type' => 'select',
                     'element_attributes' => array(
                         array(
-                            TT_DISPLAY_TABS_LEVEL_1 => new lang_string('displaytabslev1', 'format_treetopics'),
-                            TT_DISPLAY_TABS_LEVEL_2 => new lang_string('displaytabslev2', 'format_treetopics'),
-                            // Code "TT_DISPLAY_TABS_LEVEL_3 => new lang_string('displaytabslev3', 'format_treetopics'),".
-                            TT_DISPLAY_IMAGES => new lang_string('displayimages', 'format_treetopics')
+                            self::TT_DISPLAY_TABS_LEVEL_1 => new lang_string('displaytabslev1', 'format_recit'),
+                            self::TT_DISPLAY_TABS_LEVEL_2 => new lang_string('displaytabslev2', 'format_recit'),
+                            // Code "TT_DISPLAY_TABS_LEVEL_3 => new lang_string('displaytabslev3', 'format_recit'),".
+                            self::TT_DISPLAY_IMAGES => new lang_string('displayimages', 'format_recit')
                         )
                     )
                 ),
                 'ttsectioncontentdisplay' => array(
-                    'label' => new lang_string('sectioncontentdisplay', 'format_treetopics'),
+                    'label' => new lang_string('sectioncontentdisplay', 'format_recit'),
                     'help' => 'sectioncontentdisplay',
-                    'help_component' => 'format_treetopics',
+                    'help_component' => 'format_recit',
                     'element_type' => 'select',
                     'element_attributes' => array(
                         array(
-                            TT_DISPLAY_IMAGES => new lang_string('displayimages', 'format_treetopics'),
-                            TT_DISPLAY_TABS => new lang_string('displaytabs', 'format_treetopics')
+                            self::TT_DISPLAY_IMAGES => new lang_string('displayimages', 'format_recit'),
+                            self::TT_DISPLAY_TABS => new lang_string('displaytabs', 'format_recit')
                         )
                     )
                 ),
                 'ttsectionshowactivities' => array(
-                    'label' => new lang_string('sectionshowactivities', 'format_treetopics'),
+                    'label' => new lang_string('sectionshowactivities', 'format_recit'),
                     'help' => 'sectionshowactivities',
-                    'help_component' => 'format_treetopics',
+                    'help_component' => 'format_recit',
                     'element_type' => 'checkbox'
                 ),
                 'ttsectiontitle' => array(
-                    'label' => new lang_string('showsectiontitle', 'format_treetopics'),
+                    'label' => new lang_string('showsectiontitle', 'format_recit'),
                     'help' => 'showsectiontitle',
-                    'help_component' => 'format_treetopics',
+                    'help_component' => 'format_recit',
                     'element_type' => 'checkbox'
                 ),
                 'ttsectionimageurl' => array(
-                    'label' => new lang_string('sectionimageurl', 'format_treetopics'),
+                    'label' => new lang_string('sectionimageurl', 'format_recit'),
                     'help' => 'sectionimageurl',
-                    'help_component' => 'format_treetopics',
+                    'help_component' => 'format_recit',
                     'element_type' => 'text'
                 ),
                 'btnSeeDepFiles' => array(
-                    'label' => sprintf("<i class='fa fa-file'></i> %s", get_string('btnSeeDepFiles', 'format_treetopics')),
+                    'label' => sprintf("<i class='fa fa-file'></i> %s", get_string('btnSeeDepFiles', 'format_recit')),
                     'element_type' => 'button',
                     'element_attributes' => array(
                         array('onclick' => sprintf("window.open('%s/%s%ld','_blank')",
@@ -627,7 +592,7 @@ class format_treetopics extends format_base {
                     )
                 ),
                 'btnUploadDepFiles' => array(
-                    'label' => sprintf("<i class='fa fa-upload'></i> %s", get_string('btnUploadDepFiles', 'format_treetopics')),
+                    'label' => sprintf("<i class='fa fa-upload'></i> %s", get_string('btnUploadDepFiles', 'format_recit')),
                     'element_type' => 'button',
                     'element_attributes' => array(
                         array('onclick' => sprintf("window.open('%s/%s%ld','_blank')",
@@ -635,18 +600,18 @@ class format_treetopics extends format_base {
                     )
                 ),
                 'ttsectionimagesummary_editor' => array(
-                    'label' => new lang_string('sectionimagesummary', 'format_treetopics'),
+                    'label' => new lang_string('sectionimagesummary', 'format_recit'),
                     'help' => 'sectionimagesummary',
-                    'help_component' => 'format_treetopics',
+                    'help_component' => 'format_recit',
                     'element_type' => 'editor',
-                    'element_attributes' => tt_editsection_form::EDITOR_OPTIONS
+                    'element_attributes' => format_recit_editsection_form::EDITOR_OPTIONS
                 ),
                 'ttcontract_editor' => array(
-                    'label' => new lang_string('contract', 'format_treetopics'),
+                    'label' => new lang_string('contract', 'format_recit'),
                     'help' => 'contract',
-                    'help_component' => 'format_treetopics',
+                    'help_component' => 'format_recit',
                     'element_type' => 'editor',
-                    'element_attributes' => tt_editsection_form::EDITOR_OPTIONS
+                    'element_attributes' => format_recit_editsection_form::EDITOR_OPTIONS
                 )
             );
 
@@ -676,7 +641,7 @@ class format_treetopics extends format_base {
             // delete and add sections when needed.
             $courseconfig = get_config('moodlecourse');
             $max = (int)$courseconfig->maxsections;
-            $element = $mform->addElement('select', 'numsections', get_string('numsection', 'format_treetopics'), range(0, $max ?: 100));
+            $element = $mform->addElement('select', 'numsections', get_string('numsection', 'format_recit'), range(0, $max ?: 100));
             $mform->setType('numsections', PARAM_INT);
             if (is_null($mform->getElementValue('numsections'))) {
                 $mform->setDefault('numsections', $courseconfig->numsections);
@@ -690,7 +655,7 @@ class format_treetopics extends format_base {
     /**
      * Updates format options for a course
      *
-     * In case if course format was changed to 'treetopics', we try to copy options
+     * In case if course format was changed to 'recit', we try to copy options
      * 'coursedisplay' and 'hiddensections' from the previous format.
      *
      * @param stdClass|array $data return value from {@see moodleform::get_data()} or array with data
@@ -829,11 +794,11 @@ class format_treetopics extends format_base {
     public function inplace_editable_render_section_name($section, $linkifneeded = true,
                                                          $editable = null, $edithint = null, $editlabel = null) {
         if (empty($edithint)) {
-            $edithint = new lang_string('editsectionname', 'format_treetopics');
+            $edithint = new lang_string('editsectionname', 'format_recit');
         }
         if (empty($editlabel)) {
             $title = get_section_name($section->course, $section);
-            $editlabel = new lang_string('newsectionname', 'format_treetopics', $title);
+            $editlabel = new lang_string('newsectionname', 'format_recit', $title);
         }
 
         return parent::inplace_editable_render_section_name($section, $linkifneeded, $editable, $edithint, $editlabel);
@@ -862,7 +827,7 @@ class format_treetopics extends format_base {
     }
 
     /**
-     * Function of class format_treetopics.
+     * Function of class format_recit.
      * {@inheritDoc}
      * @see format_base::section_action()
      * @param string $section
@@ -873,7 +838,7 @@ class format_treetopics extends format_base {
         global $PAGE;
 
         if ($section->section && ($action === 'setmarker' || $action === 'removemarker')) {
-            // Format 'treetopics' allows to set and remove markers in addition to common section actions.
+            // Format 'recit' allows to set and remove markers in addition to common section actions.
             require_capability('moodle/course:setcurrentsection', context_course::instance($this->courseid));
             course_set_marker($this->courseid, ($action === 'setmarker') ? $section->section : 0);
             return null;
@@ -881,7 +846,7 @@ class format_treetopics extends format_base {
 
         // For show/hide actions call the parent method and return the new content for .section_availability element.
         $rv = parent::section_action($section, $action, $sr);
-        $renderer = $PAGE->get_renderer('format_treetopics');
+        $renderer = $PAGE->get_renderer('format_recit');
         $rv['section_availability'] = $renderer->section_availability($this->get_section($section));
         return $rv;
     }
@@ -898,7 +863,7 @@ class format_treetopics extends format_base {
     }
 
     /**
-     * Function of class format_treetopics.
+     * Function of class format_recit.
      * @param string $data
      */
     private function console_log( $data ) {
@@ -916,13 +881,13 @@ class format_treetopics extends format_base {
  * @param mixed $newvalue
  * @return \core\output\inplace_editable
  */
-function format_treetopics_inplace_editable($itemtype, $itemid, $newvalue) {
+function format_recit_inplace_editable($itemtype, $itemid, $newvalue) {
     global $DB, $CFG;
     require_once($CFG->dirroot . '/course/lib.php');
     if ($itemtype === 'sectionname' || $itemtype === 'sectionnamenl') {
         $section = $DB->get_record_sql(
             'SELECT s.* FROM {course_sections} s JOIN {course} c ON s.course = c.id WHERE s.id = ? AND c.format = ?',
-            array($itemid, 'treetopics'), MUST_EXIST);
+            array($itemid, 'recit'), MUST_EXIST);
         return course_get_format($section->course)->inplace_editable_update_section_name($section, $itemtype, $newvalue);
     }
 }
