@@ -648,5 +648,5 @@ M.recit.course.format.recit.messages = {
 document.addEventListener('DOMContentLoaded', function() {
     M.recit.course.format.recit.NonEditingMode.instance = new M.recit.course.format.recit.NonEditingMode();
 
-    M.recit.course.format.recit.EditingMode.instance = new M.recit.course.format.recit.EditingMode(M.recit.course.format.recit.instance.webApi);
+    M.recit.course.format.recit.EditingMode.instance = new M.recit.course.format.recit.EditingMode(M.recit.course.format.recit.NonEditingMode.instance.webApi);
 }, false);

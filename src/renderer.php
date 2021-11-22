@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/course/format/renderer.php');
 
-//js_reset_all_caches();
+js_reset_all_caches();
 /**
  * FormatRecit specifics functions.
  *
@@ -78,18 +78,7 @@ class FormatRecit
             $html = "<div class='formatrecit'>%s</div>";
             $html = sprintf($html, $this->render_contract());
         } else {
-            $orientation = "";
-            
-            switch($this->course->tttabsmodel){
-                case 5:
-                    $orientation = "horizontal"; break;
-                case 2:
-                    $orientation = "vertical-right"; break;
-                case 3:
-                    $orientation = "vertical-left"; break;
-            }
-
-            $html = "<div class='formatrecit $orientation'>%s</div>";
+            $html = "<div class='formatrecit'></div>";
         }
 
         echo $html;
@@ -100,7 +89,7 @@ class FormatRecit
      * @return boolean
      */
     protected function show_contract() {
-        return ($this->course->tthascontract) && (!$this->contract_is_signed());
+        return (isset($this->course->tthascontract)) && ($this->course->tthascontract) && (!$this->contract_is_signed());
     }
 
     /**

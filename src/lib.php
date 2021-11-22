@@ -329,10 +329,6 @@ class format_recit extends format_base {
                     'default' => $courseconfig->hiddensections,
                     'type' => PARAM_INT,
                 ),
-                'tttabsmodel' => array(
-                    'default' => 1,
-                    'type' => PARAM_INT,
-                ),
                 'ttimagegridcolumns' => array(
                     'default' => 4,
                     'type' => PARAM_INT,
@@ -368,22 +364,6 @@ class format_recit extends format_base {
                                 1 => new lang_string('hiddensectionsinvisible')
                             )
                         )
-                ),
-                'tttabsmodel' => array(
-                    'label' => new lang_string('tabsmodel', 'format_recit'),
-                    'help' => 'tabsmodel',
-                    'help_component' => 'format_recit',
-                    'element_type' => 'select',
-                    'element_attributes' => array(
-                        array(
-                            1 => new lang_string('tabmodel1', 'format_recit'),
-                            2 => new lang_string('tabmodel2', 'format_recit'),
-                            3 => new lang_string('tabmodel3', 'format_recit'),
-                            //3 => new lang_string('tabmodel3', 'format_recit'),
-                            //3 => new lang_string('tabmodel3', 'format_recit'),
-                            5 => new lang_string('tabmodel5', 'format_recit')
-                        )
-                    )
                 ),
                 'ttimagegridcolumns' => array(
                     'label' => new lang_string('imagegridcolumns', 'format_recit'),
