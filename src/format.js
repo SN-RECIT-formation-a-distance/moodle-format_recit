@@ -214,9 +214,7 @@ M.recit.course.format.recit.Utils = class{
 
 M.recit.course.format.recit.EditingMode = class{
     constructor(webApi){
-        //this.onChangeFilter = this.onChangeFilter.bind(this);
         this.onChangeLevel = this.onChangeLevel.bind(this);
-        this.onChangeContentDisplay = this.onChangeContentDisplay.bind(this);
 
         this.webApi = webApi;
         this.filter = null;
@@ -226,9 +224,6 @@ M.recit.course.format.recit.EditingMode = class{
 
     init(){
         this.initRadioSectionLevel();
-        this.initRadioSectionContentDisplay();
-
-        //this.initFilter();
 
         // Ouvrir la liste de sections automatiquement si la largeur de l'écran est plus grande que 1024
         if(window.screen.width > 1024){
@@ -275,28 +270,6 @@ M.recit.course.format.recit.EditingMode = class{
         }
         let courseId = this.getQueryVariable("id");
         this.webApi.setSectionLevel({courseId: courseId, sectionId: section.getAttribute("data-section-id"), level: radio.value}, callback);
-    }
-
-    initRadioSectionContentDisplay(){
-        let sectionList = document.querySelectorAll("[data-section-id]");
-
-        for(let section of sectionList){
-            let radioItems = section.querySelectorAll("[data-component='ttRadioSectionContentDisplay']");
-
-            for(let item of radioItems){
-                item.onchange = (event) => this.onChangeContentDisplay(event.target, section);
-            }
-        }
-    }
-
-    onChangeContentDisplay(radio, section){
-        let callback = function(result){
-            if(!result.success){
-                alert(M.recit.course.format.recit.messages.error);
-            }
-        }
-        let courseId = this.getQueryVariable("id");
-        this.webApi.setSectionContentDisplay({courseId: courseId, sectionId: section.getAttribute("data-section-id"), value: radio.value}, callback);
     }
 
     goToSection(event, sectionId){
@@ -358,7 +331,6 @@ M.recit.course.format.recit.NonEditingMode = class{
         this.goToSection = this.goToSection.bind(this);
         this.webApi = new M.recit.course.format.recit.WebApi();
         this.sectionContent = null;
-        this.pagination = null;
 
         this.init();
     } 
@@ -369,13 +341,9 @@ M.recit.course.format.recit.NonEditingMode = class{
         // If there is no sectionId defined then it displays the section-0.
         let sectionId = params.sectionId || window.location.hash.substr(1, window.location.hash.length) || M.recit.course.format.recit.Utils.getCookie('section') || 'section-0';
 
-        this.pagination = document.getElementById('sectionPagination');
-        
         this.sectionContent = document.getElementById("sectioncontent_placeholder");
 
         this.goToSection(null, sectionId);
-
-        this.ctrlPagination();
 
         let menu = document.getElementById("nav-sections");
         if(menu){
@@ -467,51 +435,8 @@ M.recit.course.format.recit.NonEditingMode = class{
 
         let params = M.recit.course.format.recit.Utils.getUrlVars();
         if(this.sectionContent !== null){
-           
             this.webApi.getSectionContent({sectionid: sectionId, courseid: params.id}, this.getSectionContentResult);
         }        
-
-        this.ctrlPagination();
-    }
-
-    ctrlPagination(){
-        if(this.pagination === null){ return; }
-        if(this.menu === null){ return; }
-
-        let navbar = this.menu;
-    
-        let sections = navbar.querySelectorAll('[data-section]');
-        if(sections === null){ return;}
-        
-        let currentSection = M.recit.course.format.recit.Utils.getCookie('section');
-        let btnPrevious = this.pagination.firstChild.firstChild;
-        let btnNext = this.pagination.firstChild.lastChild;
-       
-        let iSection = 0;
-        for(iSection = 0; iSection < sections.length; iSection++){
-            if(sections[iSection].getAttribute('data-section') === currentSection){
-                break;
-            }
-        }
-
-        if(!sections[iSection]){ return; }
-
-        if(iSection <= 0){
-            btnPrevious.classList.add("disabled");
-        }
-        else{
-            btnPrevious.classList.remove("disabled");
-            btnPrevious.firstChild.setAttribute('data-section', sections[iSection-1].getAttribute('data-section'));
-        }
-
-        if(iSection >= sections.length - 1){
-            btnNext.classList.add("disabled");
-        }
-        else{
-            btnNext.classList.remove("disabled");
-            btnNext.firstChild.setAttribute('data-section', sections[iSection+1].getAttribute('data-section'));
-        }
-
     }
 }
 

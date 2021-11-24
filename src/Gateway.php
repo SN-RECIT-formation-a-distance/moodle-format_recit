@@ -116,27 +116,6 @@ class WebApi{
     /**
      * @return void
      */
-    protected function set_section_content_display() {
-        global $CFG;
-       
-        try {
-            $prefix = $CFG->prefix;
-
-            $data = $this->request->data;
-            $query = "insert into {$prefix}course_format_options (courseid, format, sectionid, name, value)
-            values($data->courseId, 'recit', $data->sectionId, 'ttsectioncontentdisplay', '$data->value')
-            ON DUPLICATE KEY UPDATE value = '$data->value'";
-
-            $this->mysqli->query($query);
-            $this->reply(true);
-        } catch (Exception $ex) {
-            $this->reply(false, null, $ex->GetMessage());
-        }
-    }
-
-    /**
-     * @return void
-     */
     protected function get_section_content() {
         global $PAGE;
 

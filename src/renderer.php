@@ -84,6 +84,7 @@ class FormatRecit
             $html = sprintf($html, $this->render_contract());
         } else {
             $html = "<div id='sectioncontent_placeholder'></div>";
+            $html .= $this->getHtmlLoading();
         }
 
         echo $html;
@@ -536,7 +537,7 @@ class format_recit_renderer extends format_section_renderer_base {
             // OR it is hidden but the course has a setting to display hidden sections as unavilable.
             $showsection = $thissection->uservisible ||
                     ($thissection->visible && !$thissection->available && !empty($thissection->availableinfo)) ||
-                    (!$thissection->visible && !$course->hiddensections);
+                    (!$thissection->visible);
             if (!$showsection) {
                 continue;
             }

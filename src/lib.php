@@ -305,7 +305,6 @@ class format_recit extends format_base {
      *
      * Topics format uses the following options:
      * - coursedisplay
-     * - hiddensections
      *
      * @param bool $foreditform
      * @return array of options
@@ -315,66 +314,20 @@ class format_recit extends format_base {
         if ($courseformatoptions === false) {
             $courseconfig = get_config('moodlecourse');
             $courseformatoptions = array(
-                'hiddensections' => array(
-                    'default' => $courseconfig->hiddensections,
-                    'type' => PARAM_INT,
-                ),
                 'tthascontract' => array(
                     'default' => false,
                     'type' => PARAM_BOOL,
-                ),
-                'ttcustompath' => array(
-                    'default' => false,
-                    'type' => PARAM_BOOL,
-                ),
-                'tthidenavoverview' => array(
-                    'default' => false,
-                    'type' => PARAM_BOOL,
-                ),
-                'ttshownavsection' => array(
-                    'default' => false,
-                    'type' => PARAM_BOOL,
-                ),
+                )
             );
         }
         if ($foreditform && !isset($courseformatoptions['ttsectiondisplay']['label'])) {
             $courseformatoptionsedit = array(
-                'hiddensections' => array(
-                        'label' => new lang_string('hiddensections'),
-                        'help' => 'hiddensections',
-                        'help_component' => 'moodle',
-                        'element_type' => 'select',
-                        'element_attributes' => array(
-                            array(
-                                0 => new lang_string('hiddensectionscollapsed'),
-                                1 => new lang_string('hiddensectionsinvisible')
-                            )
-                        )
-                ),
                 'tthascontract' => array(
                     'label' => new lang_string('hascontract', 'format_recit'),
                     'help' => 'hascontract',
                     'help_component' => 'format_recit',
                     'element_type' => 'checkbox'
-                ),
-                'ttcustompath' => array(
-                    'label' => new lang_string('custompath', 'format_recit'),
-                    'help' => 'custompath',
-                    'help_component' => 'format_recit',
-                    'element_type' => 'checkbox'
-                ),
-                'tthidenavoverview' => array(
-                    'label' => new lang_string('navsectionoverview', 'format_recit'),
-                    'help' => 'navsectionoverview',
-                    'help_component' => 'format_recit',
-                    'element_type' => 'checkbox'
-                ),
-                'ttshownavsection' => array(
-                    'label' => new lang_string('navsection', 'format_recit'),
-                    'help' => 'navsection',
-                    'help_component' => 'format_recit',
-                    'element_type' => 'checkbox'
-                ),
+                )
             );
             $courseformatoptions = array_merge_recursive($courseformatoptions, $courseformatoptionsedit);
         }
@@ -410,12 +363,6 @@ class format_recit extends format_base {
             $form->getElement('ttcontract_editor')->freeze();
         } else {
             $form->getElement('ttsectiondisplay')->updateAttributes($disabled);
-            //$form->getElement('ttsectionshowactivities')->updateAttributes($disabled);
-            //$form->getElement('ttsectiontitle')->updateAttributes($disabled);
-            $form->getElement('ttsectionimageurl')->updateAttributes($disabled);
-            $form->getElement('btnSeeDepFiles')->updateAttributes($disabled);
-            $form->getElement('btnUploadDepFiles')->updateAttributes($disabled);
-            $form->getElement('ttsectionimagesummary_editor')->freeze();
         }
 
         return $result;
@@ -484,8 +431,6 @@ class format_recit extends format_base {
                         array(
                             self::TT_DISPLAY_TABS_LEVEL_1 => new lang_string('displaytabslev1', 'format_recit'),
                             self::TT_DISPLAY_TABS_LEVEL_2 => new lang_string('displaytabslev2', 'format_recit'),
-                            // Code "TT_DISPLAY_TABS_LEVEL_3 => new lang_string('displaytabslev3', 'format_recit'),".
-                            self::TT_DISPLAY_IMAGES => new lang_string('displayimages', 'format_recit')
                         )
                     )
                 ),
@@ -551,7 +496,7 @@ class format_recit extends format_base {
      * Updates format options for a course
      *
      * In case if course format was changed to 'recit', we try to copy options
-     * 'coursedisplay' and 'hiddensections' from the previous format.
+     * 'coursedisplay' from the previous format.
      *
      * @param stdClass|array $data return value from {@see moodleform::get_data()} or array with data
      * @param stdClass $oldcourse if this function is called from {@see update_course()}
@@ -567,7 +512,7 @@ class format_recit extends format_base {
             foreach ($options as $key => $unused) {
                 if (!array_key_exists($key, $data)) {
                     // Make sure to set the boolean value to 0 (this property is not sent by post when check input is unchecked).
-                    if (in_array($key, array(/*'ttdisplayshortcuts',*/ 'tthascontract', 'ttshownavsection', 'tthidenavoverview', 'ttcustompath'))) {
+                    if (in_array($key, array(/*'ttdisplayshortcuts',*/ 'tthascontract'))) {
                         $data[$key] = 0;
                     } else if (array_key_exists($key, $oldcourse)) {
                         $data[$key] = $oldcourse[$key];
