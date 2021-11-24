@@ -122,7 +122,6 @@ class WebApi{
         try {
             $data = $this->request->data;
 
-            $urlparams = array('id' => $data->courseid);
             $params = array('id' => $data->courseid);
             $course = $this->db->get_record('course', $params, '*', MUST_EXIST);
 

@@ -102,7 +102,7 @@ class FormatRecit
             if( !$item->visible ){ continue; }
 
             $id = $this->get_section_id($item);
-            if ($id == $sectionid) { 
+            if(($id == $sectionid) || ("#$id" == $sectionid)) { 
                 $section = $item;
                 break;
             }
@@ -145,8 +145,7 @@ class FormatRecit
             $sectionsummary = format_text($sectionsummary,  $section->summaryformat, array('noclean' => true, 'overflowdiv' => true,
                     'filter' => true));
          }
-        $html = "<div class='section main clearfix tt-section $sectionstyle' role='region' aria-label='$sectionname'";
-        $html .= " data-section='$sectionid'>";
+        $html = "<div class='section main clearfix tt-section $sectionstyle' role='region' aria-label='$sectionname'>";
 
         if($section->ttsectiontitle == 1){
             $html .= "<h2>$sectionname</h2>";

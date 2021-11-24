@@ -91,7 +91,6 @@ M.course.format.process_sections = function(Y, sectionlist, response, sectionfro
 M.recit = M.recit || {};
 M.recit.course = M.recit.course || {};
 M.recit.course.format = M.recit.course.format || {};
-M.recit.course.format = M.recit.course.format || {};
 M.recit.course.format.recit = M.recit.course.format.recit || {};
 M.recit.course.format.recit.WebApi = class{
     constructor(){
@@ -157,58 +156,11 @@ M.recit.course.format.recit.WebApi = class{
         this.post(this.gateway, options, onSuccess);
     }
 
-    setSectionContentDisplay(data, onSuccess){
-        let options = {};
-        options.data = data;
-        options.service = "set_section_content_display";
-        this.post(this.gateway, options, onSuccess);
-    }
-
     getSectionContent(data, onSuccess){
         let options = {};
         options.data = data;
         options.service = "get_section_content";
         this.post(this.gateway, options, onSuccess);
-    }
-}
-
-M.recit.course.format.recit.Utils = class{
-    static getCookie(cname) {
-        let name = cname + "=";
-        let decodedCookie = decodeURIComponent(document.cookie);
-        let ca = decodedCookie.split(';');
-        for(let i = 0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) == ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
-            }
-        }
-        return "";
-    }
-
-    static setCookie(id, value, minutesExpire) {
-        minutesExpire = minutesExpire || 1440;
-        let d = new Date();
-        d.setTime(d.getTime() + (minutesExpire * 60 * 1000));
-        let expires = "expires=" + d.toUTCString();
-        document.cookie = id + "=" + value + ";SameSite=Lax;" + expires;
-    };
-
-    static getUrlVars(){
-        let vars, uri;
-
-        vars = {};
-
-        uri = decodeURI(window.location.href);
-
-        let parts = uri.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
-            vars[key] = value;
-        });
-
-        return vars;
     }
 }
 
@@ -336,21 +288,23 @@ M.recit.course.format.recit.NonEditingMode = class{
     } 
     
     init(){
-        let params = M.recit.course.format.recit.Utils.getUrlVars();
-
-        // If there is no sectionId defined then it displays the section-0.
-        let sectionId = params.sectionId || window.location.hash.substr(1, window.location.hash.length) || M.recit.course.format.recit.Utils.getCookie('section') || 'section-0';
-
         this.sectionContent = document.getElementById("sectioncontent_placeholder");
-
-        this.goToSection(null, sectionId);
 
         let menu = document.getElementById("nav-sections");
         if(menu){
-            let sections = menu.querySelectorAll('a[data-section]');
+            let sections = menu.querySelectorAll('a');
 
             for(let section of sections){
                 section.addEventListener("click", this.goToSection);
+            }
+        }
+
+        let pagination = document.getElementById("sectionPagination");
+        if(pagination){
+            let buttons = pagination.querySelectorAll('a');
+
+            for(let btn of buttons){
+                btn.addEventListener("click", this.goToSection);
             }
         }
     }
@@ -421,19 +375,19 @@ M.recit.course.format.recit.NonEditingMode = class{
         sectionId = sectionId || '';
         if(event !== null){
             event.preventDefault();
-            sectionId = event.target.getAttribute('data-section');
+            sectionId = event.target.getAttribute('href');
 
             // collapse the menu5 if it is the case
             if($){
-                $(event.target.getAttribute("data-target")).collapse("hide");
+                if(event.target.hasAttribute("data-target")){
+                    $(event.target.getAttribute("data-target")).collapse("hide");
+                }
             }
         }
 
         if(sectionId.length === 0){ return; }
 
-        M.recit.course.format.recit.Utils.setCookie('section', sectionId);
-
-        let params = M.recit.course.format.recit.Utils.getUrlVars();
+        let params = M.recit.theme.recit2.Utils.getUrlVars();
         if(this.sectionContent !== null){
             this.webApi.getSectionContent({sectionid: sectionId, courseid: params.id}, this.getSectionContentResult);
         }        
