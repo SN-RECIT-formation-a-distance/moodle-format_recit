@@ -55,7 +55,7 @@ course_create_sections_if_missing($course, 0);
 
 $renderer = $PAGE->get_renderer('format_recit');
 
-$renderer->render_tree_topics($course);
+$renderer->render_format_recit($course);
 
 // Include course format js module.
 $PAGE->requires->js('/course/format/recit/format.js');

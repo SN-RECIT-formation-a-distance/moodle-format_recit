@@ -48,15 +48,9 @@ class format_recit_editsection_form  extends editsection_form {
         }
 
         $editoroptions = self::EDITOR_OPTIONS;
-        $defaultvalue->ttsectionimagesummary = $defaultvalue->ttsectionimagesummary_editor;
-        $defaultvalue = file_prepare_standard_editor($defaultvalue, 'ttsectionimagesummary', $editoroptions,
-                $editoroptions['context'], 'course', 'section', $defaultvalue->id);
-
         $defaultvalue->ttcontract = $defaultvalue->ttcontract_editor;
         $defaultvalue = file_prepare_standard_editor($defaultvalue, 'ttcontract', $editoroptions,
                 $editoroptions['context'], 'course', 'section', $defaultvalue->id);
-
-        $defaultvalue->ttsectionimageurl = format_recit::rewrite_file_url($defaultvalue->ttsectionimageurl);
 
         parent::set_data($defaultvalue);
     }
@@ -72,13 +66,9 @@ class format_recit_editsection_form  extends editsection_form {
 
         if ($data !== null) {
             $editoroptions = self::EDITOR_OPTIONS;
-            $data = file_postupdate_standard_editor($data, 'ttsectionimagesummary', $editoroptions,
-                    $editoroptions['context'], 'course', 'section', $data->id);
 
             $data = file_postupdate_standard_editor($data, 'ttcontract', $editoroptions,
             $editoroptions['context'], 'course', 'section', $data->id);
-
-            $data->ttsectionimageurl = format_recit::rewrite_file_url($data->ttsectionimageurl, true);
         }
         return $data;
     }
@@ -329,10 +319,6 @@ class format_recit extends format_base {
                     'default' => $courseconfig->hiddensections,
                     'type' => PARAM_INT,
                 ),
-                'ttimagegridcolumns' => array(
-                    'default' => 4,
-                    'type' => PARAM_INT,
-                ),
                 'tthascontract' => array(
                     'default' => false,
                     'type' => PARAM_BOOL,
@@ -364,22 +350,6 @@ class format_recit extends format_base {
                                 1 => new lang_string('hiddensectionsinvisible')
                             )
                         )
-                ),
-                'ttimagegridcolumns' => array(
-                    'label' => new lang_string('imagegridcolumns', 'format_recit'),
-                    'help' => 'imagegridcolumns',
-                    'help_component' => 'format_recit',
-                    'element_type' => 'select',
-                    'element_attributes' => array(
-                        array(
-                            1 => '1',
-                            2 => '2',
-                            3 => '3',
-                            4 => '4',
-                            5 => '5',
-                            6 => '6'
-                        )
-                    )
                 ),
                 'tthascontract' => array(
                     'label' => new lang_string('hascontract', 'format_recit'),
@@ -486,10 +456,6 @@ class format_recit extends format_base {
                     'default' => self::TT_DISPLAY_TABS_LEVEL_1,
                     'type' => PARAM_INT
                 ),
-                'ttsectioncontentdisplay' => array(
-                    'default' => self::TT_DISPLAY_TABS,
-                    'type' => PARAM_INT
-                ),
                 'ttsectionshowactivities' => array(
                     'default' => true,
                     'type' => PARAM_BOOL
@@ -497,16 +463,6 @@ class format_recit extends format_base {
                 'ttsectiontitle' => array(
                     'default' => true,
                     'type' => PARAM_BOOL
-                ),
-                'ttsectionimageurl' => array(
-                    'default' => '',
-                    'type' => PARAM_TEXT
-                ),
-                'btnSeeDepFiles' => array(),
-                'btnUploadDepFiles' => array(),
-                'ttsectionimagesummary_editor' => array(
-                    'default' => '',
-                    'type' => PARAM_RAW
                 ),
                 'ttcontract_editor' => array(
                     'default' => '',
@@ -533,18 +489,6 @@ class format_recit extends format_base {
                         )
                     )
                 ),
-                'ttsectioncontentdisplay' => array(
-                    'label' => new lang_string('sectioncontentdisplay', 'format_recit'),
-                    'help' => 'sectioncontentdisplay',
-                    'help_component' => 'format_recit',
-                    'element_type' => 'select',
-                    'element_attributes' => array(
-                        array(
-                            self::TT_DISPLAY_IMAGES => new lang_string('displayimages', 'format_recit'),
-                            self::TT_DISPLAY_TABS => new lang_string('displaytabs', 'format_recit')
-                        )
-                    )
-                ),
                 'ttsectionshowactivities' => array(
                     'label' => new lang_string('sectionshowactivities', 'format_recit'),
                     'help' => 'sectionshowactivities',
@@ -556,35 +500,6 @@ class format_recit extends format_base {
                     'help' => 'showsectiontitle',
                     'help_component' => 'format_recit',
                     'element_type' => 'checkbox'
-                ),
-                'ttsectionimageurl' => array(
-                    'label' => new lang_string('sectionimageurl', 'format_recit'),
-                    'help' => 'sectionimageurl',
-                    'help_component' => 'format_recit',
-                    'element_type' => 'text'
-                ),
-                'btnSeeDepFiles' => array(
-                    'label' => sprintf("<i class='fa fa-file'></i> %s", get_string('btnSeeDepFiles', 'format_recit')),
-                    'element_type' => 'button',
-                    'element_attributes' => array(
-                        array('onclick' => sprintf("window.open('%s/%s%ld','_blank')",
-                                $CFG->wwwroot, "files/index.php?contextid=", $contextcourse->id))
-                    )
-                ),
-                'btnUploadDepFiles' => array(
-                    'label' => sprintf("<i class='fa fa-upload'></i> %s", get_string('btnUploadDepFiles', 'format_recit')),
-                    'element_type' => 'button',
-                    'element_attributes' => array(
-                        array('onclick' => sprintf("window.open('%s/%s%ld','_blank')",
-                                $CFG->wwwroot, "files/coursefilesedit.php?contextid=", $contextcourse->id))
-                    )
-                ),
-                'ttsectionimagesummary_editor' => array(
-                    'label' => new lang_string('sectionimagesummary', 'format_recit'),
-                    'help' => 'sectionimagesummary',
-                    'help_component' => 'format_recit',
-                    'element_type' => 'editor',
-                    'element_attributes' => format_recit_editsection_form::EDITOR_OPTIONS
                 ),
                 'ttcontract_editor' => array(
                     'label' => new lang_string('contract', 'format_recit'),

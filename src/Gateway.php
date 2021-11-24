@@ -149,8 +149,9 @@ class WebApi{
 
             $PAGE->set_context(context_course::instance($data->courseid, MUST_EXIST));
             $PAGE->set_course($course);
+
             $tt = new FormatRecit();
-            $tt->load(course_get_format($course)->get_course());
+            $tt->load($PAGE->get_renderer('format_recit'), course_get_format($course)->get_course());
 
             $this->reply(true, $tt->render_section_content($data->sectionid));
 

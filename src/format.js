@@ -355,13 +355,10 @@ M.recit.course.format.recit.EditingMode = class{
 M.recit.course.format.recit.NonEditingMode = class{
     constructor(){
         this.getSectionContentResult = this.getSectionContentResult.bind(this);
-        window.onscroll = this.onScroll.bind(this);
-
+        this.goToSection = this.goToSection.bind(this);
         this.webApi = new M.recit.course.format.recit.WebApi();
-
         this.sectionContent = null;
         this.pagination = null;
-        this.menu = null;
 
         this.init();
     } 
@@ -374,136 +371,19 @@ M.recit.course.format.recit.NonEditingMode = class{
 
         this.pagination = document.getElementById('sectionPagination');
         
-        this.menu = document.getElementById("tt-recit-nav");
-        
         this.sectionContent = document.getElementById("sectioncontent_placeholder");
 
         this.goToSection(null, sectionId);
 
         this.ctrlPagination();
-    }
 
-    onScroll(event){
-        if(this.menu === null){ return; }
+        let menu = document.getElementById("nav-sections");
+        if(menu){
+            let sections = menu.querySelectorAll('a[data-section]');
 
-        let verticalMenu = this.menu.querySelector("[id='navbarTogglerCourse']");
-        
-        if((verticalMenu) && (this.menu.parentElement.classList.contains("vertical")) && (window.scrollY < 0)){
-            verticalMenu.style.marginTop = `${window.scrollY}px`;
-        }
-    }
-
-    ctrlMenu(sectionId){
-        let menu, menuItem, menuItemDesc;
-
-        if(this.menu === null){ return;}
-        
-        menu = this.menu;
-
-        if(!menu.classList.contains('menuM1') && !menu.classList.contains('menuM3')){ return;}
-
-        menuItemDesc = menu.querySelector(`[data-section=${sectionId}]`);
-
-        if(menuItemDesc === null){ return; }
-        
-        menuItem = menuItemDesc.parentElement.parentElement;
-
-        // Reset menu level 1 selection.
-        this.resetMenuSelection();
-
-        menuItem.setAttribute("data-selected", "1");
-
-        // If the menu level1 item has a branch then it also select it.
-        let branch = menu.querySelector(`[data-parent-section=${sectionId}]`);
-        if(branch !== null){
-            branch.setAttribute("data-selected", "1");
-        }
-         
-        // Select menu level2 item.
-        if((menuItem.parentElement.getAttribute("id") === "level2")){
-            menuItem.parentElement.setAttribute("data-selected", "1");
-            menuItem.parentElement.parentElement.setAttribute("data-selected", "1");
-        }
-
-        this.ctrlMenuResponsive(menu, menuItem, menuItemDesc, branch);
-    }
-
-    ctrlMenuResponsive(menu, menuItem, menuItemDesc, branch){
-        let itemMenuResponsive = menu.querySelector('.btn-menu-responsive');
-        let sectionTitle = itemMenuResponsive.children[1];
-        let sectionSubtitle = itemMenuResponsive.children[2];
-
-        if (sectionTitle){
-            //Make appear the title of the section in the responsive menu
-            sectionTitle.innerHTML = menuItemDesc.textContent;
-
-            if(branch !== null){
-                //Make appear the title of the sous section in the responsive menu
-                let sections = branch.getElementsByClassName('menu-item');
-                for(let sec of sections){
-                    if(sec.getAttribute('data-selected') === "1"){
-                        let subsection = sec.getElementsByClassName('menu-item-desc');
-                        sectionSubtitle.innerHTML = subsection.textContent;
-                        break;
-                    }
-                }
+            for(let section of sections){
+                section.addEventListener("click", this.goToSection);
             }
-        }
-        this.ctrlOpeningMenuResponsive('closed');
-    }
-
-    //Open and close the menu responsive
-    ctrlOpeningMenuResponsive(status){
-        if(this.menu === null){ return; }
-        this.menu.setAttribute('data-status', status);
-    }
-
-    //Open and close the submenu responsive
-    ctrlOpeningSubMenuResponsive(event, sectionId){
-        if(this.menu === null){ return; }
-
-        let branch = this.menu.querySelector(`[data-parent-section=${sectionId}]`);
-        if(branch !== null){
-            if(branch.getAttribute("data-status") === "open"){
-                branch.setAttribute("data-status", "closed");
-                event.currentTarget.firstChild.classList.add("fa-plus");
-                event.currentTarget.firstChild.classList.remove("fa-minus");
-            }
-            else{
-                branch.setAttribute("data-status", "open");
-                event.currentTarget.firstChild.classList.add("fa-minus");
-                event.currentTarget.firstChild.classList.remove("fa-plus");
-            }
-        }
-    }
-
-    resetMenuSelection(){
-        if(this.menu === null){ return;}
-
-        let menu = this.menu;
-
-        // Reset menu level 1 selection.
-        let elems = menu.getElementsByClassName('menu-item');
-        for(let el of elems){
-            el.setAttribute("data-selected", "0");
-
-            //set the negative(-) sign to plus(+) sign
-            let levelSection = el.getElementsByClassName('menu-item-desc level-section active');
-            if(levelSection.length >= 1){
-                for(let item of levelSection){
-                    let sectionIcon = el.getElementsByClassName('fas fa-minus');
-                    for(let sec of sectionIcon){
-                        item.classList.toggle("active");
-                        sec.className = 'fas fa-plus';
-                    }
-                }
-            }
-        }
-
-        // Reset menu level 2 selection.
-        elems = menu.querySelectorAll('[data-parent-section]');
-        for(let el of elems){
-            el.setAttribute("data-selected", "0");
         }
     }
 
@@ -573,7 +453,7 @@ M.recit.course.format.recit.NonEditingMode = class{
         sectionId = sectionId || '';
         if(event !== null){
             event.preventDefault();
-            sectionId = event.currentTarget.getAttribute('data-section');
+            sectionId = event.target.getAttribute('data-section');
 
             // collapse the menu5 if it is the case
             if($){
@@ -581,17 +461,13 @@ M.recit.course.format.recit.NonEditingMode = class{
             }
         }
 
-        if(sectionId.length === 0){
-            return;
-        }
-
-        this.ctrlMenu(sectionId);
+        if(sectionId.length === 0){ return; }
 
         M.recit.course.format.recit.Utils.setCookie('section', sectionId);
 
         let params = M.recit.course.format.recit.Utils.getUrlVars();
-        
         if(this.sectionContent !== null){
+           
             this.webApi.getSectionContent({sectionid: sectionId, courseid: params.id}, this.getSectionContentResult);
         }        
 

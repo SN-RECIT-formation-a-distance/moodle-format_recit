@@ -37,6 +37,8 @@ class FormatRecit
     /** @var string */
     const ID_APPEND = 'tt-';
 
+    /** @var format_recit_renderer */
+    protected $moodlerenderer = null;
     /** @var stdClass */
     protected $course = null;
     /** @var string */
@@ -45,14 +47,12 @@ class FormatRecit
     protected $modinfo = null;
     /** @var array */
     protected $sectionslist = array();
-    /** @var array */
-    protected $sectionstree = array();
 
     /**
      * Construc for FormatRecit
      */
     public function __construct() {
-        global $COURSE, $OUTPUT;
+        global $OUTPUT;
         //$context = context_course::instance($COURSE->id);
         $this->output = $OUTPUT;
     }
@@ -60,10 +60,15 @@ class FormatRecit
      /**
      * Function load of FormatRecit.
      *
+     * @param format_recit_renderer $moodlerenderer
      * @param stdClass $course
      */
-    public function load($course) {
+    public function load($moodlerenderer, $course) {
+        $this->moodlerenderer = $moodlerenderer;
         $this->course = $course;
+
+        $this->modinfo = get_fast_modinfo($course);
+        $this->sectionslist = $this->modinfo->get_section_info_all();
     }
 
     /**
@@ -75,13 +80,104 @@ class FormatRecit
         $this->signing_contract();
 
         if ($this->show_contract()) {
-            $html = "<div class='formatrecit'>%s</div>";
+            $html = "<div id='sectioncontent_placeholder'>%s</div>";
             $html = sprintf($html, $this->render_contract());
         } else {
-            $html = "<div class='formatrecit'></div>";
+            $html = "<div id='sectioncontent_placeholder'></div>";
         }
 
         echo $html;
+    }
+
+    /**
+     * Function to get section tab 
+     *
+     * @param string $section
+     * @return string
+     */
+    public function render_section_content($sectionid) {
+        $section = null;
+        foreach ($this->sectionslist as $item) {
+            if( !$item->visible ){ continue; }
+
+            $id = $this->get_section_id($item);
+            if ($id == $sectionid) { 
+                $section = $item;
+                break;
+            }
+        }
+
+        if(empty($section)){
+            return null;
+        }
+
+        //$sections = $modinfo->get_section_info_all();
+     //   $thissection = $infosections[$this];
+        $sectionid = $this->get_section_id($section);
+        $sectionname = $this->get_section_name($section);
+        $sectionavail = $this->moodlerenderer->section_availability($section);
+
+        $sectionstyle = '';
+
+        if (!$section->visible ) {
+            $sectionstyle = ' hidden';
+        }
+        if (course_get_format($this->course)->is_section_current($section)) {
+            $sectionstyle = ' current';
+        }
+
+        $content = "";
+        if ($section->ttsectionshowactivities == 1) {
+            $content = $this->moodlerenderer->get_course_section_cm_list($this->course, $section);
+        }
+
+        $context = context_course::instance($this->course->id);
+        $sectionsummary ='';
+        if (!$section->available)
+        {}
+         else{
+            
+                // Show summary if section is available or has
+            $sectionsummary = file_rewrite_pluginfile_urls($section->summary, 'pluginfile.php', $context->id, 'course', 'section',
+                    $section->id);
+
+            $sectionsummary = format_text($sectionsummary,  $section->summaryformat, array('noclean' => true, 'overflowdiv' => true,
+                    'filter' => true));
+         }
+        $html = "<div class='section main clearfix tt-section $sectionstyle' role='region' aria-label='$sectionname'";
+        $html .= " data-section='$sectionid'>";
+
+        if($section->ttsectiontitle == 1){
+            $html .= "<h2>$sectionname</h2>";
+        }
+
+        $html .= "<div class='content'>";
+        $html .= "$sectionavail";
+        $html .= "<div class='summary'>$sectionsummary</div>";
+        $html .= "$content";
+        $html .= "</div>";
+        $html .= "</div>";
+
+        return $html;
+    }
+
+    /**
+     * Generate a section's id
+     *
+     * @param stdClass $section The course_section entry from DB
+     * @return string the section's string id
+     */
+    protected function get_section_id($section) {
+        return sprintf("section-%d", $section->section);
+    }
+
+    /**
+     * Function to get section name of TreeTopics.
+     * @param string $section
+     * @return string
+     */
+    protected function get_section_name($section) {
+        return (empty($section->name) ? get_string('section') . '' . $section->section : $section->name);
     }
 
     /**
@@ -311,7 +407,7 @@ class format_recit_renderer extends format_section_renderer_base {
      * Function render tree topics of format_recit_renderer class.
      * @param stdClass $course
      */
-    public function render_tree_topics($course) {
+    public function render_format_recit($course) {
 
         if ($this->page->user_is_editing()) {
             switch (self::EDITING_MODE_OPTION) {
@@ -585,35 +681,20 @@ class format_recit_renderer extends format_section_renderer_base {
         $sectionname = $this->render(course_get_format($course)->inplace_editable_render_section_name($section));
 
         $level = "";
-        $contentdisplay = "";
 
-        //if ($course->ttdisplayshortcuts) {
-            $radiosectionlevel = '<label><input name="ttRadioSectionLevel%ld" data-component="ttRadioSectionLevel" type="radio" value="%s"  %s> %s</label>';
+        $radiosectionlevel = '<label><input name="ttRadioSectionLevel%ld" data-component="ttRadioSectionLevel" type="radio" value="%s"  %s> %s</label>';
 
-            $level = "";
-            if ($section->section > 0) {
-                $level = sprintf('<form class="inline-form-editing-mode">%s%s%s</form>',
-                sprintf($radiosectionlevel, $section->section, "1",
-                        ($section->ttsectiondisplay == 1 ? "checked" : ""), get_string('displaytabslev1', 'format_recit')),
-                sprintf($radiosectionlevel, $section->section, "2",
-                        ($section->ttsectiondisplay == 2 ? "checked" : ""), get_string('displaytabslev2', 'format_recit')),
-                "");
-                // Code 'sprintf($radiosectionlevel, ($section->ttsectiondisplay == 3 ? "active" : ""), "3",
-                // ($section->ttsectiondisplay == 3 ? "checked" : ""), get_string('displaytabslev3', 'format_recit')));'.
-            }
+        $level = "";
+        if ($section->section > 0) {
+            $level = sprintf('<form class="inline-form-editing-mode">%s%s%s</form>',
+            sprintf($radiosectionlevel, $section->section, "1",
+                    ($section->ttsectiondisplay == 1 ? "checked" : ""), get_string('displaytabslev1', 'format_recit')),
+            sprintf($radiosectionlevel, $section->section, "2",
+                    ($section->ttsectiondisplay == 2 ? "checked" : ""), get_string('displaytabslev2', 'format_recit')),
+            "");
+        }
 
-            $radiosectioncontentdisplay ='<label  ><input name="ttRadioSectionContentDisplay%ld" data-component="ttRadioSectionContentDisplay" type="radio" value="%s"  %s> %s</label>';
-
-            $contentdisplay = sprintf('<form class="inline-form-editing-mode">%s%s</form>',
-                sprintf($radiosectioncontentdisplay, $section->section, "-1",
-                        ($section->ttsectioncontentdisplay == -1 ? "checked" : ""),
-                        get_string('displaytabs', 'format_recit')),
-                sprintf($radiosectioncontentdisplay, $section->section, "-2",
-                        ($section->ttsectioncontentdisplay == -2 ? "checked" : ""),
-                        get_string('displayimages', 'format_recit')));
-       // }
-
-        $html = sprintf("<span style='display: flex; align-items: end; line-height: 40px;'>%s%s%s</span>", $sectionname, $level, $contentdisplay);
+        $html = sprintf("<span style='display: flex; align-items: center; '>%s%s</span>", $sectionname, $level);
 
         return $html;
     }
