@@ -134,9 +134,7 @@ class FormatRecit
 
         $context = context_course::instance($this->course->id);
         $sectionsummary ='';
-        if (!$section->available)
-        {}
-         else{
+        if ($section->available){
             
                 // Show summary if section is available or has
             $sectionsummary = file_rewrite_pluginfile_urls($section->summary, 'pluginfile.php', $context->id, 'course', 'section',
@@ -144,7 +142,7 @@ class FormatRecit
 
             $sectionsummary = format_text($sectionsummary,  $section->summaryformat, array('noclean' => true, 'overflowdiv' => true,
                     'filter' => true));
-         }
+        }
         $html = "<div class='section main clearfix tt-section $sectionstyle' role='region' aria-label='$sectionname'>";
 
         if($section->ttsectiontitle == 1){
@@ -619,7 +617,7 @@ class format_recit_renderer extends format_section_renderer_base {
 
         $o .= html_writer::start_tag('li', array('id' => 'section-'.$section->section,
             'class' => "section main clearfix".$sectionstyle, 'role' => 'region',
-            'aria-label' => get_section_name($course, $section), "data-section-level" => $section->ttsectiondisplay,
+            'aria-label' => get_section_name($course, $section), "data-section-level" => $section->sectionlevel,
             "data-section-id" => $section->id, 'style' => 'list-style: none;') );
 
 
@@ -688,9 +686,9 @@ class format_recit_renderer extends format_section_renderer_base {
         if ($section->section > 0) {
             $level = sprintf('<form class="inline-form-editing-mode">%s%s%s</form>',
             sprintf($radiosectionlevel, $section->section, "1",
-                    ($section->ttsectiondisplay == 1 ? "checked" : ""), get_string('displaytabslev1', 'format_recit')),
+                    ($section->sectionlevel == 1 ? "checked" : ""), get_string('displaytabslev1', 'format_recit')),
             sprintf($radiosectionlevel, $section->section, "2",
-                    ($section->ttsectiondisplay == 2 ? "checked" : ""), get_string('displaytabslev2', 'format_recit')),
+                    ($section->sectionlevel == 2 ? "checked" : ""), get_string('displaytabslev2', 'format_recit')),
             "");
         }
 

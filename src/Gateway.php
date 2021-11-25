@@ -103,7 +103,7 @@ class WebApi{
 
             $data = $this->request->data;
             $query = "insert into {$prefix}course_format_options (courseid, format, sectionid, name, value)
-            values($data->courseId, 'recit', $data->sectionId, 'ttsectiondisplay', '$data->level')
+            values($data->courseId, 'recit', $data->sectionId, 'sectionlevel', '$data->level')
             ON DUPLICATE KEY UPDATE value = '$data->level'";
 
             $this->mysqli->query($query);

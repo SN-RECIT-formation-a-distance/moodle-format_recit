@@ -320,7 +320,7 @@ class format_recit extends format_base {
                 )
             );
         }
-        if ($foreditform && !isset($courseformatoptions['ttsectiondisplay']['label'])) {
+        if ($foreditform && !isset($courseformatoptions['sectionlevel']['label'])) {
             $courseformatoptionsedit = array(
                 'tthascontract' => array(
                     'label' => new lang_string('hascontract', 'format_recit'),
@@ -362,7 +362,7 @@ class format_recit extends format_base {
         if ($customdata['cs']->__get('section') > 0) {
             $form->getElement('ttcontract_editor')->freeze();
         } else {
-            $form->getElement('ttsectiondisplay')->updateAttributes($disabled);
+            $form->getElement('sectionlevel')->updateAttributes($disabled);
         }
 
         return $result;
@@ -399,7 +399,7 @@ class format_recit extends format_base {
         $sectionformatoptions = false;
         if ($sectionformatoptions === false) {
             $sectionformatoptions = array(
-                'ttsectiondisplay' => array(
+                'sectionlevel' => array(
                     'default' => self::TT_DISPLAY_TABS_LEVEL_1,
                     'type' => PARAM_INT
                 ),
@@ -422,7 +422,7 @@ class format_recit extends format_base {
             $coursesections = array();
             $contextcourse = context_course::instance($course->id);
             $sectionformatoptionsedit = array(
-                'ttsectiondisplay' => array(
+                'sectionlevel' => array(
                     'label' => new lang_string('sectiondisplay', 'format_recit'),
                     'help' => 'sectiondisplay',
                     'help_component' => 'format_recit',
