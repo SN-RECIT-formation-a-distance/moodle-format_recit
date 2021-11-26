@@ -225,7 +225,7 @@ M.recit.course.format.recit.EditingMode = class{
     }
 
     goToSection(event, sectionId){
-        M.recit.theme.recit2.Utils.setCurrentSection(sectionId);
+        M.recit.theme.recit2.Utils.setCookieCurSection(sectionId);
     }
 
     onBtnShowHideHiddenActivities(event){
