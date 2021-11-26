@@ -225,7 +225,7 @@ M.recit.course.format.recit.EditingMode = class{
     }
 
     goToSection(event, sectionId){
-        M.recit.course.format.recit.Utils.setCookie('section', sectionId);
+        M.recit.theme.recit2.Utils.setCurrentSection(sectionId);
     }
 
     onBtnShowHideHiddenActivities(event){
@@ -375,7 +375,7 @@ M.recit.course.format.recit.NonEditingMode = class{
         sectionId = sectionId || '';
         if(event !== null){
             event.preventDefault();
-            sectionId = event.target.getAttribute('href');
+            sectionId = event.target.hash || "";
 
             // collapse the menu5 if it is the case
             if($){

@@ -166,7 +166,7 @@ class FormatRecit
      * @return string the section's string id
      */
     protected function get_section_id($section) {
-        return sprintf("section-%d", $section->section);
+        return sprintf("#section-%d", $section->section);
     }
 
     /**
@@ -253,7 +253,7 @@ class FormatRecit
     public function render_editing_mode($format_recit_renderer){
         global $CFG, $COURSE;
 
-        $selectedSection = (isset($_COOKIE['section']) ? $_COOKIE['section'] : 'menu');
+        $selectedSection = (isset($_COOKIE['cursection']) ? $_COOKIE['cursection'] : 'menu');
 
         $result = '<div class="row">';
         $result .= '<div class="bg-light p-2 w-100">';
