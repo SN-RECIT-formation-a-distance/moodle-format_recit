@@ -30,6 +30,10 @@ define(['jquery'], function($) {
             $('#tt-contract-sign').click(function() {
                 window.location = $('#tt-contract-sign').attr('href');
             });
+
+            M.recit.course.format.recit.NonEditingMode.instance = new M.recit.course.format.recit.NonEditingMode();
+
+            M.recit.course.format.recit.EditingMode.instance = new M.recit.course.format.recit.EditingMode(M.recit.course.format.recit.NonEditingMode.instance.webApi);
         }
     };
 });

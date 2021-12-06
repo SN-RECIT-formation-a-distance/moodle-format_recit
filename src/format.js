@@ -290,23 +290,7 @@ M.recit.course.format.recit.NonEditingMode = class{
     init(){
         this.sectionContent = document.getElementById("sectioncontent_placeholder");
 
-        let menu = document.getElementById("nav-sections");
-        if(menu){
-            let sections = menu.querySelectorAll('a');
-
-            for(let section of sections){
-                section.addEventListener("click", this.goToSection);
-            }
-        }
-
-        let pagination = document.getElementById("sectionPagination");
-        if(pagination){
-            let buttons = pagination.querySelectorAll('a');
-
-            for(let btn of buttons){
-                btn.addEventListener("click", this.goToSection);
-            }
-        }
+        M.recit.theme.recit2.Ctrl.instance.sectionsNav.addOnSectionNavListener(this.goToSection);
     }
 
     getSectionContentResult(result){
@@ -371,21 +355,19 @@ M.recit.course.format.recit.NonEditingMode = class{
         }
     }
 
-    goToSection(event, sectionId) {
-        sectionId = sectionId || '';
-        if(event !== null){
-            event.preventDefault();
-            sectionId = event.target.hash || "";
+    goToSection(event) {
+        event.preventDefault();
 
-            // collapse the menu5 if it is the case
-            if($){
-                if(event.target.hasAttribute("data-target")){
-                    $(event.target.getAttribute("data-target")).collapse("hide");
-                }
+        let sectionId = event.target.hash || null;
+
+        // collapse the menu5 if it is the case
+        if($){
+            if(event.target.hasAttribute("data-target")){
+                $(event.target.getAttribute("data-target")).collapse("hide");
             }
         }
 
-        if(sectionId.length === 0){ return; }
+        if(sectionId === null){ return; }
 
         let params = M.recit.theme.recit2.Utils.getUrlVars();
         if(this.sectionContent !== null){
@@ -398,10 +380,3 @@ M.recit.course.format.recit.NonEditingMode = class{
 M.recit.course.format.recit.messages = {
     error: "Une erreur inattendue est survenue. Veuillez réessayer."
 }
-
-// Without jQuery (doesn't work in older IEs).
-document.addEventListener('DOMContentLoaded', function() {
-    M.recit.course.format.recit.NonEditingMode.instance = new M.recit.course.format.recit.NonEditingMode();
-
-    M.recit.course.format.recit.EditingMode.instance = new M.recit.course.format.recit.EditingMode(M.recit.course.format.recit.NonEditingMode.instance.webApi);
-}, false);

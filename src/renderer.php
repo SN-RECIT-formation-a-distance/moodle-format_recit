@@ -253,7 +253,7 @@ class FormatRecit
     public function render_editing_mode($format_recit_renderer){
         global $CFG, $COURSE;
 
-        $selectedSection = (isset($_COOKIE['cursection']) ? $_COOKIE['cursection'] : 'menu');
+        $selectedSection = (isset($_COOKIE["course-{$COURSE->id}-cursection"]) ? $_COOKIE["course-{$COURSE->id}-cursection"] : 'menu');
 
         $result = '<div class="row">';
         $result .= '<div class="bg-light p-2 w-100">';
