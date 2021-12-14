@@ -1,4 +1,4 @@
-.inline-form-editing-mode{margin-right:1rem; margin-left: 1rem; display: grid;}
+.inline-form-editing-mode{margin-right:1rem; margin-left: 1rem; display: grid; font-size: 16px; line-height: 30px;}
 
 .course-content  .editing-mode-menu li.section{list-style: none; margin-bottom: 1rem;}
 .course-content  .editing-mode-menu li.section[data-section-level="2"]{padding-left: 3.3rem;}
