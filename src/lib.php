@@ -98,11 +98,6 @@ class format_recit_editsection_form  extends editsection_form {
  */
 class format_recit extends format_base {
     /** @var int */
-    public const TT_DISPLAY_TABS = -1;
-    /** @var int */
-    public const TT_DISPLAY_IMAGES = -2;
-
-    /** @var int */
     public const TT_DISPLAY_TABS_LEVEL_1 = 1;
     /** @var int */
     public const TT_DISPLAY_TABS_LEVEL_2 = 2;
