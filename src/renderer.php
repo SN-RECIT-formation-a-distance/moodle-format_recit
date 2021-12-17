@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/course/format/renderer.php');
 
-js_reset_all_caches();
+//js_reset_all_caches();
 /**
  * FormatRecit specifics functions.
  *
@@ -251,108 +251,48 @@ class FormatRecit
     }
 
     public function render_editing_mode($format_recit_renderer){
-        global $CFG, $COURSE;
+        global $CFG, $COURSE, $OUTPUT;
 
-        $selectedSection = (isset($_COOKIE["course-{$COURSE->id}-cursection"]) ? $_COOKIE["course-{$COURSE->id}-cursection"] : 'menu');
-
-        $result = '<div class="row">';
-        $result .= '<div class="bg-light p-2 w-100">';
-        $result .= '<button class="btn btn-outline-primary btn-sm m-1 mr-2" type="button" data-toggle="collapse" data-target="#navTabs" aria-expanded="false" aria-controls="navTabs"><i class="fa fa-bars"></i></button>';
-        $result .= '<span class="h6 text-muted">Liste de sections</span>';
-        $result .= '</div>';
-        $result .= '</div>';
-        $result .= '<div class="row">';        
-        $result .= '<div class="col-xs col-sm-4 col-lg-2 collapse p-0" id="navTabs">';
-        $result .= '<div class="nav nav-pills bg-light  flex-column" id="v-pills-tab" role="tablist" aria-orientation="vertical">';
-
-        $sectionid = 'menu';
-        $templateNavItem = "<a class='nav-item nav-link %s' id='v-pills-%s-tab' data-toggle='pill' href='#v-pills-%s' role='tab' 
-                            onclick='M.recit.course.format.recit.EditingMode.instance.goToSection(event, \"%s\")'
-                            aria-controls='v-pills-%s' aria-selected='true'>%s</a>";
-
-        $result .= sprintf($templateNavItem, ($selectedSection === $sectionid ? 'active' : ''), $sectionid, $sectionid, $sectionid, $sectionid, "Menu");
-
-        foreach ($this->sectionslist as $section) {
-            $sectionid = $this->get_section_id($section);
-            $result .= sprintf($templateNavItem, ($selectedSection === $sectionid ? 'active' : ''), $sectionid, $sectionid, $sectionid, $sectionid, $this->get_section_name($section));
-        }
-        
-        $result .= '</div>';
-        $result .= '</div>';
-        $result .= '<div class="col-xl">';
-        $result .= '<div class="tab-content" id="v-pills-tabContent">';
-
-        $html = "<div class='btn-group  pull-right'>";
-        $html .= sprintf("<a href='%s/course/changenumsections.php?courseid=%ld&insertsection=0&sesskey=%s&returnurl=%s&sectionreturn=menu' 
-                        class='btn btn-outline-primary' title='%s'><i class='fa fa-plus'></i></a>", 
-                        $CFG->wwwroot, $COURSE->id, sesskey(), course_get_url($COURSE), get_string('addsections', 'format_recit'));
-        $html .= sprintf("<button class='btn btn-outline-primary' onclick='M.recit.course.format.recit.EditingMode.instance.onBtnShowHideCmList(event)' title='%s'><i class='fa fa-fw fa-eye-slash'></i></button>", 
-                        get_string('sectionshowhideactivities', 'format_recit'));
-        $html .= sprintf("<button class='btn btn-outline-primary' onclick='window.location.reload();' title='%s'><i class='fa fa-fw fa-refresh'></i></button>", 
-                    get_string('saveandrefresh', 'format_recit'));
-        $html .= "</div>";
-        $html .= "<br/><br/><br/>";
-
-        foreach ($this->sectionslist as $section) {
-            $html .= $this->render_editing_mode_section_content($format_recit_renderer, $section, true);
-        }       
-
-        $html .= $this->getHtmlLoading();
-
-        $sectionid = 'menu';
-        $templateTabContent = '<div class="tab-pane fade show %s p-2" id="v-pills-%s" role="tabpanel" aria-labelledby="v-pills-%s-tab">%s</div>';
-        $result .= sprintf($templateTabContent, ($selectedSection === $sectionid ? 'active editing-mode-menu' : 'editing-mode-menu'), $sectionid, $sectionid, $html);
-
-        foreach ($this->sectionslist as $section) {
-            $sectionid = $this->get_section_id($section);
-            $result .= sprintf($templateTabContent, ($selectedSection === $sectionid ? 'active' : ''), $sectionid, $sectionid, 
-                        $this->render_editing_mode_section_content($format_recit_renderer, $section));
-        }
-        
-        $result .= '</div>';
-        $result .= '</div>';
-        $result .= '</div>';
-        return $result;
-    }
-
-    protected function render_editing_mode_section_content($format_recit_renderer, $section, $showMenu = false){
-        global $CFG;
-
-        // Title with completion help icon.
         $completioninfo = new completion_info($this->course);
-        $sectionid = $this->get_section_id($section);
 
-        $result = "";
-        $result .= $completioninfo->display_help_icon();
-        
-        if($showMenu){
-            $result .= $format_recit_renderer->section_header($section, $this->course, false, 0, false);
-            $result .= sprintf("<div class='section_add_menus' id='add_menus-%s'></div>", $sectionid);
-            $result .= sprintf("<div data-course-section-cm-list='1' style='display:none;'>%s</div>", $format_recit_renderer->get_course_section_cm_list($this->course, $section));
-            $result .= $format_recit_renderer->section_footer();
+        $selectedSection = (isset($_COOKIE["course-{$COURSE->id}-cursection"]) ? $_COOKIE["course-{$COURSE->id}-cursection"] : '#menu');
+
+        $data = new stdClass();
+        $data->sectionList = array();
+
+        $data->menu = new stdClass();
+        $data->menu->desc = "Menu";
+        $data->menu->sectionId = "#menu";
+        $data->menu->sectionIdAlt = "menu";
+        $data->menu->sectionIdAlt2 = 'menu';
+        $data->menu->active = ($selectedSection == "#menu" ? 'active' : '');
+        $data->menu->addSectionUrl = "{$CFG->wwwroot}/course/changenumsections.php?courseid={$COURSE->id}&insertsection=0&sesskey=".sesskey()."&returnurl=".course_get_url($COURSE)."&sectionreturn=menu";
+        $data->menu->content = $completioninfo->display_help_icon();        
+
+        foreach ($this->sectionslist as $section) {
+            $sectionId = $this->get_section_id($section);
+
+            $data->menu->content .= $format_recit_renderer->section_header($section, $this->course, false, 0, false);
+            $data->menu->content .= sprintf("<div class='section_add_menus' id='add_menus-%s'></div>", $sectionId);
+            $data->menu->content .= sprintf("<div data-course-section-cm-list='1' style='display:none;'>%s</div>", $format_recit_renderer->get_course_section_cm_list($this->course, $section));
+            $data->menu->content .= $format_recit_renderer->section_footer();
+
+            $item = new stdClass();
+            $item->desc =  $this->get_section_name($section);
+            $item->sectionId = $sectionId;
+            $item->sectionIdAlt = "section-{$section->section}";
+            $item->sectionIdAlt2 = $section->section;
+            $item->active = ($selectedSection == $sectionId ? 'active' : '');
+            $item->editingUrl = "{$CFG->wwwroot}/course/editsection.php?id= $section->id&sr";
+            $item->content = $completioninfo->display_help_icon();
+            $item->content .= $format_recit_renderer->section_header($section, $this->course, false, 0, true, false);
+            $item->content .= $format_recit_renderer->get_course_section_cm_list($this->course, $section);
+            $item->content .= $format_recit_renderer->get_course_section_add_cm_control($this->course, $section->section);
+            $item->content .= $format_recit_renderer->section_footer();
+            $data->sectionList[] = $item;
         }
-        else{   
-            $result .= sprintf("<h2>%s</h2>",  $this->get_section_name($section));
-            $result .= "<div class='btn-group pull-right'>";
-            $result .= sprintf("<a class='btn btn-outline-primary' href='%s/course/editsection.php?id=%ld&sr' title='%s'><i class='fa fa-fw fa-sliders'></i></a>", $CFG->wwwroot, $section->id, get_string('editsection', 'format_recit'));
-            $result .= sprintf("<button class='btn btn-outline-primary' onclick='M.recit.course.format.recit.EditingMode.instance.onBtnShowHideHiddenActivities(event)' title='%s'><i class='fa fa-fw fa-eye'></i></button>", get_string('showhidehiddenactivities', 'format_recit'));
-            $result .= html_writer::tag('button', "<i class='fa fa-plus'></i>", [
-                'class' => 'section-modchooser-link btn btn-outline-primary',
-                'data-action' => 'open-chooser',
-                'data-sectionid' => $section->section,
-                'data-sectionreturnid' => $section->section,
-                'title' => get_string('addresourceoractivity'),
-                ]
-            );
-            $result .= "</div>";
-            $result .= "<br/><br/>";
-            $result .= $format_recit_renderer->section_header($section, $this->course, false, 0, true, false);
-            $result .= $format_recit_renderer->get_course_section_cm_list($this->course, $section);
-            $result .= $format_recit_renderer->get_course_section_add_cm_control($this->course, $section->section);
-            $result .= $format_recit_renderer->section_footer();
-        }
         
-        return $result;
+        return $OUTPUT->render_from_template('format_recit/editing_mode', $data);
     }
 
     protected function getHtmlLoading(){
@@ -615,7 +555,7 @@ class format_recit_renderer extends format_section_renderer_base {
 
         $display = ($showsectiondetails ? '' : 'd-none');
 
-        $o .= html_writer::start_tag('li', array('id' => 'section-'.$section->section,
+        $o .= html_writer::start_tag('li', array('id' => 'section-item-'.$section->section,
             'class' => "section main clearfix".$sectionstyle, 'role' => 'region',
             'aria-label' => get_section_name($course, $section), "data-section-level" => $section->sectionlevel,
             "data-section-id" => $section->id, 'style' => 'list-style: none;') );

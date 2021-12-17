@@ -224,8 +224,8 @@ M.recit.course.format.recit.EditingMode = class{
         this.webApi.setSectionLevel({courseId: courseId, sectionId: section.getAttribute("data-section-id"), level: radio.value}, callback);
     }
 
-    goToSection(event, sectionId){
-        M.recit.theme.recit2.Utils.setCookieCurSection(sectionId);
+    goToSection(event){
+        M.recit.theme.recit2.Utils.setCookieCurSection(event.target.hash);
     }
 
     onBtnShowHideHiddenActivities(event){
