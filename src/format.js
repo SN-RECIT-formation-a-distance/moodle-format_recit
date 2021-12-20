@@ -323,6 +323,15 @@ M.recit.course.format.recit.NonEditingMode = class{
                 iframe.style.height = iframe.contentWindow.document.documentElement.scrollHeight + 'px'; //adjust iframe to page height
             }
         }
+
+        // set all links from auto-link recit with goToSection
+        let links = doc.body.querySelectorAll("a");
+        let regex = new RegExp('#section-[0-9]+');
+        for (let item of links){
+            if(regex.test(item.hash)){
+                item.addEventListener('click', this.goToSection);
+            }
+        }
     }
 
     postProcessingFilters(webApiResult){
