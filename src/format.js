@@ -162,6 +162,34 @@ M.recit.course.format.recit.WebApi = class{
         options.service = "get_section_content";
         this.post(this.gateway, options, onSuccess);
     }
+
+    moveModulesToSection(data, onSuccess){
+        let options = {};
+        options.data = data;
+        options.service = "move_module_to_section";
+        this.post(this.gateway, options, onSuccess);
+    }
+
+    deleteModules(data, onSuccess){
+        let options = {};
+        options.data = data;
+        options.service = "delete_modules";
+        this.post(this.gateway, options, onSuccess);
+    }
+
+    setModulesVisible(data, onSuccess){
+        let options = {};
+        options.data = data;
+        options.service = "set_modules_visible";
+        this.post(this.gateway, options, onSuccess);
+    }
+
+    deleteSection(data, onSuccess){
+        let options = {};
+        options.data = data;
+        options.service = "delete_section";
+        this.post(this.gateway, options, onSuccess);
+    }
 }
 
 M.recit.course.format.recit.EditingMode = class{
@@ -176,6 +204,7 @@ M.recit.course.format.recit.EditingMode = class{
 
     init(){
         this.initRadioSectionLevel();
+        this.initMassActions();
 
         // Ouvrir la liste de sections automatiquement si la largeur de l'écran est plus grande que 1024
         if(window.screen.width > 1024){
@@ -188,15 +217,106 @@ M.recit.course.format.recit.EditingMode = class{
         }
     }
 
+    initMassActions(){
+        let items = document.querySelectorAll(".recitformat_massmove");
+
+        for(let item of items){
+            item.onchange = (event) => this.onChangeSection(event.target);
+        }
+        
+        items = document.querySelectorAll(".recitformat_massdelete");
+
+        for(let item of items){
+            item.onclick = (event) => this.onDeleteModule(event.target);
+        }
+        
+        items = document.querySelectorAll(".recitformat_masshide");
+
+        for(let item of items){
+            item.onclick = (event) => this.onChangeVisibility(event.target, 0);
+        }
+        
+        items = document.querySelectorAll(".recitformat_massshow");
+
+        for(let item of items){
+            item.onclick = (event) => this.onChangeVisibility(event.target, 1);
+        }
+    }
+
+    onChangeSection(combo){
+        let items = combo.parentElement.querySelectorAll('.massactioncheckbox');
+        let modules = [];
+        for(let item of items){
+            if (item.checked){
+                modules.push(item.name)
+            }
+        }
+        let callback = function(result){
+            if(result.success){
+                window.location.reload()
+            }
+            else{
+                alert(M.recit.course.format.recit.messages.error);
+            }
+        }
+        let courseId = this.getQueryVariable("id");
+        this.webApi.moveModulesToSection({courseId: courseId, sectionId: combo.value, modules: modules}, callback);
+    }
+
+    onChangeVisibility(combo, isVisible){
+        let items = combo.parentElement.querySelectorAll('.massactioncheckbox');
+        let modules = [];
+        for(let item of items){
+            if (item.checked){
+                modules.push(item.name)
+            }
+        }
+        let callback = function(result){
+            if(result.success){
+                window.location.reload()
+            }
+            else{
+                alert(M.recit.course.format.recit.messages.error);
+            }
+        }
+        let courseId = this.getQueryVariable("id");
+        this.webApi.setModulesVisible({courseId: courseId, isVisible: isVisible, modules: modules}, callback);
+    }
+
+    onDeleteModule(){
+        if (!confirm('Êtes-vous sûr de vouloir supprimer ces activités?')){
+            return;
+        }
+        let items = combo.parentElement.querySelectorAll('.massactioncheckbox');
+        let modules = [];
+        for(let item of items){
+            if (item.checked){
+                modules.push(item.name)
+            }
+        }
+        let callback = function(result){
+            if(result.success){
+                window.location.reload()
+            }
+            else{
+                alert(M.recit.course.format.recit.messages.error);
+            }
+        }
+        let courseId = this.getQueryVariable("id");
+        this.webApi.deleteModules({courseId: courseId, modules: modules}, callback);
+    }
+
 
     getQueryVariable(name){
         let query = window.location.search.substring(1);
         let vars = query.split("&");
         for (let i = 0; i < vars.length; i++) {
             let pair = vars[i].split("=");
-            if(pair[0] == name){return pair[1];}
+            if (pair[0] == name) {
+                return pair[1];
+            }
         }
-        return(false);
+        return false;
     }
 
     initRadioSectionLevel(){
@@ -224,8 +344,32 @@ M.recit.course.format.recit.EditingMode = class{
         this.webApi.setSectionLevel({courseId: courseId, sectionId: section.getAttribute("data-section-id"), level: radio.value}, callback);
     }
 
-    goToSection(event){
+    deleteSection(section){
+        if (!confirm('Êtes-vous sûr de vouloir supprimer cette section?')){
+            return;
+        }
+        let callback = function(result){
+            if(result.success){
+                window.location.reload()
+            }
+            else{
+                alert(M.recit.course.format.recit.messages.error);
+            }
+        }
+        let courseId = this.getQueryVariable("id");
+        this.webApi.deleteSection({courseId: courseId, sectionId: section}, callback);
+    }
+
+    goToSection(event, isMenu){
         M.recit.theme.recit2.Utils.setCookieCurSection(event.target.hash);
+
+        if (isMenu){
+            setTimeout(() => event.target.classList.remove('active'), 300);
+            let el = document.querySelector('.nav-link.active');
+            if (el){
+                el.classList.remove('active');
+            }
+        }
     }
 
     onBtnShowHideHiddenActivities(event){

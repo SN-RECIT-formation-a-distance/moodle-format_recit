@@ -7,3 +7,13 @@
 h3.sectionname .inplaceeditable.inplaceeditingon .editinstructions{    margin-top:-47px;}
 
 .tt-contract{    width: 80%; margin: auto;}
+
+.recitformatmenu .accordion-toggle::before {
+    font: normal normal normal 14px/1 FontAwesome;
+    content: "\f063";    
+    color: grey;        
+}
+.recitformatmenu .accordion-toggle.collapsed::before {
+    /* symbol for "collapsed" panels */
+    content: "\f061"; 
+}

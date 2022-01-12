@@ -143,7 +143,7 @@ class FormatRecit
             $sectionsummary = format_text($sectionsummary,  $section->summaryformat, array('noclean' => true, 'overflowdiv' => true,
                     'filter' => true));
         }
-        $html = "<div class='section main clearfix tt-section $sectionstyle' role='region' aria-label='$sectionname'>";
+        $html = "<div class='section main clearfix tt-section $sectionstyle' data-section='$sectionid' role='region' aria-label='$sectionname'>";
 
         if($section->ttsectiontitle == 1){
             $html .= "<h2>$sectionname</h2>";
@@ -252,10 +252,23 @@ class FormatRecit
 
     public function render_editing_mode($format_recit_renderer){
         global $CFG, $COURSE, $OUTPUT;
+        $this->renderer = $format_recit_renderer;
 
         $completioninfo = new completion_info($this->course);
 
         $selectedSection = (isset($_COOKIE["course-{$COURSE->id}-cursection"]) ? $_COOKIE["course-{$COURSE->id}-cursection"] : '#menu');
+
+        $massaction = "";
+        $massaction .= get_string('movecm', 'format_recit').": <select class='recitformat_massmove'>";
+        
+        foreach ($this->sectionslist as $section) {
+            $sectionId = $this->get_section_id($section);
+            $massaction .= "<option value='{$section->section}'>{$section->name}</option>";
+        }
+        $massaction .= "</select> ";
+        //$massaction .= "<a href='#' class='recitformat_massdelete btn btn-danger'><i class='fa fa-trash'></i></a>";
+        $massaction .= "<a href='#' class='recitformat_masshide btn btn-outline-danger'><i class='fa fa-eye-slash'></i></a>";
+        $massaction .= "<a href='#' class='recitformat_massshow btn btn-outline-primary'><i class='fa fa-eye'></i></a>";
 
         $data = new stdClass();
         $data->sectionList = array();
@@ -265,16 +278,19 @@ class FormatRecit
         $data->menu->sectionId = "#menu";
         $data->menu->sectionIdAlt = "menu";
         $data->menu->sectionIdAlt2 = 'menu';
-        $data->menu->active = ($selectedSection == "#menu" ? 'active' : '');
-        $data->menu->addSectionUrl = "{$CFG->wwwroot}/course/changenumsections.php?courseid={$COURSE->id}&insertsection=0&sesskey=".sesskey()."&returnurl=".course_get_url($COURSE)."&sectionreturn=menu";
+        $data->menu->css = ($selectedSection == "#menu" ? 'active' : '');
+        $data->menu->addSectionUrl = "{$CFG->wwwroot}/course/changenumsections.php?courseid={$COURSE->id}&insertsection=0&sesskey=".sesskey()."&sectionreturn=0";
         $data->menu->content = $completioninfo->display_help_icon();        
 
         foreach ($this->sectionslist as $section) {
             $sectionId = $this->get_section_id($section);
 
             $data->menu->content .= $format_recit_renderer->section_header($section, $this->course, false, 0, false);
+            $data->menu->content .= html_writer::start_tag('div', array('class' => 'collapse', 'id' => 'collapse-section-'.$section->section));
             $data->menu->content .= sprintf("<div class='section_add_menus' id='add_menus-%s'></div>", $sectionId);
-            $data->menu->content .= sprintf("<div data-course-section-cm-list='1' style='display:none;'>%s</div>", $format_recit_renderer->get_course_section_cm_list($this->course, $section));
+            $data->menu->content .= "<div data-course-section-cm-list='1'>". $this->get_course_section_cm_list_editing($this->course, $section)."</div>";
+            $data->menu->content .= $massaction;
+            $data->menu->content .= html_writer::end_tag('div');
             $data->menu->content .= $format_recit_renderer->section_footer();
 
             $item = new stdClass();
@@ -283,6 +299,7 @@ class FormatRecit
             $item->sectionIdAlt = "section-{$section->section}";
             $item->sectionIdAlt2 = $section->section;
             $item->active = ($selectedSection == $sectionId ? 'active' : '');
+            $item->active .= ($section->sectionlevel == 2 ? ' ml-3' : '');
             $item->editingUrl = "{$CFG->wwwroot}/course/editsection.php?id= $section->id&sr";
             $item->content = $completioninfo->display_help_icon();
             $item->content .= $format_recit_renderer->section_header($section, $this->course, false, 0, true, false);
@@ -293,6 +310,99 @@ class FormatRecit
         }
         
         return $OUTPUT->render_from_template('format_recit/editing_mode', $data);
+    }
+
+    protected function get_course_section_cm_list_editing($course, $section, $sectionreturn = null, $displayoptions = []) {
+        global $USER;
+
+        $output = '';
+        $format = course_get_format($course);
+        $modinfo = get_fast_modinfo($course);
+        if (is_object($section)) {
+            $section = $modinfo->get_section_info($section->section);
+        } else {
+            $section = $modinfo->get_section_info($section);
+        }
+        
+        if (!empty($modinfo->sections[$section->section])) {
+            foreach ($modinfo->sections[$section->section] as $modnumber) {
+                $mod = $modinfo->cms[$modnumber];
+                if ($modulehtml = $this->course_section_cm_editing($course, $completioninfo, $mod, $sectionreturn, $displayoptions)) {
+                    $modclasses = 'activity ' . $mod->modname . ' modtype_' . $mod->modname . ' ' . $mod->extraclasses;
+                    $output .= html_writer::tag('li', $modulehtml, array('class' => $modclasses, 'id' => 'module-' . $mod->id, 'style' => 'list-style:none'));
+                }
+            }
+        }
+        return html_writer::tag('ul', $output, array('class' => 'section img-text'));
+    }
+
+    
+    public function course_section_cm_editing($course, &$completioninfo, cm_info $mod, $sectionreturn, $displayoptions = array()) {
+        global $PAGE;
+        $output = '';
+        // We return empty string (because course module will not be displayed at all)
+        // if:
+        // 1) The activity is not visible to users
+        // and
+        // 2) The 'availableinfo' is empty, i.e. the activity was
+        //     hidden in a way that leaves no info, such as using the
+        //     eye icon.
+        if (!$mod->is_visible_on_course_page()) {
+            return $output;
+        }
+
+        $indentclasses = 'mod-indent';
+        if (!empty($mod->indent)) {
+            $indentclasses .= ' mod-indent-'.$mod->indent;
+            if ($mod->indent > 15) {
+                $indentclasses .= ' mod-indent-huge';
+            }
+        }
+
+        $output .= html_writer::start_tag('div');
+
+        $output .= html_writer::start_tag('div', array('class' => 'mod-indent-outer w-100'));
+
+        if ($PAGE->user_is_editing()) {
+            $output .= "<input type='checkbox' class='massactioncheckbox' name='".$mod->id."'/>";
+        }
+
+        // This div is used to indent the content.
+        $output .= html_writer::div('', $indentclasses);
+
+        // Start a wrapper for the actual content to keep the indentation consistent
+        $output .= html_writer::start_tag('div');
+
+        // Display the link to the module (or do nothing if module has no url)
+        $cmname = $mod->name;
+
+        if (!empty($cmname)) {
+            // Start the div for the activity title, excluding the edit icons.
+            $output .= html_writer::start_tag('div', array('class' => 'activityinstance'));
+                
+            $onclick = htmlspecialchars_decode($mod->onclick, ENT_QUOTES);
+
+            // Display link itself.
+            $activitylink = html_writer::empty_tag('img', array('src' => $mod->get_icon_url(),
+                    'class' => 'iconlarge activityicon', 'alt' => '', 'role' => 'presentation', 'aria-hidden' => 'true')) .
+                    html_writer::tag('span', $cmname, array('class' => 'instancename'));
+            $output .= html_writer::link($mod->url, $activitylink, array('class' => 'aalink', 'onclick' => $onclick));
+
+
+            // Module can put text after the link (e.g. forum unread)
+            $output .= $mod->afterlink;
+
+            // Closing the tag which contains everything but edit icons. Content part of the module should not be part of this.
+            $output .= html_writer::end_tag('div'); // .activityinstance
+        }
+
+        $output .= html_writer::end_tag('div'); // $indentclasses
+
+        // End of indentation div.
+        $output .= html_writer::end_tag('div');
+
+        $output .= html_writer::end_tag('div');
+        return $output;
     }
 
     protected function getHtmlLoading(){
@@ -616,7 +726,9 @@ class format_recit_renderer extends format_section_renderer_base {
      * @return string HTML to output.
      */
     public function section_title($section, $course) {
-        $sectionname = $this->render(course_get_format($course)->inplace_editable_render_section_name($section));
+        $sectionname = "<a class='accordion-toggle collapsed' data-toggle=\"collapse\" data-target=\"#collapse-section-".$section->section."\" href='#section-".$section->section."' aria-controls='{{sectionIdAlt}}'>".$section->name."</a>";
+        $sectionname .= " <a class='ml-1' data-toggle='pill' role='tab' aria-controls='section-".$section->section."' href='#section-".$section->section."' onclick=\"M.recit.course.format.recit.EditingMode.instance.goToSection(event)\"><i class='fa fa-arrow-right'></i></a>";
+        $sectionname .= " <a href='#' class='ml-2' onclick=\"M.recit.course.format.recit.EditingMode.instance.deleteSection(".$section->section.")\"><i class='fa fa-trash'></i></a>";
 
         $level = "";
 

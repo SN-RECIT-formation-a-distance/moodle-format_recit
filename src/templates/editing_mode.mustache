@@ -19,12 +19,13 @@
     <div class="bg-light p-2 w-100">
         <button class="btn btn-outline-primary btn-sm m-1 mr-2" type="button" data-toggle="collapse" data-target="#navTabs" aria-expanded="false" aria-controls="navTabs"><i class="fa fa-bars"></i></button>
         <span class="h6 text-muted">Liste de sections</span>
+        <a class='btn btn-outline-primary' style="float:right" data-toggle='pill' href='{{menu.sectionId}}' role='tab' onclick="M.recit.course.format.recit.EditingMode.instance.goToSection(event, true);" aria-controls='{{menu.sectionIdAlt}}'>{{menu.desc}}</a>
+        <a href='{{menu.addSectionUrl}}' data-add-sections="{{#str}}addsections,format_recit{{/str}}" data-new-sections="90" data-action="addSection" style="float:right" class='btn btn-outline-primary' title='{{#str}}addsections,format_recit{{/str}}'><i class='fa fa-plus'></i> {{#str}}addsections,format_recit{{/str}}</a>
     </div>
 </div>
 <div class="row">
     <div class="col-xs col-sm-4 col-lg-2 collapse p-0" id="navTabs">
         <div class="nav nav-pills bg-light  flex-column" role="tablist" aria-orientation="vertical">
-            <a class='nav-item nav-link {{menu.active}}' data-toggle='pill' href='{{menu.sectionId}}' role='tab' onclick="M.recit.course.format.recit.EditingMode.instance.goToSection(event)" aria-controls='{{menu.sectionIdAlt}}'>{{menu.desc}}</a>
 
             {{#sectionList}}
                 <a class='nav-item nav-link {{active}}' data-toggle='pill' href='{{sectionId}}' role='tab' onclick="M.recit.course.format.recit.EditingMode.instance.goToSection(event)" aria-controls='{{sectionIdAlt}}'>{{desc}}</a>
@@ -32,13 +33,11 @@
         </div>
     </div>
     <div class="col-xl">
-        <div class="tab-content">
+        <div class="tab-content recitformatmenu">
            
             <div class="tab-pane fade show {{menu.active}} p-2 editing-mode-menu" id="{{menu.sectionIdAlt}}" role="tabpanel" aria-labelledby="{{menu.sectionIdAlt}}-tab">
                 <div class='btn-group  pull-right'>
-                    <a href='{{menu.addSectionUrl}}' class='btn btn-outline-primary' title='{{#str}}addsections,format_recit{{/str}}'><i class='fa fa-plus'></i></a>
-                    <button class='btn btn-outline-primary' onclick='M.recit.course.format.recit.EditingMode.instance.onBtnShowHideCmList(event)' title='{{#str}}sectionshowhideactivities,format_recit{{/str}}'><i class='fa fa-fw fa-eye-slash'></i></button>
-                    <button class='btn btn-outline-primary' onclick='window.location.reload();' title='{{#str}}saveandrefresh,format_recit{{/str}}'><i class='fa fa-fw fa-refresh'></i></button>
+                <div class="collapsible-actions"><a href="#" data-toggle="collapse" data-target=".recitformatmenu .collapse" class="collapseexpand">{{#str}}expandall{{/str}}</a></div>
                 </div>
                 <br/><br/><br/>
                 {{{menu.content}}}

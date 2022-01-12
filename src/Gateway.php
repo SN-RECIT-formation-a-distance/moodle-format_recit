@@ -24,6 +24,8 @@
 require('../../../config.php');
 require_once('renderer.php');
 require_once($CFG->dirroot.'/course/format/lib.php');
+require_once($CFG->dirroot.'/course/lib.php');
+
 
 require_login();
 
@@ -51,10 +53,6 @@ class WebApi{
      */
     public function __construct($db){
         $this->db = $db;
-        $refmoodledb = new ReflectionObject($db);
-        $refprop1 = $refmoodledb->getProperty('mysqli');
-        $refprop1->setAccessible(true);
-        $this->mysqli = $refprop1->getValue($db);
     }
 
     /**
@@ -97,16 +95,14 @@ class WebApi{
      * Set the section level
      */
     protected function set_section_level() {
-        global $CFG;
+        global $CFG, $DB;
         try {
-            $prefix = $CFG->prefix;
 
             $data = $this->request->data;
-            $query = "insert into {$prefix}course_format_options (courseid, format, sectionid, name, value)
-            values($data->courseId, 'recit', $data->sectionId, 'sectionlevel', '$data->level')
-            ON DUPLICATE KEY UPDATE value = '$data->level'";
+            $DB->execute("insert into {course_format_options} (courseid, format, sectionid, name, value)
+            values(?, 'recit', ?, 'sectionlevel', ?)
+            ON DUPLICATE KEY UPDATE value = ?", [$data->courseId, $data->sectionId, $data->level, $data->level]);
 
-            $this->mysqli->query($query);
             $this->reply(true);
         } catch (Exception $ex) {
             $this->reply(false, null, $ex->GetMessage());
@@ -135,6 +131,136 @@ class WebApi{
 
         } catch (Exception $ex) {
             $this->reply(false, null, $ex->GetMessage());
+        }
+    }
+
+    /**
+     * Set the section level
+     */
+    protected function move_module_to_section() {
+        global $CFG, $DB;
+        try {
+            $prefix = $CFG->prefix;
+
+            $data = $this->request->data;
+
+            $modulerecords = $DB->get_records_select('course_modules', 'ID IN (' . implode(',', array_fill(0, count($data->modules), '?')) . ')', $data->modules);
+            foreach ($modulerecords as $modulerecord) {
+                $cm = $this->validate_module($modulerecord->id);
+        
+                // Verify target section.
+                $section = $this->validate_section($cm->course, $data->sectionId);
+
+                $context = context_course::instance($section->course);
+                require_capability('moodle/course:manageactivities', $context);
+        
+                moveto_module($modulerecord, $section);
+            }
+            $this->reply(true);
+        } catch (Exception $ex) {
+            $this->reply(false, null, $ex->GetMessage());
+        }
+    }
+
+    protected function delete_modules() {
+        global $CFG, $DB;
+        try {
+            $prefix = $CFG->prefix;
+
+            $data = $this->request->data;
+
+            $modulerecords = $DB->get_records_select('course_modules', 'ID IN (' . implode(',', array_fill(0, count($data->modules), '?')) . ')', $data->modules);
+            foreach ($modulerecords as $modulerecord) {
+                $cm = $this->validate_module($modulerecord->id);
+
+                $section = $this->validate_section($cm->course, $data->sectionId);
+                $context = context_course::instance($section->course);
+                require_capability('moodle/course:manageactivities', $context);
+        
+                course_delete_module($cm->id);
+            }
+            $this->reply(true);
+        } catch (Exception $ex) {
+            $this->reply(false, null, $ex->GetMessage());
+        }
+    }
+
+    protected function set_modules_visible() {
+        global $CFG, $DB;
+        try {
+            $prefix = $CFG->prefix;
+
+            $data = $this->request->data;
+
+            $modulerecords = $DB->get_records_select('course_modules', 'ID IN (' . implode(',', array_fill(0, count($data->modules), '?')) . ')', $data->modules);
+            foreach ($modulerecords as $modulerecord) {
+                $cm = $this->validate_module($modulerecord->id);
+
+                $context = context_course::instance($data->courseId);
+                require_capability('moodle/course:manageactivities', $context);
+        
+                set_coursemodule_visible($cm->id, $data->isVisible);
+            }
+            $this->reply(true);
+        } catch (Exception $ex) {
+            print_r($ex);
+            $this->reply(false, null, $ex->GetMessage());
+        }
+    }
+
+    protected function delete_section() {
+        global $CFG, $DB;
+        try {
+            $prefix = $CFG->prefix;
+
+            $data = $this->request->data;
+
+            $course = $DB->get_record('course', array('id' => $data->courseId), '*', MUST_EXIST);
+            $section = $this->validate_section((int)$data->courseId, $data->sectionId);
+            $context = context_course::instance($section->course);
+            require_capability('moodle/course:manageactivities', $context);
+
+            course_delete_section($course, $data->sectionId, true);
+            
+            $this->reply(true);
+        } catch (Exception $ex) {
+            $this->reply(false, null, $ex->GetMessage());
+        }
+    }
+    
+    /**
+     * Checks that the $target section exists in the course.
+     *
+     * @param int $course Course id
+     * @param int $target Section number
+     *
+     * @return object $section Section database record
+     */
+    private function validate_section($course, $target) {
+        global $DB;
+
+        $section = $DB->get_record('course_sections',
+            array('course' => $course, 'section' => $target));
+
+        if (!$section) {
+            throw new Exception('sectionnotexist'.$course.' '.$target);
+        } else {
+            return $section;
+        }
+    }
+
+    /**
+     * Checks that the module exists.
+     *
+     * @param int $moduleid Module id
+     *
+     * @return object $cm Course module database record
+     */
+    private function validate_module($moduleid) {
+        if (!$cm = get_coursemodule_from_id('', $moduleid, 0, true)) {
+            print_error('invalidcoursemodule');
+        } else {
+            return $cm;
         }
     }
 }
