@@ -174,7 +174,7 @@ class FormatRecit
      * @param string $section
      * @return string
      */
-    protected function get_section_name($section) {
+    public function get_section_name($section) {
         return (empty($section->name) ? get_string('section') . '' . $section->section : $section->name);
     }
 
@@ -575,7 +575,7 @@ class format_recit_renderer extends format_section_renderer_base {
         if ($hasnamenotsecpg || $hasnamesecpg) {
             $classes = '';
         }
-        $sectionname = html_writer::tag('span', $this->section_title($section, $course), array('class' => "$display"));
+        $sectionname = html_writer::tag('span', $this->section_title($section, $course), array('class' => $display . $classes));
         $o .= $sectionname;
 
         $o .= $this->section_availability($section);
@@ -610,7 +610,7 @@ class format_recit_renderer extends format_section_renderer_base {
      * @return string HTML to output.
      */
     public function section_title($section, $course) {
-        $sectionname = "<a class='accordion-toggle collapsed' data-toggle=\"collapse\" data-target=\"#collapse-section-".$section->section."\" href='#section-".$section->section."' aria-controls='{{sectionIdAlt}}'> ".$section->name."</a>";
+        $sectionname = "<a class='accordion-toggle collapsed' data-toggle=\"collapse\" data-target=\"#collapse-section-".$section->section."\" href='#section-".$section->section."' aria-controls='{{sectionIdAlt}}'> ".$this->formatrecit->get_section_name($section)."</a>";
         $sectionname .= " <a class='ml-1 btn-sm' data-toggle='pill' title='Voir la section' role='tab' aria-controls='section-".$section->section."' href='#section-".$section->section."' onclick=\"M.recit.course.format.recit.EditingMode.instance.goToSection(event)\"><i class='fa fa-sign-in'></i></a>";
         $sectionname .= " <a href='#' title='Supprimer la section' class='ml-2' onclick=\"M.recit.course.format.recit.EditingMode.instance.deleteSection(".$section->section.")\"><i class='fa fa-trash'></i></a>";
 

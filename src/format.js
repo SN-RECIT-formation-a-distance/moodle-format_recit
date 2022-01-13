@@ -363,6 +363,11 @@ M.recit.course.format.recit.EditingMode = class{
     goToSection(event, isMenu){
         M.recit.theme.recit2.Utils.setCookieCurSection(event.target.hash);
 
+        let navlink = document.querySelector('.nav-link[aria-controls="'+event.target.getAttribute('aria-controls')+'"]');
+        if (navlink){
+            navlink.classList.add('active');
+        }
+        
         if (isMenu){
             setTimeout(() => event.target.classList.remove('active'), 300);
             let el = document.querySelector('.nav-link.active');
