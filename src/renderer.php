@@ -258,26 +258,27 @@ class FormatRecit
 
         $selectedSection = (isset($_COOKIE["course-{$COURSE->id}-cursection"]) ? $_COOKIE["course-{$COURSE->id}-cursection"] : '#menu');
 
+        $massaction = '<b>Avec la sélection : </b>';
+
         $massaction = "<div class='bg-light p-3 d-flex'>";
 
+        $massaction .= "<div class='d-flex' style='align-items: center;'>";
+        //$massaction .= "<a href='#' class='recitformat_massdelete btn btn-danger'><i class='fa fa-trash'></i></a>";
+        $massaction .= "<a href='#' class='recitformat_massshow btn btn-primary'><i class='fa fa-eye'></i> Afficher</a>";
+        $massaction .= "<a href='#' class='recitformat_masshide btn btn-primary ml-2'><i class='fa fa-eye-slash'></i> Cacher</a>";
+        $massaction .= "</div>";
+
+        $massaction .= "<div class='ml-5 mr-5' style='border-left: 1px solid #efefef;'></div>";
+
         $massaction .= "<div class=''>";
-        $massaction .= '<label class="d-block">'.get_string('movecm', 'format_recit')." : </label>";
         $massaction .= "<select class='recitformat_massmove custom-select w-100'>";
         
-        $massaction .= "<option value=''></option>";
+        $massaction .= "<option value='' disabled selected>".get_string('movecm', 'format_recit')."</option>";
         foreach ($this->sectionslist as $section) {
             $sectionId = $this->get_section_id($section);
             $massaction .= "<option value='{$section->section}'>{$section->name}</option>";
         }
         $massaction .= "</select> ";
-        $massaction .= "</div>";
-
-        $massaction .= "<div class='ml-5 mr-5' style='border-left: 1px solid #efefef;'></div>";
-
-        $massaction .= "<div class='d-flex' style='align-items: center;'>";
-        //$massaction .= "<a href='#' class='recitformat_massdelete btn btn-danger'><i class='fa fa-trash'></i></a>";
-        $massaction .= "<a href='#' class='recitformat_massshow btn btn-outline-primary' title='Afficher les activités'><i class='fa fa-eye'></i></a>";
-        $massaction .= "<a href='#' class='recitformat_masshide btn btn-outline-primary ml-2' title='Cacher les activités'><i class='fa fa-eye-slash'></i></a>";
         $massaction .= "</div>";
 
         $massaction .= "</div>";
@@ -610,7 +611,7 @@ class format_recit_renderer extends format_section_renderer_base {
      */
     public function section_title($section, $course) {
         $sectionname = "<a class='accordion-toggle collapsed' data-toggle=\"collapse\" data-target=\"#collapse-section-".$section->section."\" href='#section-".$section->section."' aria-controls='{{sectionIdAlt}}'> ".$section->name."</a>";
-        $sectionname .= " <a class='ml-1 btn-sm' data-toggle='pill' title='Voir la section' role='tab' aria-controls='section-".$section->section."' href='#section-".$section->section."' onclick=\"M.recit.course.format.recit.EditingMode.instance.goToSection(event)\"><i class='fa fa-arrow-right'></i></a>";
+        $sectionname .= " <a class='ml-1 btn-sm' data-toggle='pill' title='Voir la section' role='tab' aria-controls='section-".$section->section."' href='#section-".$section->section."' onclick=\"M.recit.course.format.recit.EditingMode.instance.goToSection(event)\"><i class='fa fa-sign-in'></i></a>";
         $sectionname .= " <a href='#' title='Supprimer la section' class='ml-2' onclick=\"M.recit.course.format.recit.EditingMode.instance.deleteSection(".$section->section.")\"><i class='fa fa-trash'></i></a>";
 
         $level = "";

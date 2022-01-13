@@ -78,5 +78,5 @@ $string['hascontract_help'] = 'Help Use a contract';
 $string['contract_help'] = 'Help Contract content';
 $string['prev_section'] = 'Previous section';
 $string['next_section'] = 'Next section';
-$string['movecm'] = 'Move module to';
+$string['movecm'] = 'Move to...';
 $string['navsection_help'] = 'Allows to display buttons at the bottom of the page in order to navigate between the different sections of the course';

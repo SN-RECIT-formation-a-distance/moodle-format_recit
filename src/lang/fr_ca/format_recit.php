@@ -80,4 +80,4 @@ $string['prev_section'] = 'Section précédente';
 $string['next_section'] = 'Section suivante';
 $string['navsection_help'] = "Permet d'afficher des boutons en bas de page afin de naviguer entre les différentes sections du cours";
 
-$string['movecm'] = 'Changer les activités selectionnés de section';
+$string['movecm'] = 'Déplacer vers...';
