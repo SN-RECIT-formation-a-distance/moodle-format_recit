@@ -1,19 +1,15 @@
-.inline-form-editing-mode{margin-right:1rem; margin-left: 1rem; display: grid; font-size: 16px; line-height: 30px;}
-
 .course-content  .editing-mode-menu li.section{list-style: none; margin-bottom: 1rem;}
 .course-content  .editing-mode-menu li.section[data-section-level="2"]{padding-left: 3.3rem;}
 .course-content  .editing-mode-menu li.section[data-section-level="3"]{padding-left: 6.3rem;}
-
-h3.sectionname .inplaceeditable.inplaceeditingon .editinstructions{    margin-top:-47px;}
 
 .tt-contract{    width: 80%; margin: auto;}
 
 .recitformatmenu .accordion-toggle::before {
     font: normal normal normal 14px/1 FontAwesome;
-    content: "\f063";    
+    content: "\f0d7";    
     color: grey;        
 }
 .recitformatmenu .accordion-toggle.collapsed::before {
     /* symbol for "collapsed" panels */
-    content: "\f061"; 
+    content: "\f0da"; 
 }

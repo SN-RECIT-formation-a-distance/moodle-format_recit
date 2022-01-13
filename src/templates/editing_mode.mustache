@@ -16,11 +16,14 @@
 }}
 
 <div class="row">
-    <div class="bg-light p-2 w-100">
-        <button class="btn btn-outline-primary btn-sm m-1 mr-2" type="button" data-toggle="collapse" data-target="#navTabs" aria-expanded="false" aria-controls="navTabs"><i class="fa fa-bars"></i></button>
-        <span class="h6 text-muted">Liste de sections</span>
-        <a class='btn btn-outline-primary' style="float:right" data-toggle='pill' href='{{menu.sectionId}}' role='tab' onclick="M.recit.course.format.recit.EditingMode.instance.goToSection(event, true);" aria-controls='{{menu.sectionIdAlt}}'>{{menu.desc}}</a>
-        <a href='{{menu.addSectionUrl}}' data-add-sections="{{#str}}addsections,format_recit{{/str}}" data-new-sections="90" data-action="addSection" style="float:right" class='btn btn-outline-primary' title='{{#str}}addsections,format_recit{{/str}}'><i class='fa fa-plus'></i> {{#str}}addsections,format_recit{{/str}}</a>
+    <div class="btn-toolbar bg-light p-2 w-100" role="toolbar" style='justify-content: space-between;'>
+        <div class="btn-group mr-2 btn-sm" role="group">
+            <button class="btn btn-outline-primary mr-2" type="button" data-toggle="collapse" data-target="#navTabs" aria-expanded="false" aria-controls="navTabs"><i class="fa fa-bars"></i> Liste de sections</button>
+        </div>
+        <div class="btn-group btn-sm" role="group">
+            <a class='btn btn-outline-primary  ' data-toggle='pill' href='{{menu.sectionId}}' role='tab' onclick="M.recit.course.format.recit.EditingMode.instance.goToSection(event, true);" aria-controls='{{menu.sectionIdAlt}}'><i class='fa fa-tasks'></i>  {{menu.desc}}</a>
+            <a href='{{menu.addSectionUrl}}' data-add-sections="{{#str}}addsections,format_recit{{/str}}" data-new-sections="90" data-action="addSection"  class='btn btn-outline-primary ' title='{{#str}}addsections,format_recit{{/str}}'><i class='fa fa-plus'></i> {{#str}}addsections,format_recit{{/str}}</a>
+        </div>
     </div>
 </div>
 <div class="row">

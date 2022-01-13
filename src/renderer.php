@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/course/format/renderer.php');
 
-//js_reset_all_caches();
+js_reset_all_caches();
 /**
  * FormatRecit specifics functions.
  *
@@ -258,23 +258,35 @@ class FormatRecit
 
         $selectedSection = (isset($_COOKIE["course-{$COURSE->id}-cursection"]) ? $_COOKIE["course-{$COURSE->id}-cursection"] : '#menu');
 
-        $massaction = "";
-        $massaction .= get_string('movecm', 'format_recit').": <select class='recitformat_massmove'>";
+        $massaction = "<div class='bg-light p-3 d-flex'>";
+
+        $massaction .= "<div class=''>";
+        $massaction .= '<label class="d-block">'.get_string('movecm', 'format_recit')." : </label>";
+        $massaction .= "<select class='recitformat_massmove custom-select w-100'>";
         
+        $massaction .= "<option value=''></option>";
         foreach ($this->sectionslist as $section) {
             $sectionId = $this->get_section_id($section);
             $massaction .= "<option value='{$section->section}'>{$section->name}</option>";
         }
         $massaction .= "</select> ";
+        $massaction .= "</div>";
+
+        $massaction .= "<div class='ml-5 mr-5' style='border-left: 1px solid #efefef;'></div>";
+
+        $massaction .= "<div class='d-flex' style='align-items: center;'>";
         //$massaction .= "<a href='#' class='recitformat_massdelete btn btn-danger'><i class='fa fa-trash'></i></a>";
-        $massaction .= "<a href='#' class='recitformat_masshide btn btn-outline-danger'><i class='fa fa-eye-slash'></i></a>";
-        $massaction .= "<a href='#' class='recitformat_massshow btn btn-outline-primary'><i class='fa fa-eye'></i></a>";
+        $massaction .= "<a href='#' class='recitformat_massshow btn btn-outline-primary' title='Afficher les activités'><i class='fa fa-eye'></i></a>";
+        $massaction .= "<a href='#' class='recitformat_masshide btn btn-outline-primary ml-2' title='Cacher les activités'><i class='fa fa-eye-slash'></i></a>";
+        $massaction .= "</div>";
+
+        $massaction .= "</div>";
 
         $data = new stdClass();
         $data->sectionList = array();
 
         $data->menu = new stdClass();
-        $data->menu->desc = "Menu";
+        $data->menu->desc = "Configurer le menu";
         $data->menu->sectionId = "#menu";
         $data->menu->sectionIdAlt = "menu";
         $data->menu->sectionIdAlt2 = 'menu';
@@ -426,13 +438,6 @@ class format_recit_renderer extends format_section_renderer_base {
     /** @var FormatRecit */
     protected $formatrecit = null;
 
-    /** 
-     * @const int
-     * Option 1 = All sections together (standard way)
-     * Option 2 = One section at once
-     */
-    public const EDITING_MODE_OPTION = 2;
-
     /**
      * Constructor method, calls the parent constructor
      *
@@ -458,15 +463,8 @@ class format_recit_renderer extends format_section_renderer_base {
     public function render_format_recit($course) {
 
         if ($this->page->user_is_editing()) {
-            switch (self::EDITING_MODE_OPTION) {
-                case 1: 
-                    $this->print_multiple_section_page($course, null, null, null, null);
-                    break;
-                case 2:
-                    $this->formatrecit->load($this, course_get_format($course)->get_course());
-                    echo $this->formatrecit->render_editing_mode($this);
-                    break;
-            }
+            $this->formatrecit->load($this, course_get_format($course)->get_course());
+            echo $this->formatrecit->render_editing_mode($this);
         } else {
             echo $this->output->heading($this->page_title(), 2, 'accesshide');
             echo $this->course_activity_clipboard($course, 0);  // Copy activity clipboard..
@@ -510,121 +508,6 @@ class format_recit_renderer extends format_section_renderer_base {
         return $this->courserenderer->course_section_cm_list($course, $section, 0);
     }
     
-     /**
-     * Output the html for a multiple section page
-     * Renders HTML for the menus to add activities and resources to the current course
-     *
-     * @param stdClass $course The course entry from DB
-     * @param string $sections
-     * @param string $mods
-     * @param string $modnames
-     * @param string $modnamesused
-     * @param stdClass $course
-     * @return string
-     */
-    public function print_multiple_section_page($course, $sections, $mods, $modnames, $modnamesused) {
-
-        $modinfo = get_fast_modinfo($course);
-        $course = course_get_format($course)->get_course();
-
-        $context = context_course::instance($course->id);
-        // Title with completion help icon.
-        $completioninfo = new completion_info($course);
-
-        echo "<div class='editing-mode-menu'>";
-
-        echo $completioninfo->display_help_icon();
-        echo $this->output->heading($this->page_title(), 2, 'accesshide');
-
-        // Copy activity clipboard..
-        echo $this->course_activity_clipboard($course, 0);
-
-        // Now the list of sections..
-        echo $this->start_section_list();
-
-        //if ($course->ttdisplayshortcuts) {
-            $filtervalues = (isset($_COOKIE['ttModeEditionFilter'])
-                    ? explode(",", $_COOKIE['ttModeEditionFilter']) : array("sum", "act"));
-            $ttmodeeditorfilter = '
-                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="ttModeEditionFilter">
-                    <label class="btn btn-outline-primary  %s">
-                        <input type="checkbox" value="sum" autocomplete="off" %s> Affiche le sommaire de la section
-                    </label>
-                    <label class="btn btn-outline-primary  %s">
-                        <input type="checkbox" value="act" autocomplete="off" %s> Afficher les activités
-                    </label>
-                </div><br/><br/>
-            ';
-
-            echo sprintf($ttmodeeditorfilter, (in_array("sum", $filtervalues) ? 'active' : ''),
-                    (in_array("sum", $filtervalues) ? 'checked' : ''),
-                    (in_array("act", $filtervalues) ? 'active' : ''),
-                    (in_array("act", $filtervalues) ? 'checked' : ''));
-       // }
-
-        $numsections = course_get_format($course)->get_last_section_number();
-
-        foreach ($modinfo->get_section_info_all() as $section => $thissection) {
-            if ($section == 0) {
-                // Special case : 0-section is displayed a little different then the others.
-                if ($thissection->summary or !empty($modinfo->sections[0]) or $this->page->user_is_editing()) {
-                    echo $this->section_header($thissection, $course, false, 0);
-                    echo $this->courserenderer->course_section_cm_list($course, $thissection, 0);
-                    echo $this->courserenderer->course_section_add_cm_control($course, 0, 0);
-                    echo $this->section_footer();
-                }
-                continue;
-            }
-            if ($section > $numsections) {
-                // Activities inside this section are 'orphaned', this section will be printed as 'stealth' below.
-                continue;
-            }
-            // Show the section if the user is permitted to access it, OR if it's not available
-            // but there is some available info text which explains the reason & should display,
-            // OR it is hidden but the course has a setting to display hidden sections as unavilable.
-            $showsection = $thissection->uservisible ||
-                    ($thissection->visible && !$thissection->available && !empty($thissection->availableinfo)) ||
-                    (!$thissection->visible);
-            if (!$showsection) {
-                continue;
-            }
-
-            if (!$this->page->user_is_editing()) {
-                // Display section summary only.
-                echo $this->section_summary($thissection, $course, null);
-            } else {
-                echo $this->section_header($thissection, $course, false, 0);
-                if ($thissection->uservisible) {
-                    echo $this->courserenderer->course_section_cm_list($course, $thissection, 0);
-                    echo $this->courserenderer->course_section_add_cm_control($course, $section, 0);
-                }
-                echo $this->section_footer();
-            }
-        }
-
-        if ($this->page->user_is_editing() and has_capability('moodle/course:update', $context)) {
-            // Print stealth sections if present.
-            foreach ($modinfo->get_section_info_all() as $section => $thissection) {
-                if ($section <= $numsections or empty($modinfo->sections[$section])) {
-                    // This is not stealth section or it is empty.
-                    continue;
-                }
-                echo $this->stealth_section_header($section);
-                echo $this->courserenderer->course_section_cm_list($course, $thissection, 0);
-                echo $this->stealth_section_footer();
-            }
-
-            echo "<br/>";
-            echo $this->end_section_list();
-
-            echo $this->change_number_sections($course, 0);
-        } else {
-            echo $this->end_section_list();
-        }
-
-        echo "</div>";
-    }
-
     /**
      * Renders HTML for the menus to add activities and resources to the current course
      *
@@ -692,7 +575,7 @@ class format_recit_renderer extends format_section_renderer_base {
             $classes = '';
         }
         $sectionname = html_writer::tag('span', $this->section_title($section, $course), array('class' => "$display"));
-        $o .= $this->output->heading($sectionname, 3, 'sectionname' . $classes);
+        $o .= $sectionname;
 
         $o .= $this->section_availability($section);
 
@@ -726,17 +609,17 @@ class format_recit_renderer extends format_section_renderer_base {
      * @return string HTML to output.
      */
     public function section_title($section, $course) {
-        $sectionname = "<a class='accordion-toggle collapsed' data-toggle=\"collapse\" data-target=\"#collapse-section-".$section->section."\" href='#section-".$section->section."' aria-controls='{{sectionIdAlt}}'>".$section->name."</a>";
-        $sectionname .= " <a class='ml-1' data-toggle='pill' role='tab' aria-controls='section-".$section->section."' href='#section-".$section->section."' onclick=\"M.recit.course.format.recit.EditingMode.instance.goToSection(event)\"><i class='fa fa-arrow-right'></i></a>";
-        $sectionname .= " <a href='#' class='ml-2' onclick=\"M.recit.course.format.recit.EditingMode.instance.deleteSection(".$section->section.")\"><i class='fa fa-trash'></i></a>";
+        $sectionname = "<a class='accordion-toggle collapsed' data-toggle=\"collapse\" data-target=\"#collapse-section-".$section->section."\" href='#section-".$section->section."' aria-controls='{{sectionIdAlt}}'> ".$section->name."</a>";
+        $sectionname .= " <a class='ml-1 btn-sm' data-toggle='pill' title='Voir la section' role='tab' aria-controls='section-".$section->section."' href='#section-".$section->section."' onclick=\"M.recit.course.format.recit.EditingMode.instance.goToSection(event)\"><i class='fa fa-arrow-right'></i></a>";
+        $sectionname .= " <a href='#' title='Supprimer la section' class='ml-2' onclick=\"M.recit.course.format.recit.EditingMode.instance.deleteSection(".$section->section.")\"><i class='fa fa-trash'></i></a>";
 
         $level = "";
 
-        $radiosectionlevel = '<label><input name="ttRadioSectionLevel%ld" data-component="ttRadioSectionLevel" type="radio" value="%s"  %s> %s</label>';
+        $radiosectionlevel = '<label class="ml-2 mb-0" style="align-self: center"><input name="ttRadioSectionLevel%ld" data-component="ttRadioSectionLevel" type="radio" value="%s"  %s> %s</label>';
 
         $level = "";
         if ($section->section > 0) {
-            $level = sprintf('<form class="inline-form-editing-mode">%s%s%s</form>',
+            $level = sprintf('<form class="d-flex ml-3">%s%s%s</form>',
             sprintf($radiosectionlevel, $section->section, "1",
                     ($section->sectionlevel == 1 ? "checked" : ""), get_string('displaytabslev1', 'format_recit')),
             sprintf($radiosectionlevel, $section->section, "2",
@@ -744,7 +627,7 @@ class format_recit_renderer extends format_section_renderer_base {
             "");
         }
 
-        $html = sprintf("<span style='display: flex; align-items: center; '>%s%s</span>", $sectionname, $level);
+        $html = sprintf("<span style='display: flex; align-items: center; height: 30px;'>%s%s</span>", $sectionname, $level);
 
         return $html;
     }
