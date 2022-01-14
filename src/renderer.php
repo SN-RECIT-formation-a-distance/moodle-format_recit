@@ -310,7 +310,7 @@ class FormatRecit
             $item = new stdClass();
             $item->desc =  $this->get_section_name($section);
             $item->sectionId = $sectionId;
-            $item->sectionIdAlt = "section-{$section->section}";
+            $item->sectionIdAlt = "section-item-{$section->section}";
             $item->sectionIdAlt2 = $section->section;
             $item->active = ($selectedSection == $sectionId ? 'active' : '');
             $item->active .= ($section->sectionlevel == 2 ? ' ml-3' : '');
@@ -550,7 +550,7 @@ class format_recit_renderer extends format_section_renderer_base {
 
         $display = ($showsectiondetails ? '' : 'd-none');
 
-        $o .= html_writer::start_tag('li', array('id' => 'section-item-'.$section->section,
+        $o .= html_writer::start_tag('li', array('id' => 'section-'.$section->section, //This id cannot be changed or dragndrop will break
             'class' => "section main clearfix".$sectionstyle, 'role' => 'region',
             'aria-label' => get_section_name($course, $section), "data-section-level" => $section->sectionlevel,
             "data-section-id" => $section->id, 'style' => 'list-style: none;') );
@@ -611,8 +611,8 @@ class format_recit_renderer extends format_section_renderer_base {
      * @return string HTML to output.
      */
     public function section_title($section, $course) {
-        $sectionname = "<a class='accordion-toggle collapsed' data-toggle=\"collapse\" data-target=\"#collapse-section-".$section->section."\" href='#section-".$section->section."' aria-controls='{{sectionIdAlt}}'> ".$this->formatrecit->get_section_name($section)."</a>";
-        $sectionname .= " <a class='ml-1 btn-sm' data-toggle='pill' title='Voir la section' role='tab' aria-controls='section-".$section->section."' href='#section-".$section->section."' onclick=\"M.recit.course.format.recit.EditingMode.instance.goToSection(event)\"><i class='fa fa-sign-in'></i></a>";
+        $sectionname = "<a class='accordion-toggle collapsed' data-toggle=\"collapse\" data-target=\"#collapse-section-".$section->section."\" href='#section-".$section->section."'> ".$this->formatrecit->get_section_name($section)."</a>";
+        $sectionname .= " <a class='ml-1 btn-sm' data-toggle='pill' title='Voir la section' role='tab' aria-controls='section-item-".$section->section."' href='#section-item-".$section->section."' onclick=\"M.recit.course.format.recit.EditingMode.instance.goToSection(event, true)\"><i class='fa fa-sign-in'></i></a>";
         $sectionname .= " <a href='#' title='Supprimer la section' class='ml-2' onclick=\"M.recit.course.format.recit.EditingMode.instance.deleteSection(".$section->section.")\"><i class='fa fa-trash'></i></a>";
 
         $level = "";

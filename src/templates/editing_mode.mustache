@@ -31,7 +31,7 @@
         <div class="nav nav-pills bg-light  flex-column" role="tablist" aria-orientation="vertical">
 
             {{#sectionList}}
-                <a class='nav-item nav-link {{active}}' data-toggle='pill' href='{{sectionId}}' role='tab' onclick="M.recit.course.format.recit.EditingMode.instance.goToSection(event)" aria-controls='{{sectionIdAlt}}'>{{desc}}</a>
+                <a class='nav-item nav-link {{active}}' data-toggle='pill' href='#{{sectionIdAlt}}' role='tab' onclick="M.recit.course.format.recit.EditingMode.instance.goToSection(event)" aria-controls='{{sectionIdAlt}}'>{{desc}}</a>
             {{/sectionList}}
         </div>
     </div>
