@@ -271,6 +271,12 @@ M.recit.course.format.recit.EditingMode = class{
                 modules.push(item.name)
             }
         }
+        
+        if (modules.length == 0){
+            alert('Veuillez sélectionner des activités');
+            return;
+        }
+
         let callback = function(result){
             if(result.success){
                 window.location.reload()
@@ -293,6 +299,10 @@ M.recit.course.format.recit.EditingMode = class{
             if (item.checked){
                 modules.push(item.name)
             }
+        }
+        if (modules.length == 0){
+            alert('Veuillez sélectionner des activités');
+            return;
         }
         let callback = function(result){
             if(result.success){
