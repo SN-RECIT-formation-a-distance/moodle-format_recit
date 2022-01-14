@@ -263,8 +263,8 @@ class FormatRecit
         $massaction = "<div class='bg-light p-3 d-flex'>";
 
         $massaction .= "<div class='d-flex' style='align-items: center;'>";
-        $massaction .= "<a href='#' class='recitformat_massdelete btn btn-danger'><i class='fa fa-trash'></i></a>";
-        $massaction .= "<a href='#' class='recitformat_massshow btn btn-primary'><i class='fa fa-eye'></i> Afficher</a>";
+        $massaction .= "<a href='#' class='recitformat_massdelete btn btn-danger'><i class='fa fa-trash'></i> Supprimer</a>";
+        $massaction .= "<a href='#' class='recitformat_massshow btn btn-primary ml-2'><i class='fa fa-eye'></i> Afficher</a>";
         $massaction .= "<a href='#' class='recitformat_masshide btn btn-primary ml-2'><i class='fa fa-eye-slash'></i> Cacher</a>";
         $massaction .= "</div>";
 
@@ -276,7 +276,8 @@ class FormatRecit
         $massaction .= "<option value='' disabled selected>".get_string('movecm', 'format_recit')."</option>";
         foreach ($this->sectionslist as $section) {
             $sectionId = $this->get_section_id($section);
-            $massaction .= "<option value='{$section->section}'>{$section->name}</option>";
+            $sectionName = $this->get_section_name($section);
+            $massaction .= "<option value='{$section->section}'>{$sectionName}</option>";
         }
         $massaction .= "</select> ";
         $massaction .= "</div>";
@@ -365,33 +366,33 @@ class FormatRecit
         }
 
         $indentclasses = 'mod-indent';
-        if (!empty($mod->indent)) {
+        /*if (!empty($mod->indent)) {
             $indentclasses .= ' mod-indent-'.$mod->indent;
             if ($mod->indent > 15) {
                 $indentclasses .= ' mod-indent-huge';
             }
-        }
+        }*/
 
         $output .= html_writer::start_tag('div');
 
-        $output .= html_writer::start_tag('div', array('class' => 'mod-indent-outer w-100'));
+        $output .= html_writer::start_tag('div', array('class' => 'mod-indent-outer w-100 d-inline'));
 
         if ($PAGE->user_is_editing()) {
             $output .= "<input type='checkbox' class='massactioncheckbox' name='".$mod->id."'/>";
         }
 
         // This div is used to indent the content.
-        $output .= html_writer::div('', $indentclasses);
+        //$output .= html_writer::div('', $indentclasses);
 
         // Start a wrapper for the actual content to keep the indentation consistent
-        $output .= html_writer::start_tag('div');
+        $output .= html_writer::start_tag('div', array('class' => 'd-inline'));
 
         // Display the link to the module (or do nothing if module has no url)
         $cmname = $mod->name;
 
         if (!empty($cmname)) {
             // Start the div for the activity title, excluding the edit icons.
-            $output .= html_writer::start_tag('div', array('class' => 'activityinstance'));
+            $output .= html_writer::start_tag('div', array('class' => 'activityinstance ml-2'));
                 
             $onclick = htmlspecialchars_decode($mod->onclick, ENT_QUOTES);
 
