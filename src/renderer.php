@@ -263,7 +263,7 @@ class FormatRecit
         $massaction = "<div class='bg-light p-3 d-flex'>";
 
         $massaction .= "<div class='d-flex' style='align-items: center;'>";
-        //$massaction .= "<a href='#' class='recitformat_massdelete btn btn-danger'><i class='fa fa-trash'></i></a>";
+        $massaction .= "<a href='#' class='recitformat_massdelete btn btn-danger'><i class='fa fa-trash'></i></a>";
         $massaction .= "<a href='#' class='recitformat_massshow btn btn-primary'><i class='fa fa-eye'></i> Afficher</a>";
         $massaction .= "<a href='#' class='recitformat_masshide btn btn-primary ml-2'><i class='fa fa-eye-slash'></i> Cacher</a>";
         $massaction .= "</div>";
