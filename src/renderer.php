@@ -288,7 +288,7 @@ class FormatRecit
         $data->sectionList = array();
 
         $data->menu = new stdClass();
-        $data->menu->desc = "Configurer le menu";
+        $data->menu->desc = "Configurer le menu et les activités";
         $data->menu->sectionId = "#menu";
         $data->menu->sectionIdAlt = "menu";
         $data->menu->sectionIdAlt2 = 'menu';

@@ -244,7 +244,7 @@ M.recit.course.format.recit.EditingMode = class{
     }
 
     onChangeSection(combo){
-        let items = combo.parentElement.querySelectorAll('.massactioncheckbox');
+        let items = combo.parentElement.parentElement.parentElement.querySelectorAll('.massactioncheckbox');
         let modules = [];
         for(let item of items){
             if (item.checked){
@@ -264,7 +264,7 @@ M.recit.course.format.recit.EditingMode = class{
     }
 
     onChangeVisibility(combo, isVisible){
-        let items = combo.parentElement.querySelectorAll('.massactioncheckbox');
+        let items = combo.parentElement.parentElement.parentElement.querySelectorAll('.massactioncheckbox');
         let modules = [];
         for(let item of items){
             if (item.checked){
@@ -289,11 +289,11 @@ M.recit.course.format.recit.EditingMode = class{
         this.webApi.setModulesVisible({courseId: courseId, isVisible: isVisible, modules: modules}, callback);
     }
 
-    onDeleteModule(){
+    onDeleteModule(combo){
         if (!confirm('Êtes-vous sûr de vouloir supprimer ces activités?')){
             return;
         }
-        let items = combo.parentElement.querySelectorAll('.massactioncheckbox');
+        let items = combo.parentElement.parentElement.parentElement.querySelectorAll('.massactioncheckbox');
         let modules = [];
         for(let item of items){
             if (item.checked){

@@ -173,8 +173,7 @@ class WebApi{
             foreach ($modulerecords as $modulerecord) {
                 $cm = $this->validate_module($modulerecord->id);
 
-                $section = $this->validate_section($cm->course, $data->sectionId);
-                $context = context_course::instance($section->course);
+                $context = context_course::instance($cm->course);
                 require_capability('moodle/course:manageactivities', $context);
         
                 course_delete_module($cm->id);
