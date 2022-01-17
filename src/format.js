@@ -434,6 +434,29 @@ M.recit.course.format.recit.EditingMode = class{
             el.style.display = display;
         }
     }
+
+    expandAccordion(btn){
+        let elems = document.querySelectorAll(".recitformatmenu .collapse");
+        let hide = elems[0].classList.contains('show');
+        btn.innerHTML = (hide ? '<i class="fa fa-arrow-right"></i> Tout déplier' : '<i class="fa fa-arrow-down"></i> Tout replier');
+        
+        for(let el of elems){
+            if (hide){
+                el.classList.remove('show');
+            }else{
+                el.classList.add('show');
+            }
+        }
+        
+        elems = document.querySelectorAll(".recitformatmenu .accordion-toggle");
+        for(let el of elems){
+            if (hide){
+                el.classList.add('collapsed');
+            }else{
+                el.classList.remove('collapsed');
+            }
+        }
+    }
 }
 
 M.recit.course.format.recit.NonEditingMode = class{

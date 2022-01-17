@@ -258,9 +258,11 @@ class FormatRecit
 
         $selectedSection = (isset($_COOKIE["course-{$COURSE->id}-cursection"]) ? $_COOKIE["course-{$COURSE->id}-cursection"] : '#menu');
 
-        $massaction = '<b>Avec la sélection : </b>';
 
-        $massaction = "<div class='bg-light p-3 d-flex'>";
+        $massaction = "<div class='bg-light p-3'>";
+
+        $massaction .= '<p><b>Avec la sélection : </b></p>';
+        $massaction .= "<div class='d-flex'>";
 
         $massaction .= "<div class='d-flex' style='align-items: center;'>";
         $massaction .= "<a href='#' class='recitformat_massdelete btn btn-danger'><i class='fa fa-trash'></i> Supprimer</a>";
@@ -282,6 +284,7 @@ class FormatRecit
         $massaction .= "</select> ";
         $massaction .= "</div>";
 
+        $massaction .= "</div>";
         $massaction .= "</div>";
 
         $data = new stdClass();
