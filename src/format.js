@@ -244,7 +244,7 @@ M.recit.course.format.recit.EditingMode = class{
     }
 
     onChangeSection(combo){
-        let items = combo.parentElement.parentElement.parentElement.querySelectorAll('.massactioncheckbox');
+        let items = document.querySelectorAll('.massactioncheckbox[data-section="'+combo.getAttribute('data-section')+'"]');
         let modules = [];
         for(let item of items){
             if (item.checked){
@@ -264,7 +264,7 @@ M.recit.course.format.recit.EditingMode = class{
     }
 
     onChangeVisibility(combo, isVisible){
-        let items = combo.parentElement.parentElement.parentElement.querySelectorAll('.massactioncheckbox');
+        let items = document.querySelectorAll('.massactioncheckbox[data-section="'+combo.getAttribute('data-section')+'"]');
         let modules = [];
         for(let item of items){
             if (item.checked){
@@ -293,7 +293,7 @@ M.recit.course.format.recit.EditingMode = class{
         if (!confirm('Êtes-vous sûr de vouloir supprimer ces activités?')){
             return;
         }
-        let items = combo.parentElement.parentElement.parentElement.querySelectorAll('.massactioncheckbox');
+        let items = document.querySelectorAll('.massactioncheckbox[data-section="'+combo.getAttribute('data-section')+'"]');
         let modules = [];
         for(let item of items){
             if (item.checked){

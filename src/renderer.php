@@ -265,15 +265,15 @@ class FormatRecit
         $massaction .= "<div class='d-flex'>";
 
         $massaction .= "<div class='d-flex' style='align-items: center;'>";
-        $massaction .= "<a href='#' class='recitformat_massdelete btn btn-danger'><i class='fa fa-trash'></i> Supprimer</a>";
-        $massaction .= "<a href='#' class='recitformat_massshow btn btn-primary ml-2'><i class='fa fa-eye'></i> Afficher</a>";
-        $massaction .= "<a href='#' class='recitformat_masshide btn btn-primary ml-2'><i class='fa fa-eye-slash'></i> Cacher</a>";
+        $massaction .= "<a href='#' class='recitformat_massdelete btn btn-danger' data-section='%s'><i class='fa fa-trash'></i> Supprimer</a>";
+        $massaction .= "<a href='#' class='recitformat_massshow btn btn-primary ml-2' data-section='%s'><i class='fa fa-eye'></i> Afficher</a>";
+        $massaction .= "<a href='#' class='recitformat_masshide btn btn-primary ml-2' data-section='%s'><i class='fa fa-eye-slash'></i> Cacher</a>";
         $massaction .= "</div>";
 
         $massaction .= "<div class='ml-5 mr-5' style='border-left: 1px solid #efefef;'></div>";
 
         $massaction .= "<div class=''>";
-        $massaction .= "<select class='recitformat_massmove custom-select w-100'>";
+        $massaction .= "<select class='recitformat_massmove custom-select w-100' data-section='%s'>";
         
         $massaction .= "<option value='' disabled selected>".get_string('movecm', 'format_recit')."</option>";
         foreach ($this->sectionslist as $section) {
@@ -306,7 +306,7 @@ class FormatRecit
             $data->menu->content .= html_writer::start_tag('div', array('class' => 'collapse', 'id' => 'collapse-section-'.$section->section));
             $data->menu->content .= sprintf("<div class='section_add_menus' id='add_menus-%s'></div>", $sectionId);
             $data->menu->content .= "<div data-course-section-cm-list='1'>". $this->get_course_section_cm_list_editing($this->course, $section)."</div>";
-            $data->menu->content .= $massaction;
+            $data->menu->content .= sprintf($massaction, $section->section, $section->section, $section->section, $section->section);
             $data->menu->content .= html_writer::end_tag('div');
             $data->menu->content .= $format_recit_renderer->section_footer();
 
@@ -344,7 +344,7 @@ class FormatRecit
         if (!empty($modinfo->sections[$section->section])) {
             foreach ($modinfo->sections[$section->section] as $modnumber) {
                 $mod = $modinfo->cms[$modnumber];
-                if ($modulehtml = $this->course_section_cm_editing($course, $completioninfo, $mod, $sectionreturn, $displayoptions)) {
+                if ($modulehtml = $this->course_section_cm_editing($course, $completioninfo, $mod, $sectionreturn, $displayoptions, $section)) {
                     $modclasses = 'activity ' . $mod->modname . ' modtype_' . $mod->modname . ' ' . $mod->extraclasses;
                     $output .= html_writer::tag('li', $modulehtml, array('class' => $modclasses, 'id' => 'module-' . $mod->id, 'style' => 'list-style:none'));
                 }
@@ -354,7 +354,7 @@ class FormatRecit
     }
 
     
-    public function course_section_cm_editing($course, &$completioninfo, cm_info $mod, $sectionreturn, $displayoptions = array()) {
+    public function course_section_cm_editing($course, &$completioninfo, cm_info $mod, $sectionreturn, $displayoptions = array(), $section) {
         global $PAGE;
         $output = '';
         // We return empty string (because course module will not be displayed at all)
@@ -381,7 +381,7 @@ class FormatRecit
         $output .= html_writer::start_tag('div', array('class' => 'mod-indent-outer w-100 d-inline'));
 
         if ($PAGE->user_is_editing()) {
-            $output .= "<input type='checkbox' class='massactioncheckbox' name='".$mod->id."'/>";
+            $output .= "<input type='checkbox' class='massactioncheckbox' data-section='$section->section' name='".$mod->id."'/>";
         }
 
         // This div is used to indent the content.
@@ -554,7 +554,7 @@ class format_recit_renderer extends format_section_renderer_base {
         $display = ($showsectiondetails ? '' : 'd-none');
 
         $o .= html_writer::start_tag('li', array('id' => 'section-'.$section->section, //This id cannot be changed or dragndrop will break
-            'class' => "section main clearfix".$sectionstyle, 'role' => 'region',
+            'class' => "section main clearfix sectiondraggable yui3-dd-drop".$sectionstyle, 'role' => 'region',
             'aria-label' => get_section_name($course, $section), "data-section-level" => $section->sectionlevel,
             "data-section-id" => $section->id, 'style' => 'list-style: none;') );
 
@@ -617,10 +617,20 @@ class format_recit_renderer extends format_section_renderer_base {
         global $CFG;
         $editSectionUrl = "{$CFG->wwwroot}/course/editsection.php?id={$section->id}&sr";
         $hideSectionUrl = "{$CFG->wwwroot}/course/view.php?id={$course->id}&".($section->visible == 1 ? 'hide' : 'show')."={$section->section}&sesskey=".sesskey();
-        $sectionname = "<a class='accordion-toggle collapsed' data-toggle=\"collapse\" data-target=\"#collapse-section-".$section->section."\" href='#section-".$section->section."'> ".$this->formatrecit->get_section_name($section)."</a>";
+        $upSectionUrl = "{$CFG->wwwroot}/course/view.php?id={$course->id}&section={$section->section}&move=-1&sesskey=".sesskey();
+        $downSectionUrl = "{$CFG->wwwroot}/course/view.php?id={$course->id}&section={$section->section}&move=1&sesskey=".sesskey();
+        $sectionname = '';
+        if ($section->section > 0){
+            //$sectionname .= '<span class="section-handle moodle-core-dragdrop-draghandle" title="Déplacer '.$this->formatrecit->get_section_name($section).'" tabindex="0" data-draggroups="sectiondraggable" role="button">          <i class="icon fa fa-arrows fa-fw " aria-hidden="true" style="cursor: move;"></i>            </span>';
+        }
+        $sectionname .= "<a class='accordion-toggle collapsed' data-toggle=\"collapse\" data-target=\"#collapse-section-".$section->section."\" href='#section-".$section->section."'> ".$this->formatrecit->get_section_name($section)."</a>";
         $sectionname .= " <a class='ml-1 btn-sm' data-toggle='pill' title='Voir la section' role='tab' aria-controls='section-item-".$section->section."' href='#section-item-".$section->section."' onclick=\"M.recit.course.format.recit.EditingMode.instance.goToSection(event, true)\"><i class='fa fa-sign-in'></i></a>";
         $sectionname .= " <a href='$editSectionUrl' title='Modifier la section' class='ml-2'><i class='fa fa-pencil'></i></a>";
         $sectionname .= " <a href='$hideSectionUrl' title='Cacher/montrer la section' class='ml-2'><i class='fa ".($section->visible == 1 ? 'fa-eye' : 'fa-eye-slash')."'></i></a>";
+        if ($section->section > 0){
+            $sectionname .= " <a href='$upSectionUrl' title='Monter la section' class='ml-2'><i class='fa fa-arrow-up'></i></a>";
+        }
+        $sectionname .= " <a href='$downSectionUrl' title='Descendre la section' class='ml-2'><i class='fa fa-arrow-down'></i></a>";
         $sectionname .= " <a href='#' title='Supprimer la section' class='ml-2' onclick=\"M.recit.course.format.recit.EditingMode.instance.deleteSection(".$section->section.")\"><i class='fa fa-trash'></i></a>";
 
         $level = "";
