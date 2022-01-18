@@ -412,6 +412,10 @@ class FormatRecit
 
             // Module can put text after the link (e.g. forum unread)
             $output .= $mod->afterlink;
+            // Show availability info (if module is not available).
+            if (!$mod->visible) {
+                $output .= html_writer::tag('span', get_string('hiddenfromstudents'), array('class' => 'badge badge-info'));
+            }
 
             // Closing the tag which contains everything but edit icons. Content part of the module should not be part of this.
             $output .= html_writer::end_tag('div'); // .activityinstance
@@ -425,6 +429,36 @@ class FormatRecit
         $output .= html_writer::end_tag('div');
         return $output;
     }
+
+    /**
+     * Displays availability info for a course section or course module
+     *
+     * @param string $text
+     * @param string $additionalclasses
+     * @return string
+     */
+    public function availability_info($text, $additionalclasses = '') {
+
+        $data = ['text' => $text, 'classes' => $additionalclasses];
+        $additionalclasses = array_filter(explode(' ', $additionalclasses));
+
+        if (in_array('ishidden', $additionalclasses)) {
+            $data['ishidden'] = 1;
+
+        } else if (in_array('isstealth', $additionalclasses)) {
+            $data['isstealth'] = 1;
+
+        } else if (in_array('isrestricted', $additionalclasses)) {
+            $data['isrestricted'] = 1;
+
+            if (in_array('isfullinfo', $additionalclasses)) {
+                $data['isfullinfo'] = 1;
+            }
+        }
+
+        return $this->render_from_template('core/availability_info', $data);
+    }
+
 
     protected function getHtmlLoading(){
         $html = "
