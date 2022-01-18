@@ -319,7 +319,7 @@ class FormatRecit
             $item->sectionId = $sectionId;
             $item->sectionIdAlt = "section-item-{$section->section}";
             $item->sectionIdAlt2 = $section->section;
-            $item->active = ($selectedSection == $sectionId ? 'active' : '');
+            $item->active = ($selectedSection == "#section-item-{$section->section}" ? 'active' : '');
             $item->active .= ($section->sectionlevel == 2 ? ' ml-3' : '');
             $item->editingUrl = "{$CFG->wwwroot}/course/editsection.php?id= $section->id&sr";
             $item->content = $completioninfo->display_help_icon();
