@@ -214,7 +214,7 @@ M.recit.course.format.recit.EditingMode = class{
                 navTabs.classList.add("show");
                 document.querySelector('[data-target="#navTabs"]').classList.add("collapsed");
             }
-        }
+        } 
     }
 
     initMassActions(){
@@ -251,6 +251,12 @@ M.recit.course.format.recit.EditingMode = class{
                 modules.push(item.name)
             }
         }
+        
+        if (modules.length == 0){
+            alert('Veuillez sélectionner des activités');
+            return;
+        }
+        
         let callback = function(result){
             if(result.success){
                 window.location.reload()
@@ -372,6 +378,7 @@ M.recit.course.format.recit.EditingMode = class{
 
     goToSection(event, isMenu){
         M.recit.theme.recit2.Utils.setCookieCurSection(event.target.hash);
+        document.location.hash = event.target.hash;
 
         
         if (isMenu){

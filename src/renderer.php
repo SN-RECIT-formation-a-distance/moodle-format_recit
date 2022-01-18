@@ -171,11 +171,15 @@ class FormatRecit
 
     /**
      * Function to get section name of TreeTopics.
-     * @param string $section
+     * @param object $section
      * @return string
      */
     public function get_section_name($section) {
         return (empty($section->name) ? get_string('section') . '' . $section->section : $section->name);
+    }
+
+    public function get_last_section(){
+        return end($this->sectionslist);
     }
 
     /**
@@ -295,7 +299,7 @@ class FormatRecit
         $data->menu->sectionId = "#menu";
         $data->menu->sectionIdAlt = "menu";
         $data->menu->sectionIdAlt2 = 'menu';
-        $data->menu->css = ($selectedSection == "#menu" ? 'active' : '');
+        $data->menu->active = ($selectedSection == "#menu" ? 'active' : '');
         $data->menu->addSectionUrl = "{$CFG->wwwroot}/course/changenumsections.php?courseid={$COURSE->id}&insertsection=0&sesskey=".sesskey()."&sectionreturn=0";
         $data->menu->content = $completioninfo->display_help_icon();        
 
@@ -303,7 +307,7 @@ class FormatRecit
             $sectionId = $this->get_section_id($section);
 
             $data->menu->content .= $format_recit_renderer->section_header($section, $this->course, false, 0, false);
-            $data->menu->content .= html_writer::start_tag('div', array('class' => 'collapse', 'id' => 'collapse-section-'.$section->section));
+            $data->menu->content .= html_writer::start_tag('div', array('class' => 'collapse show', 'id' => 'collapse-section-'.$section->section));
             $data->menu->content .= sprintf("<div class='section_add_menus' id='add_menus-%s'></div>", $sectionId);
             $data->menu->content .= "<div data-course-section-cm-list='1'>". $this->get_course_section_cm_list_editing($this->course, $section)."</div>";
             $data->menu->content .= sprintf($massaction, $section->section, $section->section, $section->section, $section->section);
@@ -615,6 +619,7 @@ class format_recit_renderer extends format_section_renderer_base {
      */
     public function section_title($section, $course) {
         global $CFG;
+        $lastSection = $this->formatrecit->get_last_section();
         $editSectionUrl = "{$CFG->wwwroot}/course/editsection.php?id={$section->id}&sr";
         $hideSectionUrl = "{$CFG->wwwroot}/course/view.php?id={$course->id}&".($section->visible == 1 ? 'hide' : 'show')."={$section->section}&sesskey=".sesskey();
         $upSectionUrl = "{$CFG->wwwroot}/course/view.php?id={$course->id}&section={$section->section}&move=-1&sesskey=".sesskey();
@@ -623,14 +628,16 @@ class format_recit_renderer extends format_section_renderer_base {
         if ($section->section > 0){
             //$sectionname .= '<span class="section-handle moodle-core-dragdrop-draghandle" title="Déplacer '.$this->formatrecit->get_section_name($section).'" tabindex="0" data-draggroups="sectiondraggable" role="button">          <i class="icon fa fa-arrows fa-fw " aria-hidden="true" style="cursor: move;"></i>            </span>';
         }
-        $sectionname .= "<a class='accordion-toggle collapsed' data-toggle=\"collapse\" data-target=\"#collapse-section-".$section->section."\" href='#section-".$section->section."'> ".$this->formatrecit->get_section_name($section)."</a>";
+        $sectionname .= "<a class='accordion-toggle' data-toggle=\"collapse\" data-target=\"#collapse-section-".$section->section."\" href='#section-".$section->section."'> ".$this->formatrecit->get_section_name($section)."</a>";
         $sectionname .= " <a class='ml-1 btn-sm' data-toggle='pill' title='Voir la section' role='tab' aria-controls='section-item-".$section->section."' href='#section-item-".$section->section."' onclick=\"M.recit.course.format.recit.EditingMode.instance.goToSection(event, true)\"><i class='fa fa-sign-in'></i></a>";
         $sectionname .= " <a href='$editSectionUrl' title='Modifier la section' class='ml-2'><i class='fa fa-pencil'></i></a>";
         $sectionname .= " <a href='$hideSectionUrl' title='Cacher/montrer la section' class='ml-2'><i class='fa ".($section->visible == 1 ? 'fa-eye' : 'fa-eye-slash')."'></i></a>";
-        if ($section->section > 0){
+        if ($section->section > 1){
             $sectionname .= " <a href='$upSectionUrl' title='Monter la section' class='ml-2'><i class='fa fa-arrow-up'></i></a>";
         }
-        $sectionname .= " <a href='$downSectionUrl' title='Descendre la section' class='ml-2'><i class='fa fa-arrow-down'></i></a>";
+        if ($section->section > 0 && $section->section != $lastSection->section){
+            $sectionname .= " <a href='$downSectionUrl' title='Descendre la section' class='ml-2'><i class='fa fa-arrow-down'></i></a>";
+        }
         $sectionname .= " <a href='#' title='Supprimer la section' class='ml-2' onclick=\"M.recit.course.format.recit.EditingMode.instance.deleteSection(".$section->section.")\"><i class='fa fa-trash'></i></a>";
 
         $level = "";
