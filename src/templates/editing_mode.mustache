@@ -22,7 +22,7 @@
             <a class='btn btn-outline-primary  ' data-toggle='pill' href='{{menu.sectionId}}' role='tab' onclick="M.recit.course.format.recit.EditingMode.instance.goToSection(event, true);" aria-controls='{{menu.sectionIdAlt}}'><i class='fa fa-tasks'></i>  {{menu.desc}}</a>
         </div>
         <div class="btn-group btn-sm" role="group">
-            <a href='{{menu.addSectionUrl}}' data-add-sections="{{#str}}addsections,format_recit{{/str}}" data-new-sections="90" data-action="addSection"  class='btn btn-outline-primary ' title='{{#str}}addsections,format_recit{{/str}}'><i class='fa fa-plus'></i> {{#str}}addsections,format_recit{{/str}}</a>
+            <a href='{{menu.addSectionUrl}}' data-add-sections="{{#str}}addsections,format_recit{{/str}}" data-new-sections="90" data-action="addSection"  class='btn btn-primary ' title='{{#str}}addsections,format_recit{{/str}}'><i class='fa fa-plus'></i> {{#str}}addsections,format_recit{{/str}}</a>
         </div>
     </div>
 </div>
@@ -40,7 +40,7 @@
            
             <div class="tab-pane fade show {{menu.active}} p-2 editing-mode-menu" id="{{menu.sectionIdAlt}}" role="tabpanel" aria-labelledby="{{menu.sectionIdAlt}}-tab">
                 <div class='btn-group pull-right'>
-                <div class="collapsible-actions"><a href="#" onclick="M.recit.course.format.recit.EditingMode.instance.expandAccordion(this)" class="collapseexpand2"><i class="fa fa-arrow-down"></i> {{#str}}collapseall{{/str}}</a></div>
+                <div class="collapsible-actions"><a href="#" onclick="M.recit.course.format.recit.EditingMode.instance.expandAccordion(this)" class="collapseexpand2 btn btn-outline-primary"><i class="fa fa-arrow-down"></i> {{#str}}collapseall{{/str}}</a></div>
                 </div>
                 <br/><br/><br/>
                 {{{menu.content}}}
