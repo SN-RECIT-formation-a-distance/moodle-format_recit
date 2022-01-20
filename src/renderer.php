@@ -317,9 +317,9 @@ class FormatRecit
             $item = new stdClass();
             $item->desc =  $this->get_section_name($section);
             $item->sectionId = $sectionId;
-            $item->sectionIdAlt = "section-item-{$section->section}";
+            $item->sectionIdAlt = "isection-{$section->section}";
             $item->sectionIdAlt2 = $section->section;
-            $item->active = ($selectedSection == "#section-item-{$section->section}" ? 'active' : '');
+            $item->active = ($selectedSection == "#section-{$section->section}" ? 'active' : '');
             $item->active .= ($section->sectionlevel == 2 ? ' ml-3' : '');
             $item->editingUrl = "{$CFG->wwwroot}/course/editsection.php?id= $section->id&sr";
             $item->content = $completioninfo->display_help_icon();
@@ -663,7 +663,7 @@ class format_recit_renderer extends format_section_renderer_base {
             //$sectionname .= '<span class="section-handle moodle-core-dragdrop-draghandle" title="Déplacer '.$this->formatrecit->get_section_name($section).'" tabindex="0" data-draggroups="sectiondraggable" role="button">          <i class="icon fa fa-arrows fa-fw " aria-hidden="true" style="cursor: move;"></i>            </span>';
         }
         $sectionname .= "<a class='accordion-toggle' data-toggle=\"collapse\" data-target=\"#collapse-section-".$section->section."\" href='#section-".$section->section."'> ".$this->formatrecit->get_section_name($section)."</a>";
-        $sectionname .= " <a class='ml-1 btn-sm' data-toggle='pill' title='Voir la section' role='tab' aria-controls='section-item-".$section->section."' href='#section-item-".$section->section."' onclick=\"M.recit.course.format.recit.EditingMode.instance.goToSection(event, true)\"><i class='fa fa-sign-in'></i></a>";
+        $sectionname .= " <a class='ml-1 btn-sm' data-toggle='pill' title='Voir la section' role='tab' aria-controls='isection-".$section->section."' href='#isection-".$section->section."' onclick=\"M.recit.course.format.recit.EditingMode.instance.goToSection(event, true)\"><i class='fa fa-sign-in'></i></a>";
         $sectionname .= " <a href='$editSectionUrl' title='Modifier la section' class='ml-2'><i class='fa fa-pencil'></i></a>";
         $sectionname .= " <a href='$hideSectionUrl' title='Cacher/montrer la section' class='ml-2'><i class='fa ".($section->visible == 1 ? 'fa-eye' : 'fa-eye-slash')."'></i></a>";
         if ($section->section > 1){
