@@ -261,6 +261,7 @@ class FormatRecit
         $completioninfo = new completion_info($this->course);
 
         $selectedSection = (isset($_COOKIE["course-{$COURSE->id}-cursection"]) ? $_COOKIE["course-{$COURSE->id}-cursection"] : '#menu');
+        $selectedSectionNumber = filter_var($selectedSection, FILTER_SANITIZE_NUMBER_INT);
 
 
         $massaction = "<div class='bg-light p-3'>";
@@ -319,7 +320,7 @@ class FormatRecit
             $item->sectionId = $sectionId;
             $item->sectionIdAlt = "isection-{$section->section}";
             $item->sectionIdAlt2 = $section->section;
-            $item->active = ($selectedSection == "#section-{$section->section}" ? 'active' : '');
+            $item->active = ($selectedSectionNumber == $section->section ? 'active' : '');
             $item->active .= ($section->sectionlevel == 2 ? ' ml-3' : '');
             $item->editingUrl = "{$CFG->wwwroot}/course/editsection.php?id= $section->id&sr";
             $item->content = $completioninfo->display_help_icon();
