@@ -377,8 +377,10 @@ M.recit.course.format.recit.EditingMode = class{
     }
 
     goToSection(event, isMenu){
-        M.recit.theme.recit2.Utils.setCookieCurSection(event.target.hash);
-        document.location.hash = event.target.hash;
+        if (event.target.hash){
+            M.recit.theme.recit2.Utils.setCookieCurSection(event.target.hash);
+            document.location.hash = event.target.hash;
+        }
 
         
         if (isMenu){
