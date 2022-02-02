@@ -261,7 +261,8 @@ class FormatRecit
         $completioninfo = new completion_info($this->course);
 
         $selectedSection = (isset($_COOKIE["course-{$COURSE->id}-cursection"]) ? $_COOKIE["course-{$COURSE->id}-cursection"] : '#menu');
-        $selectedSectionNumber = filter_var($selectedSection, FILTER_SANITIZE_NUMBER_INT);
+        $selectedSectionNumber = (int)filter_var($selectedSection, FILTER_SANITIZE_NUMBER_INT);
+        if ($selectedSection == '#menu') $selectedSectionNumber = 'menu';
 
 
         $massaction = "<div class='bg-light p-3'>";
