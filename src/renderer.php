@@ -270,9 +270,9 @@ class FormatRecit
         $massaction .= "<div class='d-flex'>";
 
         $massaction .= "<div class='d-flex' style='align-items: center;'>";
-        $massaction .= "<a href='#' class='recitformat_massdelete btn btn-danger' data-section='%s'><i class='fa fa-trash'></i> Supprimer</a>";
-        $massaction .= "<a href='#' class='recitformat_massshow btn btn-primary ml-2' data-section='%s'><i class='fa fa-eye'></i> Afficher</a>";
-        $massaction .= "<a href='#' class='recitformat_masshide btn btn-primary ml-2' data-section='%s'><i class='fa fa-eye-slash'></i> Cacher</a>";
+        $massaction .= "<a href='#' class='recitformat_massdelete btn btn-danger btn-sm ' data-section='%s'><i class='fa fa-trash'></i> Supprimer</a>";
+        $massaction .= "<a href='#' class='recitformat_massshow btn btn-primary btn-sm ml-2' data-section='%s'><i class='fa fa-eye'></i> Afficher</a>";
+        $massaction .= "<a href='#' class='recitformat_masshide btn btn-primary btn-sm ml-2' data-section='%s'><i class='fa fa-eye-slash'></i> Cacher</a>";
         $massaction .= "</div>";
 
         $massaction .= "<div class='ml-5 mr-5' style='border-left: 1px solid #efefef;'></div>";
