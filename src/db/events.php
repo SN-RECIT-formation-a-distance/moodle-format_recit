@@ -14,21 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- *
- * @package    format_recit
- * @copyright  RECITFAD
- * @author     RECITFAD
- * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
- */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2022021500;        // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2020061500.00; // Moodle 3.9.0
-$plugin->component = 'format_recit';    // Full name of the plugin (used for diagnostics).
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->release = 'v2.0.0';
-$plugin->dependencies = [
-    'theme_recit2' => 2022020900
-];
+$observers = array(
+    array(
+        'eventname'   => '\core\event\course_updated',
+        'callback'    => 'format_recit_observer::course_updated',
+        'includefile' => '/course/format/recit/classes/observer.php',
+    ),
+);

@@ -102,6 +102,9 @@ class WebApi{
             $DB->execute("insert into {course_format_options} (courseid, format, sectionid, name, value)
             values(?, 'recit', ?, 'sectionlevel', ?)
             ON DUPLICATE KEY UPDATE value = ?", [$data->courseId, $data->sectionId, $data->level, $data->level]);
+            $DB->execute("insert into {format_recit_options} (courseid, sectionid, name, value)
+            values(?, ?, 'sectionlevel' ?)
+            ON DUPLICATE KEY UPDATE value = ?", [$data->courseId, $data->sectionId, $data->level, $data->level]);
 
             $this->reply(true);
         } catch (Exception $ex) {
