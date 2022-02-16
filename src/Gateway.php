@@ -103,7 +103,7 @@ class WebApi{
             values(?, 'recit', ?, 'sectionlevel', ?)
             ON DUPLICATE KEY UPDATE value = ?", [$data->courseId, $data->sectionId, $data->level, $data->level]);
             $DB->execute("insert into {format_recit_options} (courseid, sectionid, name, value)
-            values(?, ?, 'sectionlevel' ?)
+            values(?, ?, 'sectionlevel', ?)
             ON DUPLICATE KEY UPDATE value = ?", [$data->courseId, $data->sectionId, $data->level, $data->level]);
 
             $this->reply(true);
