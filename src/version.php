@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2022021500;        // The current plugin version (Date: YYYYMMDDXX).
+$plugin->version   = 2022020900;        // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires  = 2020061500.00; // Moodle 3.9.0
 $plugin->component = 'format_recit';    // Full name of the plugin (used for diagnostics).
 $plugin->maturity = MATURITY_ALPHA;
