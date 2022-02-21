@@ -32,5 +32,37 @@ defined('MOODLE_INTERNAL') || die();
  * @return bool result
  */
 function xmldb_format_recit_upgrade($oldversion) {
+    global $DB;
+    $dbman = $DB->get_manager();
+
+    $newversion = 2022020901;
+    if($oldversion < $newversion){
+        $table = new xmldb_table('format_recit_options');
+
+        if (!$dbman->table_exists($table)) {
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $dbman->create_table($table);
+        }
+
+        $fields = array(
+            new xmldb_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0),
+            new xmldb_field('sectionid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0),
+            new xmldb_field('name', XMLDB_TYPE_CHAR, '40', null, XMLDB_NOTNULL, null, null),
+            new xmldb_field('value', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null),
+        );
+
+        // Conditionally launch add field jsoncontent.
+        foreach ($fields as $field){
+            if (!$dbman->field_exists($table, $field)) {
+                $dbman->add_field($table, $field);
+            }
+        }
+
+        $table->add_key('unique_option', XMLDB_KEY_UNIQUE, array('courseid', 'sectionid', 'name'));
+
+        upgrade_plugin_savepoint(true,  $newversion, 'format', 'format_recit');
+    }
+
     return true;
 }
