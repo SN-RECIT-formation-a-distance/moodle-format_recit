@@ -57,8 +57,6 @@ $string['saveandrefresh'] = 'Save and Refresh';
 $string['maxsection'] = 'Max sections ';
 
 $string['showsectiontitle'] = 'Show section name';
-$string['hascontract'] = 'Use a contract';
-$string['contract'] = 'Contract content';
 $string['navsection'] = 'Show navigation by section';
 $string['custompath'] = 'Activer le cheminement personalisé';
 $string['custompath_help'] = "Cela cachera les sections que l'élève n'a pas accès et modifira la manière dont Moodle calcule la completion du cours";
@@ -74,8 +72,6 @@ $string['sectionparent_help'] = 'Help Parent';
 $string['sectionshowactivities_help'] = 'Help Show activities';
 
 $string['showsectiontitle_help'] = 'Help Section name';
-$string['hascontract_help'] = 'Help Use a contract';
-$string['contract_help'] = 'Help Contract content';
 $string['prev_section'] = 'Previous section';
 $string['next_section'] = 'Next section';
 $string['movecm'] = 'Move to...';

@@ -2,8 +2,6 @@
 .course-content  .editing-mode-menu li.section[data-section-level="2"]{padding-left: 3.3rem;}
 .course-content  .editing-mode-menu li.section[data-section-level="3"]{padding-left: 6.3rem;}
 
-.tt-contract{    width: 80%; margin: auto;}
-
 .recitformatmenu .accordion-toggle::before {
     font: normal normal normal 14px/1 FontAwesome;
     content: "\f0d7";    

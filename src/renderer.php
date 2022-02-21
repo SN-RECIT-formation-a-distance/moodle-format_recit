@@ -77,15 +77,8 @@ class FormatRecit
      * @return string
      */
     public function render() {
-        $this->signing_contract();
-
-        if ($this->show_contract()) {
-            $html = "<div id='sectioncontent_placeholder'>%s</div>";
-            $html = sprintf($html, $this->render_contract());
-        } else {
-            $html = "<div id='sectioncontent_placeholder'></div>";
-            $html .= $this->getHtmlLoading();
-        }
+        $html = "<div id='sectioncontent_placeholder'></div>";
+        $html .= $this->getHtmlLoading();
 
         echo $html;
     }
@@ -182,77 +175,6 @@ class FormatRecit
         return end($this->sectionslist);
     }
 
-    /**
-     * Function show contract of FormatRecit.
-     * @return boolean
-     */
-    protected function show_contract() {
-        return (isset($this->course->tthascontract)) && ($this->course->tthascontract) && (!$this->contract_is_signed());
-    }
-
-    /**
-     * Function signing contract of FormatRecit.
-     */
-    protected function signing_contract() {
-        if ((isset($_GET["ttc"])) && ($_GET["ttc"] == '1')) {
-            $this->contract_sign();
-        }
-        // Could have "else{$this->contract_unsign();}".
-    }
-
-    /**
-     * Function for checking signed contract of FormatRecit.
-     * @return boolean
-     */
-    protected function contract_is_signed() {
-        global $DB, $USER;
-        $result = $DB->record_exists('format_recit_contract', ['courseid' => $this->course->id, 'userid' => $USER->id]);
-        return $result;
-    }
-
-    /**
-     * Function to update signed contract of FormatRecit.
-     */
-    protected function contract_sign() {
-        global $DB, $USER;
-
-        if (!$this->contract_is_signed()) {
-            $DB->insert_record('format_recit_contract',
-                    array('courseid' => $this->course->id, 'userid' => $USER->id, 'timemodified' => time()));
-        }
-    }
-
-    /**
-     * Function render contract of FormatRecit.
-     * @return string
-     */
-    protected function render_contract() {
-        global $CFG;
-
-        $signed = $this->contract_is_signed();
-
-        $section = $this->sectionslist[0];
-
-        $html = "<br/><br/>";
-        $html .= html_writer::start_tag('div', array('class' => self::ID_APPEND . 'contract'));
-        $html .= html_writer::tag('h2', "Contrat d'engagement", array('class' => self::ID_APPEND . 'contract-title'));
-        $html .= html_writer::tag('div', $section->ttcontract_editor, array('class' => self::ID_APPEND . 'contract-content'));
-
-        $html .= "<div>";
-        $html .= sprintf("<label><input id='%s' type='checkbox'/>
-                J'ai lu, je comprends et j'accepte les termes du contrat</label>", self::ID_APPEND.'contract-read');
-        $html .= "</div>";
-
-        $html .= html_writer::start_tag('div');
-        $html .= html_writer::tag('button', 'Signer le contrat',
-            array('id' => self::ID_APPEND . 'contract-sign', 'type' => 'submit', 'disabled' => 'disabled',
-                'href' => $CFG->wwwroot.'/course/view.php?id='.$this->course->id.'&ttc=1#section-1',
-                'class' => 'btn btn-primary'));
-        $html .= html_writer::end_tag('div');
-        $html .= html_writer::end_tag('div');
-
-        return $html;
-    }
 
     public function render_editing_mode($format_recit_renderer){
         global $CFG, $COURSE, $OUTPUT;

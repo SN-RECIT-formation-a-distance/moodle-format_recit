@@ -64,5 +64,16 @@ function xmldb_format_recit_upgrade($oldversion) {
         upgrade_plugin_savepoint(true,  $newversion, 'format', 'format_recit');
     }
 
+    $newversion = 2022020902;
+    if($oldversion < $newversion){
+        $table = new xmldb_table('format_recit_contract');
+
+        if ($dbman->table_exists($table)) {
+            $dbman->drop_table($table);
+        }
+
+        upgrade_plugin_savepoint(true,  $newversion, 'format', 'format_recit');
+    }
+
     return true;
 }
