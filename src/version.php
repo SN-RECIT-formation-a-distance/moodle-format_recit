@@ -28,7 +28,7 @@ $plugin->version   = 2022020902;        // The current plugin version (Date: YYY
 $plugin->requires  = 2020061500.00; // Moodle 3.9.0
 $plugin->component = 'format_recit';    // Full name of the plugin (used for diagnostics).
 $plugin->maturity = MATURITY_ALPHA;
-$plugin->release = 'v2.0.0';
+$plugin->release = 'v2.1.0';
 $plugin->dependencies = [
     'theme_recit2' => 2022020900
 ];
