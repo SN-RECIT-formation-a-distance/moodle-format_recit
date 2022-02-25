@@ -296,13 +296,15 @@ class FormatRecit
         $data = new stdClass();
         $data->sectionList = array();
 
+        $sesskey = sesskey();
+
         $data->menu = new stdClass();
         $data->menu->desc = "Configurer le menu et les activités";
         $data->menu->sectionId = "#menu";
         $data->menu->sectionIdAlt = "menu";
         $data->menu->sectionIdAlt2 = 'menu';
         $data->menu->active = ($selectedSection == "#menu" ? 'active' : '');
-        $data->menu->addSectionUrl = "{$CFG->wwwroot}/course/changenumsections.php?courseid={$COURSE->id}&insertsection=0&sesskey=".sesskey()."&sectionreturn=0";
+        $data->menu->addSectionUrl = "{$CFG->wwwroot}/course/changenumsections.php?courseid={$COURSE->id}&insertsection=0&sesskey=$sesskey&sectionreturn=0";
         $data->menu->content = $completioninfo->display_help_icon();        
 
         foreach ($this->sectionslist as $section) {
@@ -321,9 +323,13 @@ class FormatRecit
             $item->sectionId = $sectionId;
             $item->sectionIdAlt = "isection-{$section->section}";
             $item->sectionIdAlt2 = $section->section;
+            $item->sectionIdAlt3 = $section->id;
             $item->active = ($selectedSectionNumber === $section->section ? 'active' : '');
             $item->active .= ($section->sectionlevel == 2 ? ' ml-3' : '');
-            $item->editingUrl = "{$CFG->wwwroot}/course/editsection.php?id= $section->id&sr";
+            $item->editingUrl = "{$CFG->wwwroot}/course/editsection.php?id=$section->id&sr";
+            $item->markUrl = "{$CFG->wwwroot}/course/view.php?id=$COURSE->id&sesskey=$sesskey&marker={$section->section}&sr";
+            $item->hideUrl = "{$CFG->wwwroot}/course/view.php?id=$COURSE->id&sesskey=$sesskey&hide={$section->section}&sr";
+            $item->deleteUrl = "{$CFG->wwwroot}/course/editsection.php?id=$section->id&sr&delete=1";
             $item->content = $completioninfo->display_help_icon();
             $item->content .= $format_recit_renderer->section_header($section, $this->course, false, 0, true, false);
             $item->content .= $format_recit_renderer->get_course_section_cm_list($this->course, $section);
