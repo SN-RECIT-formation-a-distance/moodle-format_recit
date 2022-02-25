@@ -57,8 +57,6 @@ $string['saveandrefresh'] = 'Enregistrer et rafraîchir';
 $string['maxsection'] = 'Nombre maximal de sections ';
 
 $string['showsectiontitle'] = 'Afficher le nom de la section';
-$string['hascontract'] = 'Utiliser le contrat d\'engagement';
-$string['contract'] = 'Contrat d\'engagement';
 $string['navsection'] = 'Afficher la navigation par section';
 $string['custompath'] = 'Activer le cheminement personalisé par groupe';
 $string['custompath_help'] = "Cela cachera les sections que l'élève n'a pas accès et modifira la manière dont Moodle calcule l'achèvement du cours.";
@@ -74,8 +72,6 @@ $string['sectionparent_help'] = 'Aide Parent';
 $string['sectionshowactivities_help'] = 'Ce format de cours permet d\'afficher les liens vers les ressources ou les activités dans le résumé de section. Si on choisit d\'utiliser ce type de navigation, il devient alors inutile de les afficher.';
 
 $string['showsectiontitle_help'] = 'Ce réglage permet d\'afficher le nom de la section.';
-$string['hascontract_help'] = 'Lorsque la case "Utiliser le contract d\'engagement est cochée, le contrat d\'engagement s\'affiche à l\'élève. Ce dernier doit alors le lire le et le signer pour avoir accès à son cours.';
-$string['contract_help'] = 'Le contract d\'engagement est un texte expliquant à l\'élève ce qui est attendu de lui au point de vue comportement et méthode de travail. Ce texte s\'affiche à l\'élève au début du cours et bloque l\'accès aux activités tant que le contract n\'est pas signé.';
 $string['prev_section'] = 'Section précédente';
 $string['next_section'] = 'Section suivante';
 $string['navsection_help'] = "Permet d'afficher des boutons en bas de page afin de naviguer entre les différentes sections du cours";

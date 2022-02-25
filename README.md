@@ -3,5 +3,4 @@ Les utilisateurs Moodle connaissent bien la longue liste interminable d'activitÃ
 
 Plug-in features 
 
-    1. Contract
-    2. Load sections on demand
+    1. Load sections on demand

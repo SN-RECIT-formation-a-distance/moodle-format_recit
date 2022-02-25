@@ -28,68 +28,6 @@ require_once($CFG->dirroot. '/course/format/lib.php');
 require_once($CFG->dirroot. '/course/editsection_form.php');
 
 /**
- * Default form for editing course section
- *
- * Course format plugins may specify different editing form to use
- */
-class format_recit_editsection_form  extends editsection_form {
-    /** @var array */
-    public const EDITOR_OPTIONS = array('context' => null, 'maxfiles' => 0, 'trusttext' => false,
-            'noclean' => true, 'maxbytes' => 0);
-    /**
-     * Load in existing data as form defaults
-     *
-     * @param stdClass|array $defaultvalue object or array of default values
-     */
-    public function set_data($defaultvalue) {
-        if (!is_object($defaultvalue)) {
-            // We need object for file_prepare_standard_editor.
-            $defaultvalue = (object)$defaultvalue;
-        }
-
-        $editoroptions = self::EDITOR_OPTIONS;
-        $defaultvalue->ttcontract = $defaultvalue->ttcontract_editor;
-        $defaultvalue = file_prepare_standard_editor($defaultvalue, 'ttcontract', $editoroptions,
-                $editoroptions['context'], 'course', 'section', $defaultvalue->id);
-
-        parent::set_data($defaultvalue);
-    }
-
-    /**
-     * Return submitted data if properly submitted or returns NULL if validation fails or
-     * if there is no submitted data.
-     *
-     * @return object submitted data; NULL if not valid or not submitted or cancelled
-     */
-    public function get_data() {
-        $data = parent::get_data();
-
-        if ($data !== null) {
-            $editoroptions = self::EDITOR_OPTIONS;
-
-            $data = file_postupdate_standard_editor($data, 'ttcontract', $editoroptions,
-            $editoroptions['context'], 'course', 'section', $data->id);
-        }
-        return $data;
-    }
-
-    /**
-     * Function of class format_recit_editsection_form
-     */
-    public function get_editor_options() {
-        return $this->_customdata['editoroptions'];
-    }
-
-    /**
-     * Function of class format_recit_editsection_form
-     * @return MoodleQuickForm
-     */
-    public function get_form() {
-        return $this->_form;
-    }
-}
-
-/**
  * Main class for the Topics course format
  *
  * @package    format_recit
@@ -296,74 +234,6 @@ class format_recit extends format_base {
     }
 
     /**
-     * Definitions of the additional options that this course format uses for course
-     *
-     * Topics format uses the following options:
-     * - coursedisplay
-     *
-     * @param bool $foreditform
-     * @return array of options
-     */
-    public function course_format_options($foreditform = false) {
-        static $courseformatoptions = false;
-        if ($courseformatoptions === false) {
-            $courseconfig = get_config('moodlecourse');
-            $courseformatoptions = array(
-                'tthascontract' => array(
-                    'default' => false,
-                    'type' => PARAM_BOOL,
-                )
-            );
-        }
-        if ($foreditform && !isset($courseformatoptions['sectionlevel']['label'])) {
-            $courseformatoptionsedit = array(
-                'tthascontract' => array(
-                    'label' => new lang_string('hascontract', 'format_recit'),
-                    'help' => 'hascontract',
-                    'help_component' => 'format_recit',
-                    'element_type' => 'checkbox'
-                )
-            );
-            $courseformatoptions = array_merge_recursive($courseformatoptions, $courseformatoptionsedit);
-        }
-        return $courseformatoptions;
-    }
-
-    /**
-     * Return an instance of moodleform to edit a specified section
-     *
-     * Default implementation returns instance of editsection_form that automatically adds
-     * additional fields defined in {@see format_base::section_format_options()}
-     *
-     * Format plugins may extend editsection_form if they want to have custom edit section form.
-     *
-     * @param mixed $action the action attribute for the form. If empty defaults to auto detect the
-     *              current url. If a moodle_url object then outputs params as hidden variables.
-     * @param array $customdata the array with custom data to be passed to the form
-     *     /course/editsection.php passes section_info object in 'cs' field
-     *     for filling availability fields
-     * @return moodleform
-     */
-    public function editsection_form($action, $customdata = array()) {
-        if (!array_key_exists('course', $customdata)) {
-            $customdata['course'] = $this->get_course();
-        }
-        $result = new format_recit_editsection_form($action, $customdata);
-
-        // Code "$this->editorOptions = $result->get_editor_options();".
-        $form = $result->get_form();
-
-        $disabled = array('disabled' => 'disabled');
-        if ($customdata['cs']->__get('section') > 0) {
-            $form->getElement('ttcontract_editor')->freeze();
-        } else {
-            $form->getElement('sectionlevel')->updateAttributes($disabled);
-        }
-
-        return $result;
-    }
-
-    /**
      * Definitions of the additional options that this course format uses for section
      *
      * See {@see format_base::course_format_options()} for return array definition.
@@ -405,10 +275,6 @@ class format_recit extends format_base {
                 'ttsectiontitle' => array(
                     'default' => true,
                     'type' => PARAM_BOOL
-                ),
-                'ttcontract_editor' => array(
-                    'default' => '',
-                    'type' => PARAM_RAW,
                 )
             );
         }
@@ -440,13 +306,6 @@ class format_recit extends format_base {
                     'help' => 'showsectiontitle',
                     'help_component' => 'format_recit',
                     'element_type' => 'checkbox'
-                ),
-                'ttcontract_editor' => array(
-                    'label' => new lang_string('contract', 'format_recit'),
-                    'help' => 'contract',
-                    'help_component' => 'format_recit',
-                    'element_type' => 'editor',
-                    'element_attributes' => format_recit_editsection_form::EDITOR_OPTIONS
                 )
             );
 
@@ -506,10 +365,7 @@ class format_recit extends format_base {
             $options = $this->course_format_options();
             foreach ($options as $key => $unused) {
                 if (!array_key_exists($key, $data)) {
-                    // Make sure to set the boolean value to 0 (this property is not sent by post when check input is unchecked).
-                    if (in_array($key, array(/*'ttdisplayshortcuts',*/ 'tthascontract'))) {
-                        $data[$key] = 0;
-                    } else if (array_key_exists($key, $oldcourse)) {
+                    if (array_key_exists($key, $oldcourse)) {
                         $data[$key] = $oldcourse[$key];
                     }
                 }
