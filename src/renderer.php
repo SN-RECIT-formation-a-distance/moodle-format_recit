@@ -249,8 +249,20 @@ class FormatRecit
             $item->active = ($selectedSectionNumber === $section->section ? 'active' : '');
             $item->active .= ($section->sectionlevel == 2 ? ' ml-3' : '');
             $item->editingUrl = "{$CFG->wwwroot}/course/editsection.php?id=$section->id&sr";
-            $item->markUrl = "{$CFG->wwwroot}/course/view.php?id=$COURSE->id&sesskey=$sesskey&marker={$section->section}&sr";
-            $item->hideUrl = "{$CFG->wwwroot}/course/view.php?id=$COURSE->id&sesskey=$sesskey&hide={$section->section}&sr";
+            if ($COURSE->marker == $section->section){
+                $item->markUrl = "{$CFG->wwwroot}/course/view.php?id=$COURSE->id&sesskey=$sesskey&marker=0&sr";
+                $item->markLabel = get_string('highlightoff');
+            }else{
+                $item->markLabel = get_string('highlight');
+                $item->markUrl = "{$CFG->wwwroot}/course/view.php?id=$COURSE->id&sesskey=$sesskey&marker={$section->section}&sr";
+            }
+            if ($section->visible){
+                $item->hideUrl = "{$CFG->wwwroot}/course/view.php?id=$COURSE->id&sesskey=$sesskey&hide={$section->section}&sr";
+                $item->hideLabel = get_string('hide');
+            }else{
+                $item->hideUrl = "{$CFG->wwwroot}/course/view.php?id=$COURSE->id&sesskey=$sesskey&show={$section->section}&sr";
+                $item->hideLabel = get_string('show');
+            }
             $item->deleteUrl = "{$CFG->wwwroot}/course/editsection.php?id=$section->id&sr&delete=1";
             $item->content = $completioninfo->display_help_icon();
             $item->content .= $format_recit_renderer->section_header($section, $this->course, false, 0, true, false);
