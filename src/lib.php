@@ -416,6 +416,7 @@ class format_recit extends format_base {
             if (isset($records[$key])) {
                 if (array_key_exists($key, $data) && $records[$key]->value !== $data[$key]) {
                     $value = $data[$key];
+                    $newvalue = $data[$key];
                     if (is_array($data[$key])) {
                         $value = $data[$key]['text'];
                     }
@@ -445,6 +446,13 @@ class format_recit extends format_base {
                     'name' => $key,
                     'value' => $newvalue
                 ));
+            }
+            if (array_key_exists($key, $data)) {
+                $newvalue = $data[$key];
+                if (!$newvalue) $newvalue = 0;
+                $DB->execute("insert into {format_recit_options} (courseid, sectionid, name, value)
+                values(?, ?, ?, ?)
+                ON DUPLICATE KEY UPDATE value = ?", [$this->courseid, $sectionid, $key, $newvalue, $newvalue]);
             }
         }
         if ($needrebuild) {

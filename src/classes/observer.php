@@ -29,12 +29,12 @@ class format_recit_observer {
         if (class_exists('format_recit', false)) {
             $opts = $DB->get_records('course_format_options', array('format' => 'recit', 'courseid' => $event->courseid, 'name' => 'sectionlevel'));
             if (empty($opts)){
-                $recitopts = $DB->get_records('format_recit_options', array('courseid' => $event->courseid, 'name' => 'sectionlevel'));
+                $recitopts = $DB->get_records('format_recit_options', array('courseid' => $event->courseid));
                 if (!empty($recitopts)){
                     foreach($recitopts as $data){
                         $DB->execute("insert into {course_format_options} (courseid, format, sectionid, name, value)
-                        values(?, 'recit', ?, 'sectionlevel', ?)
-                        ON DUPLICATE KEY UPDATE value = ?", [$data->courseid, $data->sectionid, $data->value, $data->value]);
+                        values(?, 'recit', ?, ?, ?)
+                        ON DUPLICATE KEY UPDATE value = ?", [$data->courseid, $data->sectionid, $data->name, $data->value, $data->value]);
                     }
                 }
 
