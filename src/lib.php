@@ -763,6 +763,9 @@ class format_treetopics extends format_base {
                     if (is_array($data[$key])) {
                         $value = $data[$key]['text'];
                     }
+                    if (in_array($key, array('ttsectionshowactivities','ttsectiontitle')) && !$value){
+                        $value = 0;
+                    }
                     $DB->set_field('course_format_options', 'value', $value, array('id' => $records[$key]->id));
                     $changed = true;
                     $needrebuild = $needrebuild || $cached[$key];
