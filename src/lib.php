@@ -757,10 +757,10 @@ class format_treetopics extends format_base {
                     ), '', 'name,id,value');
         $changed = $needrebuild = false;
         foreach ($defaultoptions as $key => $value) {
+            if (in_array($key, array('ttsectionshowactivities','ttsectiontitle')) && !$data[$key]){
+                $data[$key] = 0;
+            }
             if (isset($records[$key])) {
-                if (in_array($key, array('ttsectionshowactivities','ttsectiontitle')) && !$data[$key]){
-                    $data[$key] = 0;
-                }
                 if (array_key_exists($key, $data) && $records[$key]->value !== $data[$key]) {
                     $value = $data[$key];
                     if (is_array($data[$key])) {
