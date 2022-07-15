@@ -46,7 +46,7 @@ class FormatRecit
     /** @var stdClass */
     protected $modinfo = null;
     /** @var array */
-    protected $sectionslist = array();
+    public $sectionslist = array();
 
     /**
      * Construc for FormatRecit
@@ -201,7 +201,7 @@ class FormatRecit
         $massaction .= "<div class='ml-5 mr-5' style='border-left: 1px solid #efefef;'></div>";
 
         $massaction .= "<div class=''>";
-        $massaction .= "<select class='recitformat_massmove custom-select w-100' data-section='%s'>";
+        $massaction .= "<select class='recitformat_move custom-select w-100' data-section='%s'>";
         
         $massaction .= "<option value='' disabled selected>".get_string('movecm', 'format_recit')."</option>";
         foreach ($this->sectionslist as $section) {
@@ -598,13 +598,17 @@ class format_recit_renderer extends format_section_renderer_base {
         $lastSection = $this->formatrecit->get_last_section();
         $editSectionUrl = "{$CFG->wwwroot}/course/editsection.php?id={$section->id}&sr";
         $hideSectionUrl = "{$CFG->wwwroot}/course/view.php?id={$course->id}&".($section->visible == 1 ? 'hide' : 'show')."={$section->section}&sesskey=".sesskey();
-        $upSectionUrl = "{$CFG->wwwroot}/course/view.php?id={$course->id}&section={$section->section}&move=-1&sesskey=".sesskey();
-        $downSectionUrl = "{$CFG->wwwroot}/course/view.php?id={$course->id}&section={$section->section}&move=1&sesskey=".sesskey();
+        $moveSectionUrl = "{$CFG->wwwroot}/course/view.php?id={$course->id}&section={$section->section}&move=%s&sesskey=".sesskey();
+        $upSectionUrl = sprintf($moveSectionUrl, '-1');
+        $downSectionUrl = sprintf($moveSectionUrl, '1');
         $sectionname = '';
         if ($section->section > 0){
             //$sectionname .= '<span class="section-handle moodle-core-dragdrop-draghandle" title="Déplacer '.$this->formatrecit->get_section_name($section).'" tabindex="0" data-draggroups="sectiondraggable" role="button">          <i class="icon fa fa-arrows fa-fw " aria-hidden="true" style="cursor: move;"></i>            </span>';
         }
         $sectionname .= "<a class='accordion-toggle h3' data-toggle=\"collapse\" data-target=\"#collapse-section-".$section->section."\" href='#section-".$section->section."'> ".$this->formatrecit->get_section_name($section)."</a>";
+        if ($section->section > 0){
+            $sectionname .= $this->get_move_section_select($section, $moveSectionUrl);
+        }
         $sectionname .= " <a class='ml-1 btn-sm' data-toggle='pill' title='Voir la section' role='tab' aria-controls='isection-".$section->section."' href='#isection-".$section->section."' onclick=\"M.recit.course.format.recit.EditingMode.instance.goToSection(event, true)\"><i class='fa fa-sign-in'></i></a>";
         $sectionname .= " <a href='$editSectionUrl' title='Modifier la section' class='ml-2'><i class='fa fa-pencil'></i></a>";
         $sectionname .= " <a href='$hideSectionUrl' title='Cacher/montrer la section' class='ml-2'><i class='fa ".($section->visible == 1 ? 'fa-eye' : 'fa-eye-slash')."'></i></a>";
@@ -633,5 +637,30 @@ class format_recit_renderer extends format_section_renderer_base {
         $html = sprintf("<span style='display: flex; align-items: center; height: 30px;'>%s%s</span>", $sectionname, $level);
 
         return $html;
+    }
+
+    public function get_move_section_select($section, $moveSectionUrl){
+        $sectionname = '';
+        
+        $sectionname .= "<select class='recitformat_massmovesect custom-select ml-2' data-section='%s'>";
+            
+        $sectionname .= "<option value='' disabled selected>".get_string('movecm', 'format_recit')."</option>";
+        $index = 0;
+        $index2 = 0;
+        foreach ($this->formatrecit->sectionslist as $sectiono) {
+            if ($section->section == $sectiono->section){
+                break;
+            }
+            $index++;
+        }
+
+        foreach ($this->formatrecit->sectionslist as $sectiono) {
+            $sectionName = $this->formatrecit->get_section_name($sectiono);
+            $url = sprintf($moveSectionUrl, 0-($index-$index2));
+            $sectionname .= "<option value='{$url}'>{$sectionName}</option>";
+            $index2++;
+        }
+        $sectionname .= "</select> ";
+        return $sectionname;
     }
 }

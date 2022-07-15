@@ -224,6 +224,12 @@ M.recit.course.format.recit.EditingMode = class{
             item.onchange = (event) => this.onChangeSection(event.target);
         }
         
+        items = document.querySelectorAll(".recitformat_massmovesect");
+
+        for(let item of items){
+            item.onchange = (event) => document.location.href = event.target.value;
+        }
+        
         items = document.querySelectorAll(".recitformat_massdelete");
 
         for(let item of items){
