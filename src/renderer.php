@@ -547,7 +547,7 @@ class format_recit_renderer extends format_section_renderer_base {
 
         $rightcontent = $this->section_right_content($section, $course, $onsectionpage);
         //$o .= html_writer::tag('div', $rightcontent, array('class' => "right side $display"));
-        $o .= html_writer::start_tag('div', array('class' => 'content'));
+        $o .= html_writer::start_tag('div', array('class' => 'content border p-2'));
 
         // When not on a section page, we display the section titles except the general section if null.
         $hasnamenotsecpg = (!$onsectionpage && ($section->section != 0 || !is_null($section->name)));
