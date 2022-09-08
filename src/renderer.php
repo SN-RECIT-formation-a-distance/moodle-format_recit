@@ -201,7 +201,7 @@ class FormatRecit
         $massaction .= "<div class='ml-5 mr-5' style='border-left: 1px solid #efefef;'></div>";
 
         $massaction .= "<div class=''>";
-        $massaction .= "<select class='recitformat_move custom-select w-100' data-section='%s'>";
+        $massaction .= "<select class='recitformat_massmove custom-select w-100' data-section='%s'>";
         
         $massaction .= "<option value='' disabled selected>".get_string('movecm', 'format_recit')."</option>";
         foreach ($this->sectionslist as $section) {
