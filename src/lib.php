@@ -413,7 +413,7 @@ class format_recit extends format_base {
                     ), '', 'name,id,value');
         $changed = $needrebuild = false;
         foreach ($defaultoptions as $key => $value) {
-            if (in_array($key, array('ttsectionshowactivities','ttsectiontitle')) && isset($data[$key]) && !$data[$key]){//If checkbox is unticked, value is null rather than 0
+            if (in_array($key, array('ttsectionshowactivities','ttsectiontitle')) && (!isset($data[$key]) || !$data[$key])){//If checkbox is unticked, value is null rather than 0
                 $data[$key] = 0;
             }
             if (isset($records[$key])) {
