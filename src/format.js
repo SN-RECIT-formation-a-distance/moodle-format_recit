@@ -488,6 +488,15 @@ M.recit.course.format.recit.NonEditingMode = class{
         this.sectionContent = document.getElementById("sectioncontent_placeholder");
 
         M.recit.theme.recit2.Ctrl.instance.sectionsNav.addOnSectionNavListener(this.goToSection);
+        this.initMoodleFixes();
+    }
+
+    initMoodleFixes(){
+        if (M.recit?.moodle?.version && M.recit.moodle.version >= 20210517){//Moodle 3.11
+            require(['core_course/manual_completion_toggle'], toggle => {
+                toggle.init()
+            });
+        }
     }
 
     getSectionContentResult(result){

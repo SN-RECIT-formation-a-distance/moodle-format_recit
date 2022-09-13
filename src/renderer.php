@@ -232,7 +232,7 @@ class FormatRecit
         foreach ($this->sectionslist as $section) {
             $sectionId = $this->get_section_id($section);
 
-            $data->menu->content .= $format_recit_renderer->section_header($section, $this->course, false, 0, false);
+            $data->menu->content .= $format_recit_renderer->section_header($section, $this->course, false, 0, false, true, true);
             $data->menu->content .= html_writer::start_tag('div', array('class' => 'collapse show', 'id' => 'collapse-section-'.$section->section));
             $data->menu->content .= sprintf("<div class='section_add_menus' id='add_menus-%s'></div>", $sectionId);
             $data->menu->content .= "<div data-course-section-cm-list='1'>". $this->get_course_section_cm_list_editing($this->course, $section)."</div>";
@@ -515,7 +515,7 @@ class format_recit_renderer extends format_section_renderer_base {
      * @param int $showsectionsummary 
      * @return string HTML to output.
      */
-    public function section_header($section, $course, $onsectionpage, $sectionreturn=null, $showsectionsummary=true, $showsectiondetails = true) {
+    public function section_header($section, $course, $onsectionpage, $sectionreturn=null, $showsectionsummary=true, $showsectiondetails = true, $onmenupage = false) {
 
         $o = '';
         $currenttext = '';
@@ -545,9 +545,11 @@ class format_recit_renderer extends format_section_renderer_base {
         $leftcontent = $this->section_left_content($section, $course, $onsectionpage);
         $o .= html_writer::tag('div', $leftcontent, array('class' => "left side $display"));
 
-        $rightcontent = $this->section_right_content($section, $course, $onsectionpage);
+        //$rightcontent = $this->section_right_content($section, $course, $onsectionpage);
         //$o .= html_writer::tag('div', $rightcontent, array('class' => "right side $display"));
-        $o .= html_writer::start_tag('div', array('class' => 'content border p-2'));
+        $contentclass = "";
+        if ($onmenupage) $contentclass = "border p-2";
+        $o .= html_writer::start_tag('div', array('class' => 'content '.$contentclass));
 
         // When not on a section page, we display the section titles except the general section if null.
         $hasnamenotsecpg = (!$onsectionpage && ($section->section != 0 || !is_null($section->name)));
