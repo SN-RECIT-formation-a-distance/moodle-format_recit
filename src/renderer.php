@@ -227,7 +227,7 @@ class FormatRecit
         $data->menu->sectionIdAlt2 = 'menu';
         $data->menu->active = ($selectedSection == "#menu" ? 'active' : '');
         $data->menu->addSectionUrl = "{$CFG->wwwroot}/course/changenumsections.php?courseid={$COURSE->id}&insertsection=0&sesskey=$sesskey&sectionreturn=0";
-        $data->menu->content = $completioninfo->display_help_icon();        
+        $data->menu->content = '';        
 
         foreach ($this->sectionslist as $section) {
             $sectionId = $this->get_section_id($section);
@@ -264,8 +264,7 @@ class FormatRecit
                 $item->hideLabel = get_string('show');
             }
             $item->deleteUrl = "{$CFG->wwwroot}/course/editsection.php?id=$section->id&sr&delete=1";
-            $item->content = $completioninfo->display_help_icon();
-            $item->content .= $format_recit_renderer->section_header($section, $this->course, false, 0, true, false);
+            $item->content = $format_recit_renderer->section_header($section, $this->course, false, 0, true, false);
             $item->content .= $format_recit_renderer->get_course_section_cm_list($this->course, $section);
             $item->content .= $format_recit_renderer->get_course_section_add_cm_control($this->course, $section->section);
             $item->content .= $format_recit_renderer->section_footer();
@@ -346,8 +345,12 @@ class FormatRecit
             $onclick = htmlspecialchars_decode($mod->onclick, ENT_QUOTES);
 
             // Display link itself.
-            $activitylink = html_writer::empty_tag('img', array('src' => $mod->get_icon_url(),
-                    'class' => 'iconlarge activityicon', 'alt' => '', 'role' => 'presentation', 'aria-hidden' => 'true')) .
+            $imagedata = $this->moodlerenderer->pix_icon('monologo', '', $mod->modname, ['class' => 'activityicon']);
+            $purposeclass = plugin_supports('mod', $mod->modname, FEATURE_MOD_PURPOSE);
+            $purposeclass .= ' activityiconcontainer small';
+            $purposeclass .= ' modicon_' . $mod->modname;
+            $imagedata = html_writer::tag('div', $imagedata, ['class' => $purposeclass]);
+            $activitylink = $imagedata .
                     html_writer::tag('span', $cmname, array('class' => 'instancename'));
             $output .= html_writer::link($mod->url, $activitylink, array('class' => 'aalink', 'onclick' => $onclick));
 
@@ -418,7 +421,7 @@ class FormatRecit
  * @copyright 2012 Dan Poltawski
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class format_recit_renderer extends format_section_renderer_base {
+class format_recit_renderer extends core_courseformat\output\section_renderer {
 
     /** @var FormatRecit */
     protected $formatrecit = null;
@@ -452,7 +455,6 @@ class format_recit_renderer extends format_section_renderer_base {
             echo $this->formatrecit->render_editing_mode($this);
         } else {
             echo $this->output->heading($this->page_title(), 2, 'accesshide');
-            echo $this->course_activity_clipboard($course, 0);  // Copy activity clipboard..
             $this->formatrecit->load($this, course_get_format($course)->get_course());
             $this->formatrecit->render();
         }
@@ -490,7 +492,10 @@ class format_recit_renderer extends format_section_renderer_base {
      * @param string $section
      */
     public function get_course_section_cm_list($course, $section) {
-        return $this->courserenderer->course_section_cm_list($course, $section, 0);
+        $format = course_get_format($course);
+        $cmlistclass = $format->get_output_classname('content\\section\\cmlist');
+
+        return $this->render(new $cmlistclass($format, $section));
     }
     
     /**
@@ -580,13 +585,69 @@ class format_recit_renderer extends format_section_renderer_base {
         return $o;
     }
 
+
+    /**
+     * Generate the content to displayed on the left part of a section
+     * before course modules are included
+     *
+     * @param stdClass $section The course_section entry from DB
+     * @param stdClass $course The course entry from DB
+     * @param bool $onsectionpage true if being printed on a section page
+     * @return string HTML to output.
+     */
+    protected function section_left_content($section, $course, $onsectionpage) {
+
+        $o = '';
+
+        if ($section->section != 0) {
+            // Only in the non-general sections.
+            if (course_get_format($course)->is_section_current($section)) {
+                $o = get_accesshide(get_string('currentsection', 'format_' . $course->format));
+            }
+        }
+
+        return $o;
+    }
+
+    /**
+     * Generate html for a section summary text
+     *
+     * @param stdClass $section The course_section entry from DB
+     * @return string HTML to output.
+     */
+    protected function format_summary_text($section) {
+
+        $format = course_get_format($section->course);
+        if (!($section instanceof section_info)) {
+            $modinfo = $format->get_modinfo();
+            $section = $modinfo->get_section_info($section->section);
+        }
+        $summaryclass = $format->get_output_classname('content\\section\\summary');
+        $summary = new $summaryclass($format, $section);
+        return $summary->format_summary_text();
+    }
+
+    public function section_availability($section){
+        
+        $context = context_course::instance($section->course);
+        $canviewhidden = has_capability('moodle/course:viewhiddensections', $context);
+        $course = $section->course;
+        $format = course_get_format($course);
+        $widgetclass = $format->get_output_classname('content\\section\\availability');
+        $widget = new $widgetclass($format, $section);
+        
+        return html_writer::div($this->render($widget), 'section_availability');
+    }
+
     /**
      * Generate footer html of a stealth section
      *
      * @return string HTML to output.
      */
     public function section_footer(){
-        return parent::section_footer();
+        $o = html_writer::end_tag('div');
+        $o .= html_writer::end_tag('li');
+        return $o;
     }
     /**
      * Generate the section title, wraps it in a link to the section page if page is to be displayed on a separate page

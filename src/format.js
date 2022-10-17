@@ -492,11 +492,9 @@ M.recit.course.format.recit.NonEditingMode = class{
     }
 
     initMoodleFixes(){
-        if (M.recit.moodle && M.recit.moodle.version >= 2021051700){//Moodle 3.11
             require(['core_course/manual_completion_toggle'], toggle => {
                 toggle.init()
             });
-        }
     }
 
     getSectionContentResult(result){

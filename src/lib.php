@@ -34,7 +34,7 @@ require_once($CFG->dirroot. '/course/editsection_form.php');
  * @copyright  2012 Marina Glancy
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class format_recit extends format_base {
+class format_recit extends core_courseformat\base {
     /** @var int */
     public const TT_DISPLAY_TABS_LEVEL_1 = 1;
     /** @var int */
@@ -299,13 +299,25 @@ class format_recit extends format_base {
                     'label' => new lang_string('sectionshowactivities', 'format_recit'),
                     'help' => 'sectionshowactivities',
                     'help_component' => 'format_recit',
-                    'element_type' => 'checkbox'
+                    'element_type' => 'select',
+                    'element_attributes' => array(
+                        array(
+                            0 => new lang_string('no'),
+                            1 => new lang_string('yes'),
+                        )
+                    )
                 ),
                 'ttsectiontitle' => array(
                     'label' => new lang_string('showsectiontitle', 'format_recit'),
                     'help' => 'showsectiontitle',
                     'help_component' => 'format_recit',
-                    'element_type' => 'checkbox'
+                    'element_type' => 'select',
+                    'element_attributes' => array(
+                        array(
+                            0 => new lang_string('no'),
+                            1 => new lang_string('yes'),
+                        )
+                    )
                 )
             );
 
@@ -413,9 +425,6 @@ class format_recit extends format_base {
                     ), '', 'name,id,value');
         $changed = $needrebuild = false;
         foreach ($defaultoptions as $key => $value) {
-            if (in_array($key, array('ttsectionshowactivities','ttsectiontitle')) && (!isset($data[$key]) || !$data[$key])){//If checkbox is unticked, value is null rather than 0
-                $data[$key] = 0;
-            }
             if (isset($records[$key])) {
                 if (array_key_exists($key, $data) && $records[$key]->value !== $data[$key]) {
                     $value = $data[$key];
