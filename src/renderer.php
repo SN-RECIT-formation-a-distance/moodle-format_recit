@@ -665,23 +665,24 @@ class format_recit_renderer extends core_courseformat\output\section_renderer {
         $upSectionUrl = sprintf($moveSectionUrl, '-1');
         $downSectionUrl = sprintf($moveSectionUrl, '1');
         $sectionname = '';
+        $sectionactions = '';
         if ($section->section > 0){
             //$sectionname .= '<span class="section-handle moodle-core-dragdrop-draghandle" title="Déplacer '.$this->formatrecit->get_section_name($section).'" tabindex="0" data-draggroups="sectiondraggable" role="button">          <i class="icon fa fa-arrows fa-fw " aria-hidden="true" style="cursor: move;"></i>            </span>';
         }
         $sectionname .= "<a class='accordion-toggle h3' data-toggle=\"collapse\" data-target=\"#collapse-section-".$section->section."\" href='#section-".$section->section."'> ".$this->formatrecit->get_section_name($section)."</a>";
         if ($section->section > 0){
-            $sectionname .= $this->get_move_section_select($section, $moveSectionUrl);
+            $sectionactions .= $this->get_move_section_select($section, $moveSectionUrl);
         }
-        $sectionname .= " <a class='ml-1 btn-sm' data-toggle='pill' title='Voir la section' role='tab' aria-controls='isection-".$section->section."' href='#isection-".$section->section."' onclick=\"M.recit.course.format.recit.EditingMode.instance.goToSection(event, true)\"><i class='fa fa-sign-in'></i></a>";
-        $sectionname .= " <a href='$editSectionUrl' title='Modifier la section' class='ml-2'><i class='fa fa-pencil'></i></a>";
-        $sectionname .= " <a href='$hideSectionUrl' title='Cacher/montrer la section' class='ml-2'><i class='fa ".($section->visible == 1 ? 'fa-eye' : 'fa-eye-slash')."'></i></a>";
+        $sectionactions .= " <a class='ml-1 btn-sm' data-toggle='pill' title='Voir la section' role='tab' aria-controls='isection-".$section->section."' href='#isection-".$section->section."' onclick=\"M.recit.course.format.recit.EditingMode.instance.goToSection(event, true)\"><i class='fa fa-sign-in'></i></a>";
+        $sectionactions .= " <a href='$editSectionUrl' title='Modifier la section' class='ml-2'><i class='fa fa-pencil'></i></a>";
+        $sectionactions .= " <a href='$hideSectionUrl' title='Cacher/montrer la section' class='ml-2'><i class='fa ".($section->visible == 1 ? 'fa-eye' : 'fa-eye-slash')."'></i></a>";
         if ($section->section > 1){
-            $sectionname .= " <a href='$upSectionUrl' title='Monter la section' class='ml-2'><i class='fa fa-arrow-up'></i></a>";
+            $sectionactions .= " <a href='$upSectionUrl' title='Monter la section' class='ml-2'><i class='fa fa-arrow-up'></i></a>";
         }
         if ($section->section > 0 && $section->section != $lastSection->section){
-            $sectionname .= " <a href='$downSectionUrl' title='Descendre la section' class='ml-2'><i class='fa fa-arrow-down'></i></a>";
+            $sectionactions .= " <a href='$downSectionUrl' title='Descendre la section' class='ml-2'><i class='fa fa-arrow-down'></i></a>";
         }
-        $sectionname .= " <a href='#' title='Supprimer la section' class='ml-2' onclick=\"M.recit.course.format.recit.EditingMode.instance.deleteSection(".$section->section.")\"><i class='fa fa-trash'></i></a>";
+        $sectionactions .= " <a href='#' title='Supprimer la section' class='ml-2' onclick=\"M.recit.course.format.recit.EditingMode.instance.deleteSection(".$section->section.")\"><i class='fa fa-trash'></i></a>";
 
         $level = "";
 
@@ -697,7 +698,7 @@ class format_recit_renderer extends core_courseformat\output\section_renderer {
             "");
         }
 
-        $html = sprintf("<span style='display: flex; align-items: center; height: 30px;'>%s%s</span>", $sectionname, $level);
+        $html = sprintf("%s<span style='display: flex; align-items: center; height: 30px; margin-top: 10px;'>%s%s</span>", $sectionname, $sectionactions, $level);
 
         return $html;
     }
