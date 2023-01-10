@@ -520,11 +520,38 @@ M.recit.course.format.recit.NonEditingMode = class{
         this.postProcessingFilters(result.data);
     }
 
+    resizeH5P(iFrame){
+        var H5P = iFrame.contentWindow.H5P;
+        if (!H5P) {
+            setTimeout(this.resizeH5P.bind(this), 500, iFrame);
+            return;
+        }
+
+        if (iFrame.getAttribute('height')){
+            iFrame.style.height = (parseInt(iFrame.getAttribute('height')) + 2) + 'px';
+        }else{
+            iFrame.style.height = iFrame.contentWindow.document.documentElement.scrollHeight + 'px'; //adjust iframe to page height
+        }
+
+        // Let h5p iframes know we're ready!
+        var iframes = iFrame.contentWindow.document.getElementsByTagName('iframe');
+        var ready = {
+            context: 'h5p',
+            action: 'ready'
+        };
+        for (var i = 0; i < iframes.length; i++) {
+            if (iframes[i].src.indexOf('h5p') !== -1) {
+                iframes[i].contentWindow.postMessage(ready, '*');
+            }
+        }
+    }
+
     preProcessingFilters(doc){
-        let h5pobjects = doc.body.querySelectorAll('.h5p-iframe');
+        let h5pobjects = doc.querySelectorAll('.h5p-iframe,.h5p-player');
+        let that = this;
         for (let iframe of h5pobjects){
             iframe.onload = function(){
-                iframe.style.height = iframe.contentWindow.document.documentElement.scrollHeight + 'px'; //adjust iframe to page height
+                that.resizeH5P(iframe);
             }
         }
     }
@@ -535,6 +562,7 @@ M.recit.course.format.recit.NonEditingMode = class{
         }
 
         this.loadMapLoaderPlugin(webApiResult);
+
     }
 
     loadMapLoaderPlugin(webApiResult){
@@ -584,3 +612,4 @@ M.recit.course.format.recit.NonEditingMode = class{
 M.recit.course.format.recit.messages = {
     error: "Une erreur inattendue est survenue. Veuillez réessayer."
 }
+
