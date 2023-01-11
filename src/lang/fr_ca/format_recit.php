@@ -75,5 +75,9 @@ $string['showsectiontitle_help'] = 'Ce réglage permet d\'afficher le nom de la 
 $string['prev_section'] = 'Section précédente';
 $string['next_section'] = 'Section suivante';
 $string['navsection_help'] = "Permet d'afficher des boutons en bas de page afin de naviguer entre les différentes sections du cours";
+$string['loadingtype'] = 'Mode de chargement';
+$string['lazyloading'] = 'Lazy Loading';
+$string['staticloading'] = 'Static Loading';
+$string['loadingtype_help'] = "Lazy loading va chargé les sections dynamiquement, requis pour les cours volumineux. Static loading va chargé tous les sections lors du chargement de la page.";
 
 $string['movecm'] = 'Déplacer vers...';

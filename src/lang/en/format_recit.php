@@ -58,8 +58,12 @@ $string['maxsection'] = 'Max sections ';
 
 $string['showsectiontitle'] = 'Show section name';
 $string['navsection'] = 'Show navigation by section';
-$string['custompath'] = 'Activer le cheminement personalisé';
+$string['custompath'] = 'Enable custom path';
 $string['custompath_help'] = "Cela cachera les sections que l'élève n'a pas accès et modifira la manière dont Moodle calcule la completion du cours";
+$string['loadingtype'] = 'Loading method';
+$string['lazyloading'] = 'Lazy Loading';
+$string['staticloading'] = 'Static Loading';
+$string['loadingtype_help'] = "Lazy loading will load sections on the fly, required for big courses";
 $string['navsectionoverview'] = 'Hide navigation overview button';
 $string['navsectionoverview_help'] = 'Hide navigation overview button';
 

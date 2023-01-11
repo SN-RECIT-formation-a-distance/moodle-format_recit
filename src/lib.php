@@ -234,6 +234,46 @@ class format_recit extends core_courseformat\base {
     }
 
     /**
+     * Definitions of the additional options that this course format uses for course
+     *
+     * Topics format uses the following options:
+     * - coursedisplay
+     * - hiddensections
+     *
+     * @param bool $foreditform
+     * @return array of options
+     */
+    public function course_format_options($foreditform = false) {
+        static $courseformatoptions = false;
+        if ($courseformatoptions === false) {
+            $courseformatoptions = array(
+                'ttloadingtype' => array(
+                    'default' => 1,
+                    'type' => PARAM_INT,
+                ),
+            );
+        }
+        if ($foreditform && !isset($courseformatoptions['ttsectiondisplay']['label'])) {
+            $courseformatoptionsedit = array(
+                'ttloadingtype' => array(
+                    'label' => new lang_string('loadingtype', 'format_recit'),
+                    'help' => 'loadingtype',
+                    'help_component' => 'format_recit',
+                    'element_type' => 'select',
+                    'element_attributes' => array(
+                        array(
+                            1 => new lang_string('lazyloading', 'format_recit'),
+                            2 => new lang_string('staticloading', 'format_recit'),
+                        )
+                    )
+                ),
+            );
+            $courseformatoptions = array_merge_recursive($courseformatoptions, $courseformatoptionsedit);
+        }
+        return $courseformatoptions;
+    }
+
+    /**
      * Definitions of the additional options that this course format uses for section
      *
      * See {@see format_base::course_format_options()} for return array definition.
