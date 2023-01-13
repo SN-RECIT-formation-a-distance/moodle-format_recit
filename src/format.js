@@ -486,6 +486,7 @@ M.recit.course.format.recit.NonEditingMode = class{
     
     init(){
         this.sectionContent = document.getElementById("sectioncontent_placeholder");
+        if (!this.sectionContent) return;
         this.lazyLoading = this.sectionContent.getAttribute('data-lazyloading') == '1';
 
         M.recit.theme.recit2.Ctrl.instance.sectionsNav.addOnSectionNavListener(this.goToSection);
