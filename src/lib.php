@@ -251,6 +251,10 @@ class format_recit extends core_courseformat\base {
                     'default' => 1,
                     'type' => PARAM_INT,
                 ),
+                'hiddensections' => [
+                    'default' => 1,
+                    'type' => PARAM_INT,
+                ],
             );
         }
         if ($foreditform && !isset($courseformatoptions['ttsectiondisplay']['label'])) {
@@ -267,6 +271,18 @@ class format_recit extends core_courseformat\base {
                         )
                     )
                 ),
+                'hiddensections' => [
+                    'label' => new lang_string('hiddensections'),
+                    'help' => 'hiddensections',
+                    'help_component' => 'moodle',
+                    'element_type' => 'select',
+                    'element_attributes' => [
+                        [
+                            0 => new lang_string('hiddensectionsshowteacher', 'format_recit'),
+                            1 => new lang_string('hiddensectionsinvisible')
+                        ],
+                    ],
+                ],
             );
             $courseformatoptions = array_merge_recursive($courseformatoptions, $courseformatoptionsedit);
         }

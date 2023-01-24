@@ -36,6 +36,7 @@ $string['section0name'] = 'Introduction';
 $string['numsection'] = 'Section';
 $string['page-course-view-topics'] = 'Toutes les pages principales de cours dans le format';
 $string['page-course-view-topics-x'] = 'Toutes les pages du cours dans le format';
+$string['hiddensectionsshowteacher'] = 'Afficher les sections cachés pour les enseignants';
 $string['hidefromothers'] = 'Cacher la section';
 $string['showfromothers'] = 'Montrer la section';
 $string['privacy:metadata'] = 'Ce format de cours ne conserve aucune donnée personnelle.';

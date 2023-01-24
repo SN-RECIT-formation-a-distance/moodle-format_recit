@@ -103,7 +103,6 @@ class FormatRecit
     public function render_section_content($sectionid) {
         $section = null;
         foreach ($this->sectionslist as $item) {
-            if( !$item->visible ){ continue; }
 
             $id = $this->get_section_id($item);
             if(($id == $sectionid) || ("#$id" == $sectionid)) { 
@@ -125,7 +124,7 @@ class FormatRecit
         $sectionstyle = '';
 
         if (!$section->visible ) {
-            $sectionstyle = ' hidden';
+            //$sectionstyle = ' hidden';//Disabled for format option hiddensections
         }
         if (course_get_format($this->course)->is_section_current($section)) {
             $sectionstyle = ' current';
