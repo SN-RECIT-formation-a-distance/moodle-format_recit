@@ -44,6 +44,11 @@ $string['displaytabslev1'] = 'Niveau 1';
 $string['displaytabslev2'] = 'Niveau 2';
 $string['displaytabslev3'] = 'Niveau 3';
 
+$string['loadingtype'] = 'Mode de chargement';
+$string['lazyloading'] = 'Lazy Loading';
+$string['staticloading'] = 'Static Loading';
+$string['loadingtype_help'] = "Lazy loading va chargé les sections dynamiquement, requis pour les cours volumineux. Static loading va chargé tous les sections lors du chargement de la page.";
+
 $string['menudisplay'] = 'Présentation du menu de navigation';
 $string['displayshortcuts'] = 'Montrer les raccourcis d\'affichage lorsque le mode d\'édition est activé';
 $string['sectionsecondarydisplay'] = 'Affichage des sections secondaires';

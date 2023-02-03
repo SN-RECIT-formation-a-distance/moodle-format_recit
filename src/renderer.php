@@ -45,6 +45,7 @@ class FormatRecit
     protected $output = null;
     /** @var stdClass */
     protected $modinfo = null;
+    protected $lazyLoading = false;
     /** @var array */
     public $sectionslist = array();
 
@@ -69,6 +70,7 @@ class FormatRecit
 
         $this->modinfo = get_fast_modinfo($course);
         $this->sectionslist = $this->modinfo->get_section_info_all();
+        $this->lazyLoading = ($course->ttloadingtype == 1);
     }
 
     /**
@@ -77,11 +79,20 @@ class FormatRecit
      * @return string
      */
     public function render() {
-        $html = "<div id='sectioncontent_placeholder'></div>";
-        $html .= $this->getHtmlLoading();
-
+        $html = "<div id='sectioncontent_placeholder' data-lazyloading='".($this->lazyLoading ? 1 : 0)."'></div>";
+        if ($this->lazyLoading){
+            $html .= $this->getHtmlLoading();
+        }else{
+            foreach ($this->sectionslist as $item) {
+                if( !$item->visible ){ continue; }
+    
+                $id = $this->get_section_id($item);
+                $html .= $this->render_section_content($id);
+            }
+        }
         echo $html;
     }
+
 
     /**
      * Function to get section tab 
@@ -136,7 +147,7 @@ class FormatRecit
             $sectionsummary = format_text($sectionsummary,  $section->summaryformat, array('noclean' => true, 'overflowdiv' => true,
                     'filter' => true));
         }
-        $html = "<div class='section main clearfix tt-section $sectionstyle' data-section='$sectionid' role='region' aria-label='$sectionname'>";
+        $html = "<div class='section main clearfix tt-section $sectionstyle' ".($this->lazyLoading ? '' : 'style="display:none"')." data-section='$sectionid' role='region' aria-label='$sectionname'>";
 
         if($section->ttsectiontitle == 1){
             $html .= "<h2>$sectionname</h2>";

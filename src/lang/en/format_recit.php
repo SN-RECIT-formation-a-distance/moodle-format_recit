@@ -44,6 +44,10 @@ $string['displaytabslev1'] = 'Level 1';
 $string['displaytabslev2'] = 'Level 2';
 $string['displaytabslev3'] = 'Level 3';
 
+$string['loadingtype'] = 'Loading method';
+$string['lazyloading'] = 'Lazy Loading';
+$string['staticloading'] = 'Static Loading';
+$string['loadingtype_help'] = "Lazy loading will load sections on the fly, required for big courses";
 $string['menudisplay'] = 'Menu display';
 $string['displayshortcuts'] = 'Display shortcuts when editing mode on';
 $string['sectionsecondarydisplay'] = 'Secondary sections display';

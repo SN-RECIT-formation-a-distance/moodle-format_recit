@@ -486,9 +486,15 @@ M.recit.course.format.recit.NonEditingMode = class{
     
     init(){
         this.sectionContent = document.getElementById("sectioncontent_placeholder");
+        if (!this.sectionContent) return;
 
         M.recit.theme.recit2.Ctrl.instance.sectionsNav.addOnSectionNavListener(this.goToSection);
+        this.lazyLoading = this.sectionContent.getAttribute('data-lazyloading') == '1';
         this.initMoodleFixes();
+        
+        if (this.lazyLoading){
+            this.hideSections(true);
+        }
     }
 
     initMoodleFixes(){
@@ -496,6 +502,22 @@ M.recit.course.format.recit.NonEditingMode = class{
             require(['core_course/manual_completion_toggle'], toggle => {
                 toggle.init()
             });
+        }
+    }
+    
+    hideSections(showFirst){
+        var els = document.querySelectorAll('div.section');
+        for (var el of els){
+            el.style.display = 'none';
+        }
+        if (showFirst){
+            var sectionId = document.querySelector('#menu-sections li[data-selected="1"] a')?.hash || '';
+            var section = document.querySelector('[data-section="'+sectionId+'"]');
+            if (section){
+                section.style.display = 'block';
+            }else{
+                els[0].style.display = 'block';
+            }
         }
     }
 
@@ -574,11 +596,18 @@ M.recit.course.format.recit.NonEditingMode = class{
         }
 
         if(sectionId === null){ return; }
-
-        let params = M.recit.theme.recit2.Utils.getUrlVars();
-        if(this.sectionContent !== null){
-            this.webApi.getSectionContent({sectionid: sectionId, courseid: params.id}, this.getSectionContentResult);
-        }        
+        if (this.lazyLoading){
+            let params = M.recit.theme.recit2.Utils.getUrlVars();
+            if(this.sectionContent !== null){
+                this.webApi.getSectionContent({sectionid: sectionId, courseid: params.id}, this.getSectionContentResult);
+            }
+        }else{
+            var section = document.querySelector('[data-section="'+sectionId+'"]');
+            if (section){
+                this.hideSections();
+                section.style.display = 'block';
+            }
+        }
     }
 }
 
