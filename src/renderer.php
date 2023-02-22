@@ -309,7 +309,7 @@ class FormatRecit
     }
 
     
-    public function course_section_cm_editing($course, &$completioninfo, cm_info $mod, $sectionreturn, $displayoptions = array(), $section) {
+    public function course_section_cm_editing($course, &$completioninfo, cm_info $mod, $sectionreturn, $displayoptions, $section) {
         global $PAGE;
         $output = '';
         // We return empty string (because course module will not be displayed at all)
