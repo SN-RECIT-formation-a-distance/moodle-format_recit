@@ -606,6 +606,7 @@ M.recit.course.format.recit.NonEditingMode = class{
             if (section){
                 this.hideSections();
                 section.style.display = 'block';
+                window.scrollTo(0,0);
             }
         }
     }
