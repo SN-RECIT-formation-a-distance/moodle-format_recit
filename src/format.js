@@ -515,7 +515,7 @@ M.recit.course.format.recit.NonEditingMode = class{
             var section = document.querySelector('[data-section="'+sectionId+'"]');
             if (section){
                 section.style.display = 'block';
-            }else{
+            }else if(els[0]){
                 els[0].style.display = 'block';
             }
         }
