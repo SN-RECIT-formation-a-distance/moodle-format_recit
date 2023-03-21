@@ -515,7 +515,7 @@ M.recit.course.format.recit.NonEditingMode = class{
             if (section){
                 section.style.display = 'block';
             }else{
-                els[0].style.display = 'block';
+                if (els[0]) els[0].style.display = 'block';
             }
         }
     }
