@@ -628,15 +628,9 @@ class format_recit extends core_courseformat\base {
         // Return everything (nothing to hide).
         return $this->get_format_options();
     }
-
-    /**
-     * Function of class format_recit.
-     * @param string $data
-     */
-    private function console_log( $data ) {
-        echo '<script>';
-        echo 'console.log('. json_encode( $data ) .')';
-        echo '</script>';
+    
+    public function uses_indentation(): bool{
+        return false;
     }
 }
 
