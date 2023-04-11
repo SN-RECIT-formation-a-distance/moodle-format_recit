@@ -488,8 +488,8 @@ M.recit.course.format.recit.NonEditingMode = class{
         this.sectionContent = document.getElementById("sectioncontent_placeholder");
         if (!this.sectionContent) return;
 
-        M.recit.theme.recit2.Ctrl.instance.sectionsNav.addOnSectionNavListener(this.goToSection);
         this.lazyLoading = this.sectionContent.getAttribute('data-lazyloading') == '1';
+        M.recit.theme.recit2.Ctrl.instance.sectionsNav.addOnSectionNavListener(this.goToSection);
         this.initMoodleFixes();
         
         if (this.lazyLoading){
@@ -505,7 +505,7 @@ M.recit.course.format.recit.NonEditingMode = class{
         }
     }
     
-    hideSections(showFirst){
+    hideSections(showFirst){ //@boolean showFirst: Whether to show the selected section or not
         var els = document.querySelectorAll('div.section');
         for (var el of els){
             el.style.display = 'none';
