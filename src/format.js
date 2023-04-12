@@ -3,6 +3,11 @@
 M.course = M.course || {};
 M.course.format = M.course.format || {};
 
+M.recit = M.recit || {};
+M.recit.course = M.recit.course || {};
+M.recit.course.format = M.recit.course.format || {};
+M.recit.course.format.recit = M.recit.course.format.recit || {};
+
 /**
  * Get sections config for this format
  *
@@ -88,10 +93,6 @@ M.course.format.process_sections = function(Y, sectionlist, response, sectionfro
     }
 }
 
-M.recit = M.recit || {};
-M.recit.course = M.recit.course || {};
-M.recit.course.format = M.recit.course.format || {};
-M.recit.course.format.recit = M.recit.course.format.recit || {};
 M.recit.course.format.recit.WebApi = class{
     constructor(){
         this.gateway = this.getGateway();
@@ -511,7 +512,9 @@ M.recit.course.format.recit.NonEditingMode = class{
             el.style.display = 'none';
         }
         if (showFirst){
-            var sectionId = document.querySelector('#menu-sections li[data-selected="1"] a')?.hash || '';
+            var el = document.querySelector('#menu-sections li[data-selected="1"] a');
+            var sectionId = (el ? el.hash : '');
+
             var section = document.querySelector('[data-section="'+sectionId+'"]');
             if (section){
                 section.style.display = 'block';
