@@ -3,6 +3,11 @@
 M.course = M.course || {};
 M.course.format = M.course.format || {};
 
+M.recit = M.recit || {};
+M.recit.course = M.recit.course || {};
+M.recit.course.format = M.recit.course.format || {};
+M.recit.course.format.recit = M.recit.course.format.recit || {};
+
 /**
  * Get sections config for this format
  *
@@ -88,10 +93,6 @@ M.course.format.process_sections = function(Y, sectionlist, response, sectionfro
     }
 }
 
-M.recit = M.recit || {};
-M.recit.course = M.recit.course || {};
-M.recit.course.format = M.recit.course.format || {};
-M.recit.course.format.recit = M.recit.course.format.recit || {};
 M.recit.course.format.recit.WebApi = class{
     constructor(){
         this.gateway = this.getGateway();
@@ -487,8 +488,8 @@ M.recit.course.format.recit.NonEditingMode = class{
     init(){
         this.sectionContent = document.getElementById("sectioncontent_placeholder");
         if (!this.sectionContent) return;
-        this.lazyLoading = this.sectionContent.getAttribute('data-lazyloading') == '1';
 
+        this.lazyLoading = this.sectionContent.getAttribute('data-lazyloading') == '1';
         M.recit.theme.recit2.Ctrl.instance.sectionsNav.addOnSectionNavListener(this.goToSection);
         this.initMoodleFixes();
 
@@ -503,19 +504,20 @@ M.recit.course.format.recit.NonEditingMode = class{
         });
     }
 
-    hideSections(showFirst){
-        var els = document.querySelectorAll('.section');
+    hideSections(showFirst){ //@boolean showFirst: Whether to show the selected section or not
+        var els = document.querySelectorAll('div.section');
         for (var el of els){
             el.style.display = 'none';
         }
-
         if (showFirst){
-            var sectionId = document.querySelector('#menu-sections li[data-selected="1"] a')?.hash || '';
+            var el = document.querySelector('#menu-sections li[data-selected="1"] a');
+            var sectionId = (el ? el.hash : '');
+
             var section = document.querySelector('[data-section="'+sectionId+'"]');
             if (section){
                 section.style.display = 'block';
-            }else{
-                if (els[0]) els[0].style.display = 'block';
+            }else if(els[0]){
+                els[0].style.display = 'block';
             }
         }
     }
