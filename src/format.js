@@ -210,13 +210,16 @@ M.recit.course.format.recit.EditingMode = class{
         // Ouvrir la liste de sections automatiquement si la largeur de l'écran est plus grande que 1024
         if(window.screen.width > 1024){
             let navTabs = document.getElementById('navTabs');
+            let menu = document.querySelector('.nav-inner');
 
             if(navTabs){
+                this.floatingMenu = new M.recit.theme.recit2.floatingSection(navTabs, menu);
                 navTabs.classList.add("show");
                 document.querySelector('[data-target="#navTabs"]').classList.add("collapsed");
             }
         } 
     }
+    
 
     initMassActions(){
         let items = document.querySelectorAll(".recitformat_massmove");

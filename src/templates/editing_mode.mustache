@@ -17,25 +17,28 @@
 
 <div class="row">
     <div class="btn-toolbar bg-light p-2 w-100" role="toolbar" style='justify-content: space-between;'>
-        <div class="btn-group mr-2 btn-sm" role="group">
+        <div class="btn-group mr-2 col-sm-2 btn-sm" role="group">
             <button class="btn btn-outline-primary mr-2" type="button" data-toggle="collapse" data-target="#navTabs" aria-expanded="false" aria-controls="navTabs"><i class="fa fa-bars"></i> Liste de sections</button>
-            <a class='btn btn-outline-primary  ' data-toggle='pill' href='{{menu.sectionId}}' role='tab' onclick="M.recit.course.format.recit.EditingMode.instance.goToSection(event, true);" aria-controls='{{menu.sectionIdAlt}}'><i class='fa fa-tasks'></i>  {{menu.desc}}</a>
         </div>
         <div class="btn-group btn-sm" role="group">
+            <a class='btn btn-primary mr-2' data-toggle='pill' href='{{menu.sectionId}}' role='tab' onclick="M.recit.course.format.recit.EditingMode.instance.goToSection(event, true);" aria-controls='{{menu.sectionIdAlt}}'><i class='fa fa-tasks'></i>  {{menu.desc}}</a>
             <a href='{{menu.addSectionUrl}}' data-add-sections="{{#str}}addsections,format_recit{{/str}}" data-new-sections="90" data-action="addSection"  class='btn btn-primary ' title='{{#str}}addsections,format_recit{{/str}}'><i class='fa fa-plus'></i> {{#str}}addsections,format_recit{{/str}}</a>
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-xs col-sm-4 col-lg-2 collapse p-0" id="navTabs">
-        <div class="nav nav-pills bg-light  flex-column" role="tablist" aria-orientation="vertical">
+<div class="row reciteditingmenu">
+    <div class="col-lg-2 collapse p-0" id="navTabs">
+        <div class="nav-inner bg-light">
+            <a class="mx-3 my-1" type="button" data-toggle="collapse" data-target="#navTabs" aria-expanded="false" aria-controls="navTabs"><i class="fa fa-times"></i></a>
+            <div class="nav nav-pills bg-light flex-column" role="tablist" aria-orientation="vertical">
 
-            {{#sectionList}}
-                <a class='nav-item nav-link {{active}}' data-toggle='pill' href='#{{sectionIdAlt}}' role='tab' onclick="M.recit.course.format.recit.EditingMode.instance.goToSection(event)" aria-controls='{{sectionIdAlt}}'>{{desc}}</a>
-            {{/sectionList}}
+                {{#sectionList}}
+                    <a class='nav-item nav-link {{active}}' data-toggle='pill' href='#{{sectionIdAlt}}' role='tab' onclick="M.recit.course.format.recit.EditingMode.instance.goToSection(event)" aria-controls='{{sectionIdAlt}}'>{{desc}}</a>
+                {{/sectionList}}
+            </div>
         </div>
     </div>
-    <div class="col-xl">
+    <div class="col-lg-10">
         <div class="tab-content recitformatmenu">
            
             <div class="tab-pane fade show {{menu.active}} p-2 editing-mode-menu" id="{{menu.sectionIdAlt}}" role="tabpanel" aria-labelledby="{{menu.sectionIdAlt}}-tab">
