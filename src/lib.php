@@ -26,6 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot. '/course/format/lib.php');
 require_once($CFG->dirroot. '/course/editsection_form.php');
+require_once(dirname(__FILE__).'/classes/sectionform.php');
 
 /**
  * Main class for the Topics course format
@@ -315,7 +316,7 @@ class format_recit extends core_courseformat\base {
      * @return array
      */
     public function section_format_options($foreditform = false) {
-        global $CFG;
+        global $DB;
 
         $sectionformatoptions = false;
         if ($sectionformatoptions === false) {
@@ -335,9 +336,7 @@ class format_recit extends core_courseformat\base {
             );
         }
         if ($foreditform) {
-            $course = $this->get_course();
-            $coursesections = array();
-            $contextcourse = context_course::instance($course->id);
+            $course = $this->get_course(); 
             $sectionformatoptionsedit = array(
                 'sectionlevel' => array(
                     'label' => new lang_string('sectiondisplay', 'format_recit'),
@@ -376,10 +375,40 @@ class format_recit extends core_courseformat\base {
                     )
                 )
             );
-
             $sectionformatoptions = array_merge_recursive($sectionformatoptions, $sectionformatoptionsedit);
+
         }
         return $sectionformatoptions;
+    }
+    /**
+     * Return an instance of moodleform to edit a specified section
+     *
+     * Default implementation returns instance of editsection_form that automatically adds
+     * additional fields defined in {@see format_base::section_format_options()}
+     *
+     * Format plugins may extend editsection_form if they want to have custom edit section form.
+     *
+     * @param mixed $action the action attribute for the form. If empty defaults to auto detect the
+     *              current url. If a moodle_url object then outputs params as hidden variables.
+     * @param array $customdata the array with custom data to be passed to the form
+     *     /course/editsection.php passes section_info object in 'cs' field
+     *     for filling availability fields
+     * @return moodleform
+     */
+    public function editsection_form($action, $customdata = array()) {
+        if (!array_key_exists('course', $customdata)) {
+            $customdata['course'] = $this->get_course();
+        }
+        $result = new format_recit_sectionform($action, $customdata);
+
+        $form = $result->get_form();
+
+        $disabled = array('disabled' => 'disabled');
+        if ($customdata['cs']->__get('section') == 0) {
+            $form->getElement('sectionlevel')->updateAttributes($disabled);
+        }
+
+        return $result;
     }
 
     /**
