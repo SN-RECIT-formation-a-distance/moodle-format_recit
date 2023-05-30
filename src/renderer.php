@@ -101,6 +101,7 @@ class FormatRecit
      * @return string
      */
     public function render_section_content($sectionid) {
+        global $USER;
         $section = null;
         foreach ($this->sectionslist as $item) {
 
@@ -120,6 +121,8 @@ class FormatRecit
         $sectionid = $this->get_section_id($section);
         $sectionname = $this->get_section_name($section);
         $sectionavail = $this->moodlerenderer->section_availability($section);
+        $course = course_get_format($this->course)->get_course();
+        $hideVisible = isset($course->hiddensections) ? $course->hiddensections : 1; //0 = show for teachers, 1 = hidden for everyone
 
         $sectionstyle = '';
 
@@ -136,8 +139,9 @@ class FormatRecit
         }
 
         $context = context_course::instance($this->course->id);
-        $sectionsummary ='';
-        if ($section->available){
+        $seehidden = has_capability('theme/recit2:accesshiddensections', $context, $USER->id, false);
+        $sectionsummary = '';
+        if ($section->available || ($hideVisible == 0 && $seehidden)){
             
                 // Show summary if section is available or has
             $sectionsummary = file_rewrite_pluginfile_urls($section->summary, 'pluginfile.php', $context->id, 'course', 'section',
