@@ -101,7 +101,7 @@ class FormatRecit
      * @return string
      */
     public function render_section_content($sectionid) {
-        global $USER;
+        global $USER, $CFG;
         $section = null;
         foreach ($this->sectionslist as $item) {
 
@@ -142,13 +142,13 @@ class FormatRecit
         $seehidden = has_capability('theme/recit2:accesshiddensections', $context, $USER->id, false);
         $sectionsummary = '';
         if ($section->available || ($hideVisible == 0 && $seehidden)){
-            
-                // Show summary if section is available or has
-            $sectionsummary = file_rewrite_pluginfile_urls($section->summary, 'pluginfile.php', $context->id, 'course', 'section',
-                    $section->id);
-
-            $sectionsummary = format_text($sectionsummary,  $section->summaryformat, array('noclean' => true, 'overflowdiv' => true,
-                    'filter' => true));
+            // Show summary if section is available or has
+            $sectionsummary = file_rewrite_pluginfile_urls($section->summary, 'pluginfile.php', $context->id, 'course', 'section', $section->id);
+                    
+            $bkpForceclean = $CFG->forceclean;
+            $CFG->forceclean = false;
+            $sectionsummary = format_text($sectionsummary,  $section->summaryformat, array('noclean' => true, 'overflowdiv' => true, 'filter' => true));
+            $CFG->forceclean = $bkpForceclean;
         }
         $html = "<div class='section main clearfix tt-section $sectionstyle' ".($this->lazyLoading ? '' : 'style="display:none"')." data-section='$sectionid' role='region' aria-label='$sectionname'>";
  
