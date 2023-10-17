@@ -201,7 +201,7 @@ class FormatRecit
         if ($selectedSection == '#menu') $selectedSectionNumber = 'menu';
 
 
-        $massaction = "<div class='bg-light p-3'>";
+        $massaction = "<div class='p-3'>";
 
         $massaction .= '<p><b>Avec la sélection : </b></p>';
         $massaction .= "<div class='d-flex'>";
@@ -247,7 +247,7 @@ class FormatRecit
             $sectionId = $this->get_section_id($section);
 
             $data->menu->content .= $format_recit_renderer->section_header($section, $this->course, false, 0, false, true, true);
-            $data->menu->content .= html_writer::start_tag('div', array('class' => 'collapse show', 'id' => 'collapse-section-'.$section->section));
+            $data->menu->content .= html_writer::start_tag('div', array('class' => 'collapse show bg-light pt-2', 'id' => 'collapse-section-'.$section->section));
             $data->menu->content .= sprintf("<div class='section_add_menus' id='add_menus-%s'></div>", $sectionId);
             $data->menu->content .= "<div data-course-section-cm-list='1'>". $this->get_course_section_cm_list_editing($this->course, $section)."</div>";
             $data->menu->content .= sprintf($massaction, $section->section, $section->section, $section->section, $section->section);
@@ -340,7 +340,7 @@ class FormatRecit
         $output .= html_writer::start_tag('div', array('class' => 'mod-indent-outer w-100 d-inline'));
 
         if ($PAGE->user_is_editing()) {
-            $output .= "<input type='checkbox' class='massactioncheckbox' data-section='$section->section' name='".$mod->id."'/>";
+            $output .= "<input type='checkbox' class='massactioncheckbox mr-2' data-section='$section->section' name='".$mod->id."'/>";
         }
 
         // This div is used to indent the content.
@@ -354,14 +354,14 @@ class FormatRecit
 
         if (!empty($cmname)) {
             // Start the div for the activity title, excluding the edit icons.
-            $output .= html_writer::start_tag('div', array('class' => 'activityinstance ml-2'));
+            $output .= html_writer::start_tag('div', array('class' => 'd-inline-flex align-items-center'));
                 
             $onclick = htmlspecialchars_decode($mod->onclick, ENT_QUOTES);
 
             // Display link itself.
             $imagedata = $this->moodlerenderer->pix_icon('monologo', '', $mod->modname, ['class' => 'activityicon']);
             $purposeclass = plugin_supports('mod', $mod->modname, FEATURE_MOD_PURPOSE);
-            $purposeclass .= ' activityiconcontainer small';
+            $purposeclass .= ' activityiconcontainer small2';
             $purposeclass .= ' modicon_' . $mod->modname;
             $imagedata = html_writer::tag('div', $imagedata, ['class' => $purposeclass]);
             $activitylink = $imagedata .
@@ -687,8 +687,7 @@ class format_recit_renderer extends core_courseformat\output\section_renderer {
         if ($section->section > 0){
             $sectionactions .= $this->get_move_section_select($section, $moveSectionUrl);
         }
-        $sectionactions .= " <a class='ml-1 btn-sm' data-toggle='pill' title='Voir la section' role='tab' aria-controls='isection-".$section->section."' href='#isection-".$section->section."' onclick=\"M.recit.course.format.recit.EditingMode.instance.goToSection(event, true)\"><i class='fa fa-sign-in'></i></a>";
-        $sectionactions .= " <a href='$editSectionUrl' title='Modifier la section' class='ml-2'><i class='fa fa-pencil'></i></a>";
+
         $sectionactions .= " <a href='$hideSectionUrl' title='Cacher/montrer la section' class='ml-2'><i class='fa ".($section->visible == 1 ? 'fa-eye' : 'fa-eye-slash')."'></i></a>";
         if ($section->section > 1){
             $sectionactions .= " <a href='$upSectionUrl' title='Monter la section' class='ml-2'><i class='fa fa-arrow-up'></i></a>";
@@ -704,7 +703,7 @@ class format_recit_renderer extends core_courseformat\output\section_renderer {
 
         $level = "";
         if ($section->section > 0) {
-            $level = sprintf('<form class="d-flex ml-3">%s%s%s</form>',
+            $level = sprintf('<form class="d-flex m-3">%s%s%s</form>',
             sprintf($radiosectionlevel, $section->section, "1",
                     ($section->sectionlevel == 1 ? "checked" : ""), get_string('displaytabslev1', 'format_recit')),
             sprintf($radiosectionlevel, $section->section, "2",
@@ -712,7 +711,9 @@ class format_recit_renderer extends core_courseformat\output\section_renderer {
             "");
         }
 
-        $html = sprintf("%s<span style='display: flex; align-items: center; height: 30px; margin-top: 10px;'>%s%s</span>", $sectionname, $sectionactions, $level);
+        $goToSection = " <a class='btn btn-primary' data-toggle='pill' title='Accéder à la section' role='tab' aria-controls='isection-".$section->section."' href='#isection-".$section->section."' onclick=\"M.recit.course.format.recit.EditingMode.instance.goToSection(event, true)\"><i class='fa fa-sign-in'></i> Accéder à la section</a>";
+
+        $html = sprintf("%s<div class='float-sm-right m-2'>%s</div><div class='m-2 d-flex align-items-center flex-wrap'>%s%s</div>", $sectionname, $goToSection, $sectionactions, $level);
 
         return $html;
     }
