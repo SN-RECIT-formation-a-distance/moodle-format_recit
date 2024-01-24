@@ -727,6 +727,11 @@ class format_recit_renderer extends core_courseformat\output\section_renderer {
         $index = 0;
         $index2 = 0;
         foreach ($this->formatrecit->sectionslist as $sectiono) {
+            // ignore section 0
+            if($sectiono->section == 0){
+                continue;
+            }
+
             if ($section->section == $sectiono->section){
                 break;
             }
@@ -734,6 +739,11 @@ class format_recit_renderer extends core_courseformat\output\section_renderer {
         }
 
         foreach ($this->formatrecit->sectionslist as $sectiono) {
+            // ignore section 0
+            if($sectiono->section == 0){
+                continue;
+            }
+
             $sectionName = $this->formatrecit->get_section_name($sectiono);
             $url = sprintf($moveSectionUrl, 0-($index-$index2));
             $sectionname .= "<option value='{$url}'>{$sectionName}</option>";
