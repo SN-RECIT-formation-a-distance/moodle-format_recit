@@ -12,22 +12,23 @@
     content: "\f0da"; 
 }
 
-@media screen and (min-width: 1200px){
-        /* width */
-        .reciteditingmenu ::-webkit-scrollbar { width: 4px; height: 4px;}
+/* width */
+.reciteditingmenu ::-webkit-scrollbar { width: 4px; height: 4px;}
         
-        /* Track */
-        .reciteditingmenu ::-webkit-scrollbar-track { background: #f1f1f1; }
+/* Track */
+.reciteditingmenu ::-webkit-scrollbar-track { background: #f1f1f1; }
 
-        /* Handle */
-        .reciteditingmenu ::-webkit-scrollbar-thumb {background: #888;}
+/* Handle */
+.reciteditingmenu ::-webkit-scrollbar-thumb {background: #888;}
 
-        /* Handle on hover */
-        .reciteditingmenu ::-webkit-scrollbar-thumb:hover {background: #555;}
-        .reciteditingmenu .nav-inner {
-            position: relative;
-            overflow-y: auto;
-        }
+/* Handle on hover */
+.reciteditingmenu ::-webkit-scrollbar-thumb:hover {background: #555;}
+.reciteditingmenu .nav-inner {
+    position: relative;
+    overflow-y: auto;
+}
+
+@media screen and (min-width: 1200px){        
         .reciteditingmenu .nav {
             flex-flow: column;
         }
