@@ -492,8 +492,15 @@ M.recit.course.format.recit.NonEditingMode = class{
         this.sectionContent = document.getElementById("sectioncontent_placeholder");
         if (!this.sectionContent) return;
 
-        this.lazyLoading = this.sectionContent.getAttribute('data-lazyloading') == '1';
-        M.recit.theme.recit2.Ctrl.instance.sectionsNav.addOnSectionNavListener(this.goToSection);
+        this.lazyLoading = (this.sectionContent.getAttribute('data-lazyloading') === '1');
+        
+        if(M.recit.theme && M.recit.theme.recit2){
+            M.recit.theme.recit2.Ctrl.instance.sectionsNav.addOnSectionNavListener(this.goToSection);
+        }
+        else{
+            throw new Error("The Recit course format should only be used with theme Recit 2.");
+        }
+        
         this.initMoodleFixes();
 
         if (this.lazyLoading){
@@ -508,7 +515,8 @@ M.recit.course.format.recit.NonEditingMode = class{
     }
 
     hideSections(showFirst){ //@boolean showFirst: Whether to show the selected section or not
-        var els = document.querySelectorAll('div.section');
+        var els = document.querySelectorAll('div.section[data-section]');
+        
         for (var el of els){
             el.style.display = 'none';
         }
