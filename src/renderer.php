@@ -24,7 +24,7 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-require_once($CFG->dirroot.'/course/format/renderer.php');
+//require_once($CFG->dirroot.'/course/format/renderer.php');
 
 //js_reset_all_caches();
 /**
@@ -497,7 +497,7 @@ class format_recit_renderer extends core_courseformat\output\section_renderer {
      * @return string the page title
      */
     protected function page_title() {
-        return get_string('topicoutline');
+        return get_string('sectionoutline');
     }
 
     /**
@@ -519,7 +519,7 @@ class format_recit_renderer extends core_courseformat\output\section_renderer {
      * @return string
      */
     public function get_course_section_add_cm_control($course, $isection) {
-        return $this->courserenderer->course_section_add_cm_control($course, $isection, 0);
+        return $this->course_section_add_cm_control($course, $isection, 0); 
     }
     
     /**
