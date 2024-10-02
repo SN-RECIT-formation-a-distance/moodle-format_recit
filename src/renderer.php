@@ -555,6 +555,7 @@ class format_recit_renderer extends core_courseformat\output\section_renderer {
         $o .= html_writer::start_tag('li', array('id' => 'section-'.$section->section, //This id cannot be changed or dragndrop will break
             'class' => "section main clearfix sectiondraggable yui3-dd-drop".$sectionstyle, 'role' => 'region',
             'aria-label' => get_section_name($course, $section), "data-section-level" => $section->sectionlevel,
+            "data-for" => "section",
             "data-section-id" => $section->id, 'style' => 'list-style: none;') );
 
 
