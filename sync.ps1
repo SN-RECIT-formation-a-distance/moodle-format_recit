@@ -1,5 +1,6 @@
 $from = "moodle-format_recit/src/*"
-$to = "shared/recitfad2/course/format/recit"
+$to = "shared/recitfad/course/format/recit"
+$source = "./src";
 
 try {
     . ("..\sync\watcher.ps1")

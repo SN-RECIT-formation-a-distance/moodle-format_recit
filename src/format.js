@@ -599,6 +599,9 @@ M.recit.course.format.recit.NonEditingMode = class{
 
         this.loadMapLoaderPlugin(webApiResult);
 
+        if(M.recit && M.recit.filter && M.recit.filter.autolink){
+            M.recit.filter.autolink.loadLazyOptions();
+        }
     }
 
     loadMapLoaderPlugin(webApiResult){
