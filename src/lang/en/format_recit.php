@@ -23,6 +23,10 @@
  * @license     {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
  */
 
+$string['pluginname'] = 'RÉCIT format v2';
+$string['plugin_description'] = 'This course format provides accelerated loading by section, sub-sections and a utility for batch operations. It requires selection of the RÉCIT V2 theme within the Appearance section.';
+$string['privacy:metadata'] = 'The RÉCIT format plugin does not store any personal data.';
+
 $string['addsections'] = 'Add topics';
 $string['currentsection'] = 'This topic';
 $string['editsection'] = 'Edit topic';
@@ -31,7 +35,6 @@ $string['showhidehiddenactivities'] = 'Show/Hide hidden activities';
 $string['deletesection'] = 'Delete topic';
 $string['newsectionname'] = 'New name for topic {$a}';
 $string['sectionname'] = 'Topic';
-$string['pluginname'] = 'RÉCIT format v2';
 $string['section0name'] = 'General';
 $string['numsection'] = 'Section';
 $string['page-course-view-topics'] = 'Any course main page in topics format';
@@ -39,7 +42,6 @@ $string['page-course-view-topics-x'] = 'Any course page in topics format';
 $string['hiddensectionsshowteacher'] = 'Show hidden sections for teachers';
 $string['hidefromothers'] = 'Hide topic';
 $string['showfromothers'] = 'Show topic';
-$string['privacy:metadata'] = 'The Topics format plugin does not store any personal data.';
 
 $string['displaytabslev1'] = 'Level 1';
 $string['displaytabslev2'] = 'Level 2';

@@ -7,6 +7,7 @@ M.recit = M.recit || {};
 M.recit.course = M.recit.course || {};
 M.recit.course.format = M.recit.course.format || {};
 M.recit.course.format.recit = M.recit.course.format.recit || {};
+M.recit.course.format.recit.jQuery = null;
 
 /**
  * Get sections config for this format
@@ -498,7 +499,9 @@ M.recit.course.format.recit.NonEditingMode = class{
             M.recit.theme.recit2.Ctrl.instance.sectionsNav.addOnSectionNavListener(this.goToSection);
         }
         else{
-            throw new Error("The Recit course format should only be used with theme Recit 2.");
+            let msg = "The Recit course format should only be used with theme Recit 2.";
+            alert(msg);
+            throw new Error(msg);
         }
         
         this.initMoodleFixes();
@@ -593,15 +596,21 @@ M.recit.course.format.recit.NonEditingMode = class{
     }
 
     postProcessingFilters(webApiResult){
+        // plugin mathjax
         if(M.filter_mathjaxloader){
             M.filter_mathjaxloader.typeset();
         }
 
+        // plugin Map Loader
         this.loadMapLoaderPlugin(webApiResult);
 
+        // plugin filter_recitactivity
         if(M.recit && M.recit.filter && M.recit.filter.autolink){
             M.recit.filter.autolink.loadLazyOptions();
         }
+
+        // Bootstrap components
+        M.recit.course.format.recit.jQuery('.carousel').carousel();
     }
 
     loadMapLoaderPlugin(webApiResult){

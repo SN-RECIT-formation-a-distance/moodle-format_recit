@@ -23,6 +23,10 @@
  * @license     {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
  */
 
+$string['pluginname'] = 'Format RÉCIT v2';
+$string['plugin_description'] = 'Ce format de cours propose un chargement accéléré par section, des sous-sections et un utilitaire pour des opérations en lot. Il requiert la sélection du thème RÉCIT V2 situé à l\'intérieur de la rubrique Apparence.';
+$string['privacy:metadata'] = 'Ce format de cours ne conserve aucune donnée personnelle.';
+
 $string['addsections'] = 'Ajouter une section';
 $string['currentsection'] = 'Cette section';
 $string['editsection'] = 'Modifier la section';
@@ -31,7 +35,6 @@ $string['showhidehiddenactivities'] = 'Afficher/Cacher les activités cachées';
 $string['deletesection'] = 'Supprimer la section';
 $string['newsectionname'] = 'Nouveau nom pour la section {$a}';
 $string['sectionname'] = 'Section';
-$string['pluginname'] = 'Format RÉCIT v2';
 $string['section0name'] = 'Introduction';
 $string['numsection'] = 'Section';
 $string['page-course-view-topics'] = 'Toutes les pages principales de cours dans le format';
@@ -39,7 +42,6 @@ $string['page-course-view-topics-x'] = 'Toutes les pages du cours dans le format
 $string['hiddensectionsshowteacher'] = 'Afficher les sections cachés pour les enseignants';
 $string['hidefromothers'] = 'Cacher la section';
 $string['showfromothers'] = 'Montrer la section';
-$string['privacy:metadata'] = 'Ce format de cours ne conserve aucune donnée personnelle.';
 
 $string['displaytabslev1'] = 'Niveau 1';
 $string['displaytabslev2'] = 'Niveau 2';
