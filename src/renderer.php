@@ -192,9 +192,6 @@ class FormatRecit
 
     public function render_editing_mode($format_recit_renderer){
         global $CFG, $COURSE, $OUTPUT;
-        $this->renderer = $format_recit_renderer;
-
-        $completioninfo = new completion_info($this->course);
 
         $selectedSection = (isset($_COOKIE["course-{$COURSE->id}-cursection"]) ? $_COOKIE["course-{$COURSE->id}-cursection"] : '#menu');
         $selectedSectionNumber = (int)filter_var($selectedSection, FILTER_SANITIZE_NUMBER_INT);
@@ -289,10 +286,7 @@ class FormatRecit
     }
 
     protected function get_course_section_cm_list_editing($course, $section, $sectionreturn = null, $displayoptions = []) {
-        global $USER;
-
         $output = '';
-        $format = course_get_format($course);
         $modinfo = get_fast_modinfo($course);
         if (is_object($section)) {
             $section = $modinfo->get_section_info($section->section);
