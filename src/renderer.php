@@ -237,7 +237,7 @@ class FormatRecit
         $data->menu->sectionIdAlt = "menu";
         $data->menu->sectionIdAlt2 = 'menu';
         $data->menu->active = ($selectedSection == "#menu" ? 'active' : '');
-        $data->menu->addSectionUrl = "{$CFG->wwwroot}/course/changenumsections.php?courseid={$COURSE->id}&insertsection=0&sesskey=$sesskey&sectionreturn=0";
+        $data->menu->addSectionUrl = "{$CFG->wwwroot}/course/changenumsections.php?courseid={$COURSE->id}&insertsection=0&sesskey=$sesskey";
         $data->menu->content = '';        
 
         foreach ($this->sectionslist as $section) {
@@ -259,22 +259,22 @@ class FormatRecit
             $item->sectionIdAlt3 = $section->id;
             $item->active = ($selectedSectionNumber === $section->section ? 'active' : '');
             $item->active .= ($section->sectionlevel == 2 ? ' ml-3' : '');
-            $item->editingUrl = "{$CFG->wwwroot}/course/editsection.php?id=$section->id&sr";
+            $item->editingUrl = "{$CFG->wwwroot}/course/editsection.php?id=$section->id";
             if ($COURSE->marker == $section->section){
-                $item->markUrl = "{$CFG->wwwroot}/course/view.php?id=$COURSE->id&sesskey=$sesskey&marker=0&sr";
+                $item->markUrl = "{$CFG->wwwroot}/course/view.php?id=$COURSE->id&sesskey=$sesskey&marker=0";
                 $item->markLabel = get_string('highlightoff');
             }else{
                 $item->markLabel = get_string('highlight');
-                $item->markUrl = "{$CFG->wwwroot}/course/view.php?id=$COURSE->id&sesskey=$sesskey&marker={$section->section}&sr";
+                $item->markUrl = "{$CFG->wwwroot}/course/view.php?id=$COURSE->id&sesskey=$sesskey&marker={$section->section}";
             }
             if ($section->visible){
-                $item->hideUrl = "{$CFG->wwwroot}/course/view.php?id=$COURSE->id&sesskey=$sesskey&hide={$section->section}&sr";
+                $item->hideUrl = "{$CFG->wwwroot}/course/view.php?id=$COURSE->id&sesskey=$sesskey&hide={$section->section}";
                 $item->hideLabel = get_string('hide');
             }else{
-                $item->hideUrl = "{$CFG->wwwroot}/course/view.php?id=$COURSE->id&sesskey=$sesskey&show={$section->section}&sr";
+                $item->hideUrl = "{$CFG->wwwroot}/course/view.php?id=$COURSE->id&sesskey=$sesskey&show={$section->section}";
                 $item->hideLabel = get_string('show');
             }
-            $item->deleteUrl = "{$CFG->wwwroot}/course/editsection.php?id=$section->id&sr&delete=1";
+            $item->deleteUrl = "{$CFG->wwwroot}/course/editsection.php?id=$section->id&delete=1";
             $item->content = $format_recit_renderer->section_header($section, $this->course, false, 0, true, false);
             $item->content .= $format_recit_renderer->get_course_section_cm_list($this->course, $section);
             $item->content .= $format_recit_renderer->get_course_section_add_cm_control($this->course, $section->section);
@@ -667,7 +667,7 @@ class format_recit_renderer extends core_courseformat\output\section_renderer {
     public function section_title($section, $course) {
         global $CFG;
         $lastSection = $this->formatrecit->get_last_section();
-        $editSectionUrl = "{$CFG->wwwroot}/course/editsection.php?id={$section->id}&sr";
+        $editSectionUrl = "{$CFG->wwwroot}/course/editsection.php?id={$section->id}";
         $hideSectionUrl = "{$CFG->wwwroot}/course/view.php?id={$course->id}&".($section->visible == 1 ? 'hide' : 'show')."={$section->section}&sesskey=".sesskey();
         $moveSectionUrl = "{$CFG->wwwroot}/course/view.php?id={$course->id}&section={$section->section}&move=%s&sesskey=".sesskey();
         $upSectionUrl = sprintf($moveSectionUrl, '-1');
