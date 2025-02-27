@@ -639,11 +639,12 @@ M.recit.course.format.recit.NonEditingMode = class{
         event.preventDefault();
 
         let sectionId = event.target.hash || null;
+        let jQuery = M.recit.course.format.recit.jQuery;
 
         // collapse the menu5 if it is the case
-        if($){
+        if(jQuery){
             if(event.target.hasAttribute("data-target")){
-                $(event.target.getAttribute("data-target")).collapse("hide");
+                jQuery(event.target.getAttribute("data-target")).collapse("hide");
             }
         }
 
