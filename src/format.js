@@ -602,7 +602,8 @@ M.recit.course.format.recit.NonEditingMode = class{
         }
 
         // plugin Map Loader
-        this.loadMapLoaderPlugin(webApiResult);
+        this.loadMapLoaderPluginMoodle403Lower(webApiResult);
+        this.loadMapLoaderPluginMoodle405();
 
         // plugin filter_recitactivity
         if(M.recit && M.recit.filter && M.recit.filter.autolink){
@@ -613,7 +614,7 @@ M.recit.course.format.recit.NonEditingMode = class{
         M.recit.course.format.recit.jQuery('.carousel').carousel();
     }
 
-    loadMapLoaderPlugin(webApiResult){
+    loadMapLoaderPluginMoodle403Lower(webApiResult){
         let match = webApiResult.match(/maploader\(\{(?:\s|.)*?\}\)/);
 
         if(match){ 
@@ -633,6 +634,16 @@ M.recit.course.format.recit.NonEditingMode = class{
             }
             loader();
         }
+    }
+
+    loadMapLoaderPluginMoodle405(){
+        require(['mod_learningmap/renderer'], function(renderer) {
+            let elements = document.querySelectorAll(".learningmap");
+
+            for(let item of elements){
+                renderer.init(parseInt(item.dataset.id));
+            }
+        });
     }
 
     goToSection(event) {
