@@ -600,12 +600,19 @@ M.recit.course.format.recit.NonEditingMode = class{
 
     loadMapLoaderPluginMoodle405(){
         require(['mod_learningmap/renderer'], function(renderer) {
-            let elements = document.querySelectorAll(".learningmap");
+                let elements = document.querySelectorAll(".learningmap");
 
-            for(let item of elements){
-                renderer.init(parseInt(item.dataset.id));
+                for(let item of elements){
+                    renderer.init(parseInt(item.dataset.id));
+                }
+            },
+            function(err) {
+            // This errback executes if 'someModule' could not be loaded.
+            // 'err' object provides details about the loading failure.
+            console.log('Module Learning Map was not found.');
+            // Implement alternative logic or fallback behavior here.
             }
-        });
+        );
     }
 
     goToSection(event) {

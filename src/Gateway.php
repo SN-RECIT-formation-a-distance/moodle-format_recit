@@ -29,6 +29,7 @@ require_once($CFG->dirroot.'/course/lib.php');
 
 require_login();
 
+$PAGE->set_url('/Gateway.php');
 $webApi = new WebApi($DB);
 $webApi->readRequest();
 $webApi->processRequest();
