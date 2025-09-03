@@ -50,8 +50,8 @@
             </div>
 
             {{#sectionList}}
-                <div class="tab-pane fade show {{active}} p-2 " id="{{sectionIdAlt}}" role="tabpanel" aria-labelledby="{{sectionIdAlt}}-tab">
-                    <h2>{{desc}}</h2>
+                <div class="tab-pane fade show {{active}} p-2 " id="{{sectionIdAlt}}" role="tabpanel" aria-labelledby="{{sectionIdAlt}}-tab" data-for="section" data-id="{{sectionIdAlt3}}">
+                    <h2 data-for="section_title">{{desc}}</h2>
                     <div class='btn-group pull-right'><div class="section_action_menu" data-sectionid="{{sectionIdAlt2}}">
                         <div class="action-menu moodle-actionmenu section-actions d-inline" id="action-menu-{{sectionIdAlt2}}" data-enhance="moodle-core-actionmenu">
                             <div class="menubar d-flex " id="action-menu-{{sectionIdAlt2}}-menubar" role="menubar">
