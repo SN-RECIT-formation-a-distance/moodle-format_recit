@@ -42,6 +42,10 @@ if ($topic = optional_param('topic', 0, PARAM_INT)) {
     redirect($url);
 }
 // End backwards-compatible aliasing..
+if ($displaysection) {
+    // redirect section.php to main view page with anchor or params
+    redirect(new moodle_url('/course/view.php', ['id'=> $course->id], 'section-'.$displaysection));
+}
 
 $context = context_course::instance($course->id);
 // Retrieve course format option fields and add them to the $course object.
