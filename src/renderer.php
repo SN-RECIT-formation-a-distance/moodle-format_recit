@@ -70,7 +70,6 @@ class FormatRecit
 
         $this->modinfo = get_fast_modinfo($course);
         $this->sectionslist = $this->modinfo->get_section_info_all();
-        $this->lazyLoading = ($course->ttloadingtype == 1);
     }
 
     /**
@@ -79,16 +78,18 @@ class FormatRecit
      * @return string
      */
     public function render() {
-        $html = "<div id='sectioncontent_placeholder' data-lazyloading='".($this->lazyLoading ? 1 : 0)."'></div>";
-        if ($this->lazyLoading){
-            $html .= $this->getHtmlLoading();
-        }else{
-            foreach ($this->sectionslist as $item) {
-                if( !$item->visible ){ continue; }
-    
-                $id = $this->get_section_id($item);
+        $html = '';
+        $cursection = $_COOKIE['course-'.$this->course->id.'-cursection'] ?? 0; 
+        foreach ($this->sectionslist as $item) {
+            if( !$item->visible ){ continue; }
+
+            $id = $this->get_section_id($item);
+            if ($id == $cursection || $item->id == $cursection){
                 $html .= $this->render_section_content($id);
             }
+        }
+        if (empty($html)){
+            $html .= $this->render_section_content('#section-0');//Render section 0 if nothing was found 
         }
 
         echo $html;
@@ -150,7 +151,7 @@ class FormatRecit
             $sectionsummary = format_text($sectionsummary,  $section->summaryformat, array('noclean' => true, 'overflowdiv' => true, 'filter' => true));
             $CFG->forceclean = $bkpForceclean;
         }
-        $html = "<div class='section main clearfix tt-section $sectionstyle' ".($this->lazyLoading ? '' : 'style="display:none"')." data-section='$sectionid' role='region' aria-label='$sectionname'>";
+        $html = "<div class='section main clearfix tt-section $sectionstyle' data-section='$sectionid' role='region' aria-label='$sectionname'>";
  
         if($section->ttsectiontitle == 1){
             $html .= "<h2>$sectionname</h2>";
@@ -232,11 +233,10 @@ class FormatRecit
         $sesskey = sesskey();
 
         $data->menu = new stdClass();
-        $data->menu->desc = "Configurer le menu et les activités";
         $data->menu->sectionId = "#menu";
         $data->menu->sectionIdAlt = "menu";
         $data->menu->sectionIdAlt2 = 'menu';
-        $data->menu->active = ($selectedSection == "#menu" ? 'active' : '');
+        $data->menu->active = 'active';//($selectedSection == "#menu" ? 'active' : '');
         $data->menu->addSectionUrl = "{$CFG->wwwroot}/course/changenumsections.php?courseid={$COURSE->id}&insertsection=0&sesskey=$sesskey";
         $data->menu->content = '';        
 
@@ -250,36 +250,6 @@ class FormatRecit
             $data->menu->content .= sprintf($massaction, $section->section, $section->section, $section->section, $section->section);
             $data->menu->content .= html_writer::end_tag('div');
             $data->menu->content .= $format_recit_renderer->section_footer();
-
-            $item = new stdClass();
-            $item->desc =  $this->get_section_name($section);
-            $item->sectionId = $sectionId;
-            $item->sectionIdAlt = "isection-{$section->section}";
-            $item->sectionIdAlt2 = $section->section;
-            $item->sectionIdAlt3 = $section->id;
-            $item->active = ($selectedSectionNumber === $section->section ? 'active' : '');
-            $item->active .= ($section->sectionlevel == 2 ? ' ml-3' : '');
-            $item->editingUrl = "{$CFG->wwwroot}/course/editsection.php?id=$section->id";
-            if ($COURSE->marker == $section->section){
-                $item->markUrl = "{$CFG->wwwroot}/course/view.php?id=$COURSE->id&sesskey=$sesskey&marker=0";
-                $item->markLabel = get_string('highlightoff');
-            }else{
-                $item->markLabel = get_string('highlight');
-                $item->markUrl = "{$CFG->wwwroot}/course/view.php?id=$COURSE->id&sesskey=$sesskey&marker={$section->section}";
-            }
-            if ($section->visible){
-                $item->hideUrl = "{$CFG->wwwroot}/course/view.php?id=$COURSE->id&sesskey=$sesskey&hide={$section->section}";
-                $item->hideLabel = get_string('hide');
-            }else{
-                $item->hideUrl = "{$CFG->wwwroot}/course/view.php?id=$COURSE->id&sesskey=$sesskey&show={$section->section}";
-                $item->hideLabel = get_string('show');
-            }
-            $item->deleteUrl = "{$CFG->wwwroot}/course/editsection.php?id=$section->id&delete=1";
-            $item->content = $format_recit_renderer->section_header($section, $this->course, false, 0, true, false);
-            $item->content .= $format_recit_renderer->get_course_section_cm_list($this->course, $section);
-            $item->content .= $format_recit_renderer->get_course_section_add_cm_control($this->course, $section->section);
-            $item->content .= $format_recit_renderer->section_footer();
-            $data->sectionList[] = $item;
         }
         
         return $OUTPUT->render_from_template('format_recit/editing_mode', $data);
@@ -412,15 +382,6 @@ class FormatRecit
         return $this->render_from_template('core/availability_info', $data);
     }
 
-
-    protected function getHtmlLoading(){
-        $html = "
-        <div id='tt-loading' class='fa-5x' style='display: none; position: fixed; z-index: 9999; top: 50%; left: 50%; transform: translate(50%, 50%);'>
-            <i class='fa fa-spinner fa-spin'></i>
-        </div>";
-
-        return $html;
-    }
 }
 
 /**
@@ -493,7 +454,7 @@ class format_recit_renderer extends core_courseformat\output\section_renderer {
     protected function page_title() {
         return get_string('sectionoutline');
     }
-
+    
     /**
      * Function get course section cm list of format_recit_renderer class.
      * @param stdClass $course
@@ -515,7 +476,6 @@ class format_recit_renderer extends core_courseformat\output\section_renderer {
     public function get_course_section_add_cm_control($course, $isection) {
         return $this->course_section_add_cm_control($course, $isection, 0); 
     }
-    
     /**
      * OVERRIDE
      * Generate the display of the header part of a section before
@@ -667,6 +627,7 @@ class format_recit_renderer extends core_courseformat\output\section_renderer {
     public function section_title($section, $course) {
         global $CFG;
         $lastSection = $this->formatrecit->get_last_section();
+        $sectionUrl = "{$CFG->wwwroot}/course/section.php?id={$section->id}";
         $editSectionUrl = "{$CFG->wwwroot}/course/editsection.php?id={$section->id}";
         $hideSectionUrl = "{$CFG->wwwroot}/course/view.php?id={$course->id}&".($section->visible == 1 ? 'hide' : 'show')."={$section->section}&sesskey=".sesskey();
         $moveSectionUrl = "{$CFG->wwwroot}/course/view.php?id={$course->id}&section={$section->section}&move=%s&sesskey=".sesskey();
@@ -705,7 +666,7 @@ class format_recit_renderer extends core_courseformat\output\section_renderer {
             "");
         }
 
-        $goToSection = " <a class='btn btn-primary' data-toggle='pill' title='Accéder à la section' role='tab' aria-controls='isection-".$section->section."' href='#isection-".$section->section."' onclick=\"M.recit.course.format.recit.EditingMode.instance.goToSection(event, true)\"><i class='fa fa-sign-in'></i> Accéder à la section</a>";
+        $goToSection = " <a class='btn btn-primary' data-toggle='pill' title='Accéder à la section' role='tab' href='".$sectionUrl."'><i class='fa fa-sign-in'></i> Accéder à la section</a>";
 
         $html = sprintf("%s<div class='float-sm-right m-2'>%s</div><div class='m-2 d-flex align-items-center flex-wrap'>%s%s</div>", $sectionname, $goToSection, $sectionactions, $level);
 

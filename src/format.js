@@ -389,7 +389,6 @@ M.recit.course.format.recit.EditingMode = class{
 
     goToSection(event, isMenu){
         if (event.target.hash){
-            M.recit.theme.recit2.Utils.setCookieCurSection(event.target.hash);
             document.location.hash = event.target.hash;
         }
 
@@ -481,169 +480,11 @@ M.recit.course.format.recit.EditingMode = class{
 
 M.recit.course.format.recit.NonEditingMode = class{
     constructor(){
-        this.getSectionContentResult = this.getSectionContentResult.bind(this);
-        this.goToSection = this.goToSection.bind(this);
         this.webApi = new M.recit.course.format.recit.WebApi();
         this.sectionContent = null;
 
-        this.init();
     } 
     
-    init(){
-        this.sectionContent = document.getElementById("sectioncontent_placeholder");
-        if (!this.sectionContent) return;
-
-        this.lazyLoading = (this.sectionContent.getAttribute('data-lazyloading') === '1');
-        
-        if(M.recit.theme && M.recit.theme.recit2){
-            M.recit.theme.recit2.Ctrl.instance.sectionsNav.addOnSectionNavListener(this.goToSection);
-        }
-        else{
-            let msg = "The Recit course format should only be used with theme Recit 2.";
-            alert(msg);
-            throw new Error(msg);
-        }
-        
-        this.initMoodleFixes();
-
-        if (this.lazyLoading){
-            this.hideSections(true);
-        }
-    }
-
-    initMoodleFixes(){
-        require(['core_course/manual_completion_toggle'], toggle => {
-            toggle.init()
-        });
-    }
-
-    hideSections(showFirst){ //@boolean showFirst: Whether to show the selected section or not
-        var els = document.querySelectorAll('div.section[data-section]');
-        
-        for (var el of els){
-            el.style.display = 'none';
-        }
-        if (showFirst){
-            var el = document.querySelector('#menu-sections li[data-selected="1"] a');
-            var sectionId = (el ? el.hash : '');
-
-            var section = document.querySelector('[data-section="'+sectionId+'"]');
-            if (section){
-                section.style.display = 'block';
-            }else if(els[0]){
-                els[0].style.display = 'block';
-            }
-        }
-    }
-
-    getSectionContentResult(result){
-        if(!result.success){
-            alert(M.recit.course.format.recit.messages.error);
-            return;
-        }
-        if(result.data === null){
-            return;
-        }        
-
-        let doc = new DOMParser().parseFromString(result.data, "text/html");
-        
-        while (this.sectionContent.lastElementChild) {
-            this.sectionContent.removeChild(this.sectionContent.lastElementChild);
-        }
-        
-        window.scrollTo(0,0); 
-        this.sectionContent.appendChild(doc.body.firstChild);
-
-        this.postProcessingFilters(result.data);
-    }
-
-    postProcessingFilters(webApiResult){
-        // plugin mathjax
-        if(M.filter_mathjaxloader){
-            M.filter_mathjaxloader.typeset();
-        }
-
-        // plugin Map Loader
-        this.loadMapLoaderPluginMoodle403Lower(webApiResult);
-        this.loadMapLoaderPluginMoodle405();
-
-        // plugin filter_recitactivity
-        if(M.recit && M.recit.filter && M.recit.filter.autolink){
-            M.recit.filter.autolink.loadLazyOptions();
-        }
-
-        // Bootstrap components
-        M.recit.course.format.recit.jQuery('.carousel').carousel();
-    }
-
-    loadMapLoaderPluginMoodle403Lower(webApiResult){
-        let match = webApiResult.match(/maploader\(\{(?:\s|.)*?\}\)/);
-
-        if(match){ 
-            let script = document.createElement("script");
-            script.src = `${M.cfg.wwwroot}/mod/mapmodules/js/maploader.js`;
-            window.document.head.appendChild(script);
-            
-            let loader = function(){
-                if(typeof maploader === "undefined"){
-                    setTimeout(loader, 500)
-                    return;
-                }
-
-                let mapLoaderCode = match.pop();
-                let f = new Function(mapLoaderCode);
-                f();
-            }
-            loader();
-        }
-    }
-
-    loadMapLoaderPluginMoodle405(){
-        require(['mod_learningmap/renderer'], function(renderer) {
-                let elements = document.querySelectorAll(".learningmap");
-
-                for(let item of elements){
-                    renderer.init(parseInt(item.dataset.id));
-                }
-            },
-            function(err) {
-            // This errback executes if 'someModule' could not be loaded.
-            // 'err' object provides details about the loading failure.
-            console.log('Module Learning Map was not found.');
-            // Implement alternative logic or fallback behavior here.
-            }
-        );
-    }
-
-    goToSection(event) {
-        event.preventDefault();
-
-        let sectionId = event.target.hash || null;
-        let jQuery = M.recit.course.format.recit.jQuery;
-
-        // collapse the menu5 if it is the case
-        if(jQuery){
-            if(event.target.hasAttribute("data-target")){
-                jQuery(event.target.getAttribute("data-target")).collapse("hide");
-            }
-        }
-
-        if(sectionId === null){ return; }
-
-        if (this.lazyLoading){
-            let params = M.recit.theme.recit2.Utils.getUrlVars();
-            if(this.sectionContent !== null){
-                this.webApi.getSectionContent({sectionid: sectionId, courseid: params.id}, this.getSectionContentResult);
-            }
-        }else{
-            var section = document.querySelector('[data-section="'+sectionId+'"]');
-            if (section){
-                this.hideSections();
-                section.style.display = 'block';
-                window.scrollTo(0,0);
-            }
-        }
-    }
 }
 
 // Definition static attributes and methods to work with Firefox.

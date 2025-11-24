@@ -200,10 +200,6 @@ class format_recit extends core_courseformat\base {
         static $courseformatoptions = false;
         if ($courseformatoptions === false) {
             $courseformatoptions = array(
-                'ttloadingtype' => array(
-                    'default' => 1,
-                    'type' => PARAM_INT,
-                ),
                 'hiddensections' => [
                     'default' => 1,
                     'type' => PARAM_INT,
@@ -212,18 +208,6 @@ class format_recit extends core_courseformat\base {
         }
         if ($foreditform && !isset($courseformatoptions['ttsectiondisplay']['label'])) {
             $courseformatoptionsedit = array(
-                'ttloadingtype' => array(
-                    'label' => new lang_string('loadingtype', 'format_recit'),
-                    'help' => 'loadingtype',
-                    'help_component' => 'format_recit',
-                    'element_type' => 'select',
-                    'element_attributes' => array(
-                        array(
-                            1 => new lang_string('lazyloading', 'format_recit'),
-                            2 => new lang_string('staticloading', 'format_recit'),
-                        )
-                    )
-                ),
                 'hiddensections' => [
                     'label' => new lang_string('hiddensections'),
                     'help' => 'hiddensections',
@@ -627,7 +611,7 @@ class format_recit extends core_courseformat\base {
      * @return bool if the format is compatible with components.
      */
     public function supports_components() {
-        return false;
+        return true;
     }
 }
 

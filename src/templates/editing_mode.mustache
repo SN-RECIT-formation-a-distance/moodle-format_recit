@@ -17,28 +17,13 @@
 
 <div class="row">
     <div class="btn-toolbar bg-light p-2 w-100" role="toolbar" style='justify-content: space-between;'>
-        <div class="btn-group mr-2 col-sm-2 btn-sm" role="group">
-            <button class="btn btn-outline-primary mr-2" type="button" data-toggle="collapse" data-target="#navTabs" aria-expanded="false" aria-controls="navTabs"><i class="fa fa-bars"></i> Liste de sections</button>
-        </div>
         <div class="btn-group btn-sm" role="group">
-            <a class='btn btn-primary mr-2' data-toggle='pill' href='{{menu.sectionId}}' role='tab' onclick="M.recit.course.format.recit.EditingMode.instance.goToSection(event, true);" aria-controls='{{menu.sectionIdAlt}}'><i class='fa fa-tasks'></i>  {{menu.desc}}</a>
             <a href='{{menu.addSectionUrl}}' data-add-sections="{{#str}}addsections,format_recit{{/str}}" data-new-sections="90" data-action="addSection"  class='btn btn-primary ' title='{{#str}}addsections,format_recit{{/str}}'><i class='fa fa-plus'></i> {{#str}}addsections,format_recit{{/str}}</a>
         </div>
     </div>
 </div>
-<div class="row reciteditingmenu">
-    <div class="col-lg-2 collapse p-0" id="navTabs">
-        <div class="nav-inner bg-light">
-            <a class="mx-3 my-1" type="button" data-toggle="collapse" data-target="#navTabs" aria-expanded="false" aria-controls="navTabs"><i class="fa fa-times"></i></a>
-            <div class="nav nav-pills bg-light flex-column" role="tablist" aria-orientation="vertical">
-
-                {{#sectionList}}
-                    <a class='nav-item nav-link {{active}}' data-toggle='pill' href='#{{sectionIdAlt}}' role='tab' onclick="M.recit.course.format.recit.EditingMode.instance.goToSection(event)" aria-controls='{{sectionIdAlt}}'>{{desc}}</a>
-                {{/sectionList}}
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-10">
+<div class="row reciteditingmenu">  
+    <div class="col-12">
         <div class="tab-content recitformatmenu">
            
             <div class="tab-pane fade show {{menu.active}} p-2 editing-mode-menu" id="{{menu.sectionIdAlt}}" role="tabpanel" aria-labelledby="{{menu.sectionIdAlt}}-tab">
@@ -49,57 +34,6 @@
                 {{{menu.content}}}
             </div>
 
-            {{#sectionList}}
-                <div class="tab-pane fade show {{active}} p-2 " id="{{sectionIdAlt}}" role="tabpanel" aria-labelledby="{{sectionIdAlt}}-tab" data-for="section" data-id="{{sectionIdAlt3}}">
-                    <h2 data-for="section_title">{{desc}}</h2>
-                    <div class='btn-group pull-right'><div class="section_action_menu" data-sectionid="{{sectionIdAlt2}}">
-                        <div class="action-menu moodle-actionmenu section-actions d-inline" id="action-menu-{{sectionIdAlt2}}" data-enhance="moodle-core-actionmenu">
-                            <div class="menubar d-flex " id="action-menu-{{sectionIdAlt2}}-menubar" role="menubar">
-                                <div class="action-menu-trigger">
-                                    <div class="dropdown">
-                                    <a href="#" tabindex="0" class=" dropdown-toggle btn btn-primary" id="dropdown-{{sectionIdAlt2}}" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true" aria-controls="action-menu-{{sectionIdAlt2}}-menu">
-                                    <i class='fa fa-fw fa-sliders'></i> <b class="caret"></b>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right menu align-tr-br" id="action-menu-{{sectionIdAlt2}}-menu" data-rel="menu-content" aria-labelledby="action-menu-toggle-{{sectionIdAlt2}}" role="menu" data-align="tr-br" style="max-height: 500px; overflow-y: auto; will-change: transform;" x-placement="bottom-end">
-                                        <a href="{{{editingUrl}}}" class="dropdown-item edit menu-action" role="menuitem" aria-labelledby="actionmenuaction-15{{sectionIdAlt2}}">
-                                        <i class="icon fa fa-cog fa-fw " aria-hidden="true"></i>
-                                        <span class="menu-action-text" id="actionmenuaction-15{{sectionIdAlt2}}">
-                                        {{#str}}editsection,format_recit{{/str}}
-                                        </span>
-                                        </a>
-                                        <a href="{{{markUrl}}}" class="dropdown-item editing_highlight menu-action" data-action="setmarker" role="menuitem" aria-labelledby="actionmenuaction-16{{sectionIdAlt2}}">
-                                        <i class="icon fa fa-circle-o fa-fw " aria-hidden="true"></i>
-                                        <span class="menu-action-text" id="actionmenuaction-16{{sectionIdAlt2}}">
-                                        {{markLabel}}
-                                        </span>
-                                        </a>
-                                        <a href="{{{hideUrl}}}" class="dropdown-item editing_showhide menu-action" data-sectionreturn="{{sectionIdAlt2}}" data-action="hide" role="menuitem" aria-labelledby="actionmenuaction-17{{sectionIdAlt2}}">
-                                        <i class="icon fa fa-eye fa-fw " aria-hidden="true"></i>
-                                        <span class="menu-action-text" id="actionmenuaction-17{{sectionIdAlt2}}">
-                                        {{hideLabel}}
-                                        </span>
-                                        </a>
-                                        <a href="{{{deleteUrl}}}" class="dropdown-item editing_delete menu-action" role="menuitem" aria-labelledby="actionmenuaction-20{{sectionIdAlt2}}">
-                                        <i class="icon fa fa-trash fa-fw " aria-hidden="true"></i>
-                                        <span class="menu-action-text" id="actionmenuaction-20{{sectionIdAlt2}}">
-                                        {{#str}}delete{{/str}}
-                                        </span>
-                                        </a>
-                                    </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                        <button class='section-modchooser-link btn btn-primary ml-2' data-action='open-chooser' 
-                                data-sectionid='{{sectionIdAlt2}}' data-sectionreturnid='{{sectionIdAlt2}}' title='{{#str}}addresourceoractivity{{/str}}'>
-                            <i class='fa fa-plus'></i>
-                        </button>
-                    </div>
-                    <br/><br/>
-                    {{{content}}}
-                </div>
-            {{/sectionList}}
         </div>
     </div>
 </div>

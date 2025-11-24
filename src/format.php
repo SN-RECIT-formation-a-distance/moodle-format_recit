@@ -61,5 +61,3 @@ $renderer->render_format_recit($course);
 
 // Include course format js module.
 $PAGE->requires->js('/course/format/recit/format.js');
-//$PAGE->requires->js('/h5p/h5plib/v127/joubel/core/js/h5p-resizer.js');
-$PAGE->requires->js(autoloader::get_h5p_core_library_url('js/h5p-resizer.js'));
