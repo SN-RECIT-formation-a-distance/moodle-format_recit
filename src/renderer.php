@@ -183,7 +183,10 @@ class FormatRecit
      * @return string
      */
     public function get_section_name($section) {
-        return (empty($section->name) ? get_string('section') . '' . $section->section : $section->name);
+        $format = course_get_format($section->course);
+        $sectioninfo = $format->get_section($section);
+        
+        return $sectionname = $format->get_section_name($sectioninfo);
     }
 
     public function get_last_section(){
@@ -666,7 +669,7 @@ class format_recit_renderer extends core_courseformat\output\section_renderer {
             "");
         }
 
-        $goToSection = " <a class='btn btn-primary' data-toggle='pill' title='Accéder à la section' role='tab' href='".$sectionUrl."'><i class='fa fa-sign-in'></i> Accéder à la section</a>";
+        $goToSection = " <a class='btn btn-primary' title='Accéder à la section' role='tab' href='".$sectionUrl."'><i class='fa fa-sign-in'></i> Accéder à la section</a>";
 
         $html = sprintf("%s<div class='float-sm-right m-2'>%s</div><div class='m-2 d-flex align-items-center flex-wrap'>%s%s</div>", $sectionname, $goToSection, $sectionactions, $level);
 
