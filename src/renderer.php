@@ -208,15 +208,15 @@ class FormatRecit
         $massaction .= "<div class='d-flex'>";
 
         $massaction .= "<div class='d-flex' style='align-items: center;'>";
-        $massaction .= "<a href='#' class='recitformat_massdelete btn btn-danger btn-sm ' data-section='%s'><i class='fa fa-trash'></i> Supprimer</a>";
-        $massaction .= "<a href='#' class='recitformat_massshow btn btn-primary btn-sm ml-2' data-section='%s'><i class='fa fa-eye'></i> Afficher</a>";
-        $massaction .= "<a href='#' class='recitformat_masshide btn btn-primary btn-sm ml-2' data-section='%s'><i class='fa fa-eye-slash'></i> Cacher</a>";
+        $massaction .= "<a href='#' class='recitformat_massdelete btn btn-danger btn-sm ' data-section='##DATA_SECTION##'><i class='fa fa-trash'></i> Supprimer</a>";
+        $massaction .= "<a href='#' class='recitformat_massshow btn btn-primary btn-sm ml-2' data-section='##DATA_SECTION##'><i class='fa fa-eye'></i> Afficher</a>";
+        $massaction .= "<a href='#' class='recitformat_masshide btn btn-primary btn-sm ml-2' data-section='##DATA_SECTION##'><i class='fa fa-eye-slash'></i> Cacher</a>";
         $massaction .= "</div>";
 
         $massaction .= "<div class='ml-5 mr-5' style='border-left: 1px solid #efefef;'></div>";
 
         $massaction .= "<div class=''>";
-        $massaction .= "<select class='recitformat_massmove custom-select w-100' data-section='%s'>";
+        $massaction .= "<select class='recitformat_massmove custom-select w-100' data-section='##DATA_SECTION##'>";
         
         $massaction .= "<option value='' disabled selected>".get_string('movecm', 'format_recit')."</option>";
         foreach ($this->sectionslist as $section) {
@@ -250,7 +250,7 @@ class FormatRecit
             $data->menu->content .= html_writer::start_tag('div', array('class' => 'collapse show bg-light pt-2', 'id' => 'collapse-section-'.$section->section));
             $data->menu->content .= sprintf("<div class='section_add_menus' id='add_menus-%s'></div>", $sectionId);
             $data->menu->content .= "<div data-course-section-cm-list='1'>". $this->get_course_section_cm_list_editing($this->course, $section)."</div>";
-            $data->menu->content .= sprintf($massaction, $section->section, $section->section, $section->section, $section->section);
+            $data->menu->content .= str_replace('##DATA_SECTION##', $section->section, $massaction);
             $data->menu->content .= html_writer::end_tag('div');
             $data->menu->content .= $format_recit_renderer->section_footer();
         }
