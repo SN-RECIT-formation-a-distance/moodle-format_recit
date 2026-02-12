@@ -135,6 +135,7 @@ class FormatRecit
         }
 
         $content = "";
+
         if ($section->ttsectionshowactivities == 1) {
             $content = $this->moodlerenderer->get_course_section_cm_list($this->course, $section);
         }
@@ -186,7 +187,7 @@ class FormatRecit
         $format = course_get_format($section->course);
         $sectioninfo = $format->get_section($section);
         
-        return $sectionname = $format->get_section_name($sectioninfo);
+        return $format->get_section_name($sectioninfo);
     }
 
     public function get_last_section(){
@@ -494,7 +495,6 @@ class format_recit_renderer extends core_courseformat\output\section_renderer {
     public function section_header($section, $course, $onsectionpage, $sectionreturn=null, $showsectionsummary=true, $showsectiondetails = true, $onmenupage = false) {
 
         $o = '';
-        $currenttext = '';
         $sectionstyle = '';
 
         if ($section->section != 0) {
@@ -537,7 +537,7 @@ class format_recit_renderer extends core_courseformat\output\section_renderer {
         if ($hasnamenotsecpg || $hasnamesecpg) {
             $classes = '';
         }
-        $sectionname = html_writer::tag('span', $this->section_title($section, $course), array('class' => $display . $classes));
+        $sectionname = html_writer::tag('div', $this->section_title($section, $course), array('class' => $display . $classes . "p-2"));
         $o .= $sectionname;
 
         $o .= $this->section_availability($section);
@@ -638,22 +638,23 @@ class format_recit_renderer extends core_courseformat\output\section_renderer {
         $downSectionUrl = sprintf($moveSectionUrl, '1');
         $sectionname = '';
         $sectionactions = '';
-        if ($section->section > 0){
-            //$sectionname .= '<span class="section-handle moodle-core-dragdrop-draghandle" title="Déplacer '.$this->formatrecit->get_section_name($section).'" tabindex="0" data-draggroups="sectiondraggable" role="button">          <i class="icon fa fa-arrows fa-fw " aria-hidden="true" style="cursor: move;"></i>            </span>';
-        }
-        $sectionname .= "<a class='accordion-toggle h3' data-toggle=\"collapse\" data-target=\"#collapse-section-".$section->section."\" href='#section-".$section->section."'> ".$this->formatrecit->get_section_name($section)."</a>";
+       
+        $sectionname .= "<span class='accordion-toggle mr-3' data-toggle=\"collapse\" data-target=\"#collapse-section-".$section->section."\" href='#section-".$section->section."'></span>";
+        
+        $sectionname .= "<a class='h3' href='$editSectionUrl'>". $this->formatrecit->get_section_name($section) ."</a>";
+
         if ($section->section > 0){
             $sectionactions .= $this->get_move_section_select($section, $moveSectionUrl);
         }
 
-        $sectionactions .= " <a href='$hideSectionUrl' title='Cacher/montrer la section' class='ml-2'><i class='fa ".($section->visible == 1 ? 'fa-eye' : 'fa-eye-slash')."'></i></a>";
+        $sectionactions .= " <a href='$hideSectionUrl' title='Cacher/montrer la section' class='ml-5'><i class='fa fa-lg ".($section->visible == 1 ? 'fa-eye' : 'fa-eye-slash')."'></i></a>";
         if ($section->section > 1){
-            $sectionactions .= " <a href='$upSectionUrl' title='Monter la section' class='ml-2'><i class='fa fa-arrow-up'></i></a>";
+            $sectionactions .= " <a href='$upSectionUrl' title='Monter la section' class='ml-3'><i class='fa fa-arrow-up fa-lg'></i></a>";
         }
         if ($section->section > 0 && $section->section != $lastSection->section){
-            $sectionactions .= " <a href='$downSectionUrl' title='Descendre la section' class='ml-2'><i class='fa fa-arrow-down'></i></a>";
+            $sectionactions .= " <a href='$downSectionUrl' title='Descendre la section' class='ml-3'><i class='fa fa-arrow-down fa-lg'></i></a>";
         }
-        $sectionactions .= " <a href='#' title='Supprimer la section' class='ml-2' onclick=\"M.recit.course.format.recit.EditingMode.instance.deleteSection(".$section->section.")\"><i class='fa fa-trash'></i></a>";
+        $sectionactions .= " <a href='#' title='Supprimer la section' class='ml-3' onclick=\"M.recit.course.format.recit.EditingMode.instance.deleteSection(".$section->section.")\"><i class='fa fa-trash fa-lg'></i></a>";
 
         $level = "";
 
@@ -661,17 +662,15 @@ class format_recit_renderer extends core_courseformat\output\section_renderer {
 
         $level = "";
         if ($section->section > 0) {
-            $level = sprintf('<form class="d-flex m-3">%s%s%s</form>',
+            $level = sprintf('<form class="d-flex ml-5 ">%s%s%s</form>',
             sprintf($radiosectionlevel, $section->section, "1",
                     ($section->sectionlevel == 1 ? "checked" : ""), get_string('displaytabslev1', 'format_recit')),
             sprintf($radiosectionlevel, $section->section, "2",
                     ($section->sectionlevel == 2 ? "checked" : ""), get_string('displaytabslev2', 'format_recit')),
             "");
-        }
+        }        
 
-        $goToSection = " <a class='btn btn-primary' title='Accéder à la section' role='tab' href='".$sectionUrl."'><i class='fa fa-sign-in'></i> Accéder à la section</a>";
-
-        $html = sprintf("%s<div class='float-sm-right m-2'>%s</div><div class='m-2 d-flex align-items-center flex-wrap'>%s%s</div>", $sectionname, $goToSection, $sectionactions, $level);
+        $html = sprintf("%s<span class='ml-5 d-inline-flex align-items-center flex-wrap'>%s%s</span>", $sectionname, $sectionactions, $level);
 
         return $html;
     }
