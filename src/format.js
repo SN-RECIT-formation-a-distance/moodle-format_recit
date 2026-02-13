@@ -158,13 +158,6 @@ M.recit.course.format.recit.WebApi = class{
         this.post(this.gateway, options, onSuccess);
     }
 
-    getSectionContent(data, onSuccess){
-        let options = {};
-        options.data = data;
-        options.service = "get_section_content";
-        this.post(this.gateway, options, onSuccess);
-    }
-
     moveModulesToSection(data, onSuccess){
         let options = {};
         options.data = data;
@@ -385,73 +378,6 @@ M.recit.course.format.recit.EditingMode = class{
         }
         let courseId = this.getQueryVariable("id");
         this.webApi.deleteSection({courseId: courseId, sectionId: section}, callback);
-    }
-
-    goToSection(event, isMenu){
-        if (event.target.hash){
-            document.location.hash = event.target.hash;
-        }
-
-        
-        if (isMenu){
-            setTimeout(() => event.target.classList.remove('active'), 300);
-            let el = document.querySelector('.nav-link.active');
-            if (el){
-                el.classList.remove('active');
-            }
-            let navlink = document.querySelector('.nav-link[aria-controls="'+event.target.getAttribute('aria-controls')+'"]');
-            if (navlink){
-                navlink.classList.add('active');
-            }
-        }
-    }
-
-    onBtnShowHideHiddenActivities(event){
-        let btn = event.currentTarget;
-        let icon = btn.querySelector("i");
-        let display = 'block';
-
-        if(icon.classList.contains("fa-eye")){
-            icon.classList.remove("fa-eye");
-            icon.classList.add("fa-eye-slash");
-            display = 'none';
-        }
-        else{
-            icon.classList.remove("fa-eye-slash");
-            icon.classList.add("fa-eye");
-            display = 'block';
-        }
-
-        let elems = document.querySelectorAll("li .activity")
-        for(let el of elems){
-            let ret = el.querySelectorAll("div .availabilityinfo.ishidden");
-
-            if(ret.length > 0){
-                el.style.display = display;
-            }
-        }
-    }
-
-    onBtnShowHideCmList(event){
-        let btn = event.currentTarget;
-        let icon = btn.querySelector("i");
-        let display = 'block';
-
-        if(icon.classList.contains("fa-eye")){
-            icon.classList.remove("fa-eye");
-            icon.classList.add("fa-eye-slash");
-            display = 'none';
-        }
-        else{
-            icon.classList.remove("fa-eye-slash");
-            icon.classList.add("fa-eye");
-            display = 'block';
-        }
-
-        let elems = document.querySelectorAll("[data-course-section-cm-list='1']");
-        for(let el of elems){
-            el.style.display = display;
-        }
     }
 
     expandAccordion(btn){

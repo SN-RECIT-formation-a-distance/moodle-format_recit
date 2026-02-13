@@ -15,21 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Treetopics lib file.
- *
  * @package    format_recit
  * @copyright  RECITFAD
  * @author     RECITFAD
  * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
  */
-
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot. '/course/format/lib.php');
 require_once($CFG->dirroot. '/course/editsection_form.php');
 require_once(dirname(__FILE__).'/classes/sectionform.php');
 
 /**
- * Main class for the Topics course format
  *
  * @package    format_recit
  * @copyright  2012 Marina Glancy
@@ -74,6 +70,7 @@ class format_recit extends core_courseformat\base {
      */
     public function get_section_name($section) {
         $section = $this->get_section($section);
+        
         if ((string)$section->name !== '') {
             return format_string($section->name, true,
                     array('context' => context_course::instance($this->courseid)));
@@ -81,7 +78,7 @@ class format_recit extends core_courseformat\base {
             return $this->get_default_section_name($section);
         }
     }
-
+  
     /**
      * Returns the default section name for the topics course format.
      *

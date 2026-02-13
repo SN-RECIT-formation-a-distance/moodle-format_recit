@@ -25,8 +25,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-use core_h5p\local\library\autoloader;
-
 require_once($CFG->libdir.'/filelib.php');
 require_once($CFG->libdir.'/completionlib.php');
 
@@ -57,7 +55,7 @@ course_create_sections_if_missing($course, 0);
 
 $renderer = $PAGE->get_renderer('format_recit');
 
-$renderer->render_format_recit($course);
+$renderer->render();
 
 // Include course format js module.
 $PAGE->requires->js('/course/format/recit/format.js');
