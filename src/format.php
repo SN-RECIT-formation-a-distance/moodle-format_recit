@@ -28,7 +28,6 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir.'/filelib.php');
 require_once($CFG->libdir.'/completionlib.php');
 
-$PAGE->requires->js_call_amd('format_recit/core', 'init');
 $PAGE->requires->string_for_js('showhidehiddenactivities', 'format_recit');
 $PAGE->requires->string_for_js('sectionshowhideactivities', 'format_recit');
 
@@ -54,7 +53,6 @@ if (($marker >= 0) && has_capability('moodle/course:setcurrentsection', $context
 course_create_sections_if_missing($course, 0);
 
 $renderer = $PAGE->get_renderer('format_recit');
-
 $renderer->render();
 
 // Include course format js module.

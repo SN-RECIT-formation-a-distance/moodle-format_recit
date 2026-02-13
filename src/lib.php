@@ -261,10 +261,6 @@ class format_recit extends core_courseformat\base {
                 'ttsectionshowactivities' => array(
                     'default' => true,
                     'type' => PARAM_BOOL
-                ),
-                'ttsectiontitle' => array(
-                    'default' => true,
-                    'type' => PARAM_BOOL
                 )
             );
         }
@@ -286,18 +282,6 @@ class format_recit extends core_courseformat\base {
                 'ttsectionshowactivities' => array(
                     'label' => new lang_string('sectionshowactivities', 'format_recit'),
                     'help' => 'sectionshowactivities',
-                    'help_component' => 'format_recit',
-                    'element_type' => 'select',
-                    'element_attributes' => array(
-                        array(
-                            0 => new lang_string('no'),
-                            1 => new lang_string('yes'),
-                        )
-                    )
-                ),
-                'ttsectiontitle' => array(
-                    'label' => new lang_string('showsectiontitle', 'format_recit'),
-                    'help' => 'showsectiontitle',
                     'help_component' => 'format_recit',
                     'element_type' => 'select',
                     'element_attributes' => array(
@@ -511,29 +495,6 @@ class format_recit extends core_courseformat\base {
     }
 
     /**
-     * Prepares the templateable object to display section name
-     *
-     * @param \section_info|\stdClass $section
-     * @param bool $linkifneeded
-     * @param bool $editable
-     * @param null|lang_string|string $edithint
-     * @param null|lang_string|string $editlabel
-     * @return \core\output\inplace_editable
-     */
-    public function inplace_editable_render_section_name($section, $linkifneeded = true,
-                                                         $editable = null, $edithint = null, $editlabel = null) {
-        if (empty($edithint)) {
-            $edithint = new lang_string('editsectionname', 'format_recit');
-        }
-        if (empty($editlabel)) {
-            $title = get_section_name($section->course, $section);
-            $editlabel = new lang_string('newsectionname', 'format_recit', $title);
-        }
-
-        return parent::inplace_editable_render_section_name($section, $linkifneeded, $editable, $edithint, $editlabel);
-    }
-
-    /**
      * Indicates whether the course format supports the creation of a news forum.
      *
      * @return bool
@@ -609,24 +570,5 @@ class format_recit extends core_courseformat\base {
      */
     public function supports_components() {
         return true;
-    }
-}
-
-/**
- * Implements callback inplace_editable() allowing to edit values in-place
- *
- * @param string $itemtype
- * @param int $itemid
- * @param mixed $newvalue
- * @return \core\output\inplace_editable
- */
-function format_recit_inplace_editable($itemtype, $itemid, $newvalue) {
-    global $DB, $CFG;
-    require_once($CFG->dirroot . '/course/lib.php');
-    if ($itemtype === 'sectionname' || $itemtype === 'sectionnamenl') {
-        $section = $DB->get_record_sql(
-            'SELECT s.* FROM {course_sections} s JOIN {course} c ON s.course = c.id WHERE s.id = ? AND c.format = ?',
-            array($itemid, 'recit'), MUST_EXIST);
-        return course_get_format($section->course)->inplace_editable_update_section_name($section, $itemtype, $newvalue);
     }
 }
