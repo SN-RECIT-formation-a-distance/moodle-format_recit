@@ -68,15 +68,31 @@ class renderer extends section_renderer {
      * @return string the widget HTML
      */
     public function render(renderable $widget = null) {
-        if($widget != null){
-            return parent::render($widget);
-        }
+        // This function is not called from format.php as it was in Moodle 4.*
 
         $result = "";
-        if ($this->page->user_is_editing()) {           
-            $result .= $this->editingMode->render();
+        if ($this->page->user_is_editing()) {  
+            //$result = $this->editingMode->render();
+            $result = parent::render($widget);
+        }
+        else{
+            $result = $this->nonEditingMode->render($this->page_title());
+        }
+
+        return $result;
+    }
+
+    public function renderOldFormat() {
+        global $COURSE;
+
+        $result = "";
+        if ($this->page->user_is_editing()) {  
+            $this->format = course_get_format($COURSE);
+            $outputclass = $this->format->get_output_classname('content');
+            $widget = new $outputclass($this->format);
+            $result = parent::render($widget);
             echo $result;
-            return "";
+            return;
         } else {
             $result .= $this->nonEditingMode->render($this->page_title());
         }
@@ -91,7 +107,7 @@ class renderer extends section_renderer {
      */
     public function get_course_section_cm_list($format, $section) {
         $cmlistclass = $format->get_output_classname('content\\section\\cmlist');
-        return $this->render(new $cmlistclass($format, $section));
+        return parent::render(new $cmlistclass($format, $section));
     }
 }
 
@@ -232,9 +248,9 @@ class NonEditingMode extends LocalRenderer{
 
 class EditingMode extends LocalRenderer{
     public function render(){
-        $renderer = $this->page->get_renderer('format_topics');
+       /* $renderer = $this->page->get_renderer('format_topics');
         $outputclass = $this->format->get_output_classname('content');
         $widget = new $outputclass($this->format);
-        return $renderer->render($widget);
+        return $renderer->render($widget);*/
     }
 }

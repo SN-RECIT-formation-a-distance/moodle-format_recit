@@ -24,6 +24,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot. '/course/format/lib.php');
 require_once($CFG->dirroot. '/course/editsection_form.php');
 require_once(dirname(__FILE__).'/classes/sectionform.php');
+require_once($CFG->dirroot . '/course/format/topics/lib.php');
 
 /**
  *
@@ -31,7 +32,7 @@ require_once(dirname(__FILE__).'/classes/sectionform.php');
  * @copyright  2012 Marina Glancy
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class format_recit extends core_courseformat\base {
+class format_recit extends format_topics  {
     /** @var int */
     public const TT_DISPLAY_TABS_LEVEL_1 = 1;
     /** @var int */
