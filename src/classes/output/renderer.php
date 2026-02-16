@@ -87,9 +87,9 @@ class renderer extends section_renderer {
 
         $result = "";
         if ($this->page->user_is_editing()) {  
-            $this->format = course_get_format($COURSE);
-            $outputclass = $this->format->get_output_classname('content');
-            $widget = new $outputclass($this->format);
+            $format = course_get_format($COURSE);
+            $outputclass = $format->get_output_classname('content');
+            $widget = new $outputclass($format);
             $result = parent::render($widget);
             echo $result;
             return;
