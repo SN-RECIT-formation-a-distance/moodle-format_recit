@@ -106,8 +106,10 @@ class renderer extends section_renderer {
      * @param string $section
      */
     public function get_course_section_cm_list($format, $section) {
+        global $OUTPUT;
+
         $cmlistclass = $format->get_output_classname('content\\section\\cmlist');
-        return parent::render(new $cmlistclass($format, $section));
+        return $OUTPUT->render(new $cmlistclass($format, $section));
     }
 }
 
