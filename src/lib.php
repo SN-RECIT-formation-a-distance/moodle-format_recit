@@ -208,8 +208,6 @@ class format_recit extends format_topics  {
             $courseformatoptionsedit = array(
                 'hiddensections' => [
                     'label' => new lang_string('hiddensections'),
-                    'help' => 'hiddensections',
-                    'help_component' => 'moodle',
                     'element_type' => 'select',
                     'element_attributes' => [
                         [
