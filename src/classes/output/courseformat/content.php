@@ -22,6 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// intentionally delegating to format_topics for the editing mode rendering
 namespace format_topics\output\courseformat;
 
 use core_courseformat\output\local\content as content_base;
