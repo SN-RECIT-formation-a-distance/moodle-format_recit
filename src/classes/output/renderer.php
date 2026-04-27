@@ -197,7 +197,7 @@ class NonEditingMode extends LocalRenderer{
      * @return string
      */
     public function render_section_content($section) {
-        global $USER, $CFG;
+        global $USER, $CFG, $OUTPUT;
 
         if(empty($section)){
             return "";
@@ -238,7 +238,12 @@ class NonEditingMode extends LocalRenderer{
         $html = "<div class='section main clearfix tt-section $sectionstyle' data-section='$sectionid' role='region' aria-label='$sectionname'>";
 
         $html .= "<div class='content'>";
-        $html .= $section->availableinfo;
+
+        if (!empty($section->availableinfo)) {
+            $availinfo = new \core_availability\output\availability_info($section->availableinfo);
+            $html .= $OUTPUT->render($availinfo);
+        }
+
         $html .= "<div class='summary'>$sectionsummary</div>";
         $html .= "$content";
         $html .= "</div>";
