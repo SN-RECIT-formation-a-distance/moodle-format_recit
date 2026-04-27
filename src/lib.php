@@ -516,28 +516,6 @@ class format_recit extends format_topics  {
     }
 
     /**
-     * Function of class format_recit.
-     * {@inheritDoc}
-     * @see format_base::section_action()
-     * @param string $section
-     * @param string $action
-     * @param string $sr
-     */
-    public function section_action($section, $action, $sr) {
-        if ($section->section && ($action === 'setmarker' || $action === 'removemarker')) {
-            // Format 'recit' allows to set and remove markers in addition to common section actions.
-            require_capability('moodle/course:setcurrentsection', context_course::instance($this->courseid));
-            course_set_marker($this->courseid, ($action === 'setmarker') ? $section->section : 0);
-            return null;
-        }
-
-        // For show/hide actions call the parent method.
-        // Note: section_availability() was removed in Moodle 4.4+.
-        // The availability rendering is now handled by core_courseformat\output\local\content\section\availability.
-        return parent::section_action($section, $action, $sr);
-    }
-
-    /**
      * Return the plugin configs for external functions.
      *
      * @return array the list of configuration settings
