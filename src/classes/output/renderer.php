@@ -240,8 +240,13 @@ class NonEditingMode extends LocalRenderer{
         $html .= "<div class='content'>";
 
         if (!empty($section->availableinfo)) {
-            $availinfo = new \core_availability\output\availability_info($section->availableinfo);
-            $html .= $OUTPUT->render($availinfo);
+            if(is_string($section->availableinfo)){
+                $html .= (string) $section->availableinfo;
+            }
+            else{
+                $availinfo = new \core_availability\output\availability_info($section->availableinfo);
+                $html .= $OUTPUT->render($availinfo);
+            }
         }
         
         $html .= "<div class='summary'>$sectionsummary</div>";
