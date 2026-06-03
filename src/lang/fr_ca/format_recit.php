@@ -25,7 +25,7 @@
 
 $string['pluginname'] = 'Format RÉCIT v2';
 $string['plugin_description'] = 'Ce format de cours propose un chargement accéléré par section, des sous-sections et un utilitaire pour des opérations en lot. Il requiert la sélection du thème RÉCIT V2 situé à l\'intérieur de la rubrique Apparence.';
-$string['privacy:metadata'] = 'Ce format de cours ne conserve aucune donnée personnelle.';
+$string['privacy:metadata'] = 'Ce format de cours ne conserve aucune donnée personnelle. Il enregistre des paramètres de configuration de section (niveau d\'affichage et visibilité des activités) dans la table format_recit_options, associés uniquement à un identifiant de cours et de section — aucun identifiant d\'utilisateur (nom, courriel, identifiant) n\'est consigné. Conformément à la Loi 25 (Loi québécoise sur la protection des renseignements personnels dans le secteur privé), aucune information personnellement identifiable n\'est collectée, traitée ou conservée par ce plugiciel.';
 
 $string['addsections'] = 'Ajouter une section';
 $string['currentsection'] = 'Cette section';

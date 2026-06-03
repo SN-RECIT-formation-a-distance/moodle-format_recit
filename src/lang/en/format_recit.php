@@ -25,7 +25,7 @@
 
 $string['pluginname'] = 'RÉCIT format v2';
 $string['plugin_description'] = 'This course format provides accelerated loading by section, sub-sections and a utility for batch operations. It requires selection of the RÉCIT V2 theme within the Appearance section.';
-$string['privacy:metadata'] = 'The RÉCIT format plugin does not store any personal data.';
+$string['privacy:metadata'] = 'The RÉCIT format plugin does not store any personal data. It does store course-level section configuration (layout level and activity visibility options) in the format_recit_options table, linked to a course and section ID only — no user identifiers (name, email, user ID) are recorded. In compliance with Law 25 (Québec Act respecting the protection of personal information in the private sector), no personally identifiable information is collected, processed, or retained by this plugin.';
 
 $string['addsections'] = 'Add topics';
 $string['currentsection'] = 'This topic';

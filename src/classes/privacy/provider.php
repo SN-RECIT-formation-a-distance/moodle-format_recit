@@ -15,7 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Define provider.
+ * Privacy provider for format_recit.
+ *
+ * This plugin stores only course-level configuration data (section layout
+ * options) in the format_recit_options table. No personally identifiable
+ * information (PII) is collected, processed, or stored. This satisfies the
+ * requirements of Law 25 (Québec Act respecting the protection of personal
+ * information in the private sector) and Moodle's privacy subsystem.
+ *
+ * The format_recit_options table contains:
+ *   - courseid  (int)  : links to the course, not to any user
+ *   - sectionid (int)  : links to a course section, not to any user
+ *   - name      (char) : option key (e.g. 'sectionlevel')
+ *   - value     (text) : option value (e.g. '1')
+ *
+ * No userid, username, email, or other personal identifiers are recorded.
  *
  * @package     format_recit
  * @copyright   RECITFAD
@@ -24,21 +38,27 @@
  */
 
 namespace format_recit\privacy;
+
 defined('MOODLE_INTERNAL') || die();
+
 /**
- * Privacy Subsystem for format_recit implementing null_provider.
+ * Privacy subsystem for format_recit.
  *
- * @copyright  2018 Carlos Escobedo <carlos@moodle.com>
+ * Implements null_provider because the format_recit_options table stores
+ * course configuration only — no personal data is collected, and there is
+ * nothing to export or delete on a per-user basis (Law 25 / GDPR compliant).
+ *
+ * @copyright  RECITFAD
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements \core_privacy\local\metadata\null_provider {
+
     /**
-     * Get the language string identifier with the component's language
-     * file to explain why this plugin stores no data.
+     * Returns the lang string key explaining that no personal data is stored.
      *
-     * @return  string
+     * @return string
      */
-    public static function get_reason() : string {
+    public static function get_reason(): string {
         return 'privacy:metadata';
     }
 }

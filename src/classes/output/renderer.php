@@ -197,7 +197,7 @@ class NonEditingMode extends LocalRenderer{
      * @return string
      */
     public function render_section_content($section) {
-        global $USER, $CFG, $OUTPUT;
+        global $USER, $OUTPUT;
 
         if(empty($section)){
             return "";
@@ -230,12 +230,9 @@ class NonEditingMode extends LocalRenderer{
             // Show summary if section is available or has
             $sectionsummary = file_rewrite_pluginfile_urls($section->summary, 'pluginfile.php', $context->id, 'course', 'section', $section->id);
                     
-            $bkpForceclean = $CFG->forceclean;
-            $CFG->forceclean = false;
-            $sectionsummary = format_text($sectionsummary,  $section->summaryformat, array('noclean' => true, 'overflowdiv' => true, 'filter' => true));
-            $CFG->forceclean = $bkpForceclean;
+            $sectionsummary = format_text($sectionsummary, $section->summaryformat, ['noclean' => true, 'overflowdiv' => true, 'filter' => true]);
         }
-        $html = "<div class='section main clearfix tt-section $sectionstyle' data-section='$sectionid' role='region' aria-label='$sectionname'>";
+        $html = "<div class='section main clearfix tt-section " . s($sectionstyle) . "' data-section='" . s($sectionid) . "' role='region' aria-label='" . s($sectionname) . "'>";
 
         $html .= "<div class='content'>";
 
