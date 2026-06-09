@@ -24,11 +24,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2026030600;        // The current plugin version (Date: YYYYMMDDXX).
+$plugin->version   = 2026030601;        // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires  = 2025100603.00; // Moodle 5.1.3
 $plugin->component = 'format_recit';    // Full name of the plugin (used for diagnostics).
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = 'v5.0.0-stable';
+$plugin->release = 'v5.0.1-stable';
 $plugin->supported = [501, 501];      //  Moodle 3.9.x, 3.10.x and 3.11.x are supported.
 $plugin->dependencies = [
     'theme_recit2' => 2026030600,
