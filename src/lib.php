@@ -340,8 +340,8 @@ class format_recit extends format_topics  {
         global $COURSE;
 
         $elements = parent::create_edit_form_elements($mform, $forsection);
-
-        if (!$forsection && (empty($COURSE->id) || $COURSE->id == SITEID)) {
+        if (!$forsection && (empty($COURSE->id) || $COURSE->id == SITEID)
+                && !$mform->elementExists('numsections')) {
             // Add "numsections" element to the create course form - it will force new course to be prepopulated
             // with empty sections.
             // The "Number of sections" option is no longer available when editing course, instead teachers should
